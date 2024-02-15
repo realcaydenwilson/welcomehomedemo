@@ -39,22 +39,22 @@ let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastDragTime = Date.now();
 
-document.addEventListener('mousedown', function(event) {
+document.addEventListener('pointerdown', function(event) {
     isDragging = true;
     previousMouseX = event.clientX;
     previousMouseY = event.clientY;
     lastDragTime = Date.now();
   });
   
-  document.addEventListener('mouseup', function() {
+  document.addEventListener('pointerup', function() {
     isDragging = false;
   });
   
-  document.addEventListener('mouseleave', function() {
+  document.addEventListener('pointerleave', function() {
     isDragging = false;
   });
 
-document.addEventListener('mousemove', function (event) {
+document.addEventListener('pointermove', function (event) {
     if (!isDragging) return;
   
     const now = Date.now();

@@ -13,7 +13,7 @@ body {
   position: absolute;
   margin: 0.5em;
   padding: 0.5em;
-  background-color: rgba(255, 255, 255, 0.25); /*change to black upon loading of panorama images*/
+  background-color: rgba(0, 0, 0, 0.35); /*change to black upon loading of panorama images*/
   border-radius: 0.25em;
   display: flex;
   flex-direction: column;
@@ -21,23 +21,23 @@ body {
 }
 
 #client-logo {
-  width: 200px; /* Adjust the width as needed */
+  width: 12em; /* Adjust the width as needed */
   height: auto;
   margin: auto;
 }
 
 #project-name {
-  font-size: 18px;
-  padding-top: 5px;
+  font-size: 1em;
+  padding-top: 0.5em;
   color: rgb(255,255,255);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 #floorplan-button {
   position: absolute;
-  bottom: 5px;
-  left: 5px;
-  padding: 10px;
+  bottom: 0.5em;
+  left: 0.5em;
+  padding: 1em;
   background-color: #00d4e8;
   color: #fff;
   cursor: pointer;

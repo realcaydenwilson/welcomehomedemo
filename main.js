@@ -63,12 +63,12 @@ document.addEventListener('mousemove', function (event) {
     const deltaY = event.clientY - previousMouseY;
   
     // Calculate rotation speed based on movement and time
-    rotationSpeedY = deltaX / deltaTime * 0.01;
-    rotationSpeedX = deltaY / deltaTime * 0.01;
+    rotationSpeedY = deltaX / deltaTime * 0.001;
+    rotationSpeedX = deltaY / deltaTime * 0.001;
 
     // Apply rotation while dragging
-    sphere.rotation.y += deltaX * 0.001;
-    sphere.rotation.x += deltaY * 0.001;
+    sphere.rotation.y += deltaX * 0.005;
+    sphere.rotation.x += deltaY * 0.005;
   
     // Update last positions and time
     previousMouseX = event.clientX;

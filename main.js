@@ -85,8 +85,8 @@ function animate() {
     sphere.rotation.x += rotationSpeedX;
 
     // Slow down rotation
-    rotationSpeedY *= 0.925;
-    rotationSpeedX *= 0.925;
+    rotationSpeedY *= 0.85;
+    rotationSpeedX *= 0.85;
   }
 
   renderer.render(scene, camera);

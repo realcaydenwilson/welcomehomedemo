@@ -1,211 +1,42 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Home Demo</title>
-    <link rel="icon" type="image/x-icon" href="./images/favicon.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
-    <style>
-    body {
-      margin: 0px;
-    }
-    #panorama {
-        width: 100vw;
-        height: 100vh;
-    }
-    </style>
-</head>
-<body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Welcome Home Immersive Tour</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./images/favicon.png"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  </head>
+  <body>
+    <div id="info-box">
+      <img
+        id="client-logo"
+        src="./images/welcome_home_logo.png"
+        alt="Client Logo"
+      />
+      <div id="project-name">Cayden Wilson</div>
+    </div>
 
-<div id="panorama"></div>
-<script>
-pannellum.viewer('panorama', {   
-    "default": {
-        "firstScene": "office2",
-        "author": "Cayden Wilson",
-        "sceneFadeDuration": 1000
-    },
+    <button id="floorplan-button">View Floorplan</button>
 
-    "scenes": {
-        "office1": {
-            "title": "Office",
-            "hfov": 110,
-            "pitch": 0,
-            "yaw": -100,
-            "type": "equirectangular",
-            "panorama": "./images/Office_1.jpg",
-            "hotSpots": [
-                {
-                    "pitch": 0,
-                    "yaw": 85,
-                    "type": "scene",
-                    "text": "Office",
-                    "sceneId": "office2"
-                },
-                {
-                    "pitch": 0,
-                    "yaw": -65,
-                    "type": "scene",
-                    "text": "Dining",
-                    "sceneId": "dining3"
-                },
-                {
-                    "pitch": 0,
-                    "yaw": -10,
-                    "type": "scene",
-                    "text": "Office",
-                    "sceneId": "office3"
-                },
-            ]
-        },
-
-        "office2": {
-            "title": "Office",
-            "hfov": 110,
-            "pitch": 0,
-            "yaw": 200,
-            "type": "equirectangular",
-            "panorama": "./images/Office_2.jpg",
-            "hotSpots": [
-                {
-                    "pitch": 0,
-                    "yaw": -100,
-                    "type": "scene",
-                    "text": "Dining",
-                    "sceneId": "dining3"
-                },
-                {
-                    "pitch": 0,
-                    "yaw": -35,
-                    "type": "scene",
-                    "text": "Office",
-                    "sceneId": "office3"
-                },
-            ]
-        },
-
-        "office3": {
-            "title": "Office",
-            "hfov": 110,
-            "pitch": 0,
-            "yaw": -20,
-            "type": "equirectangular",
-            "panorama": "./images/Office_3.jpg",
-            "hotSpots": [
-                {
-                    "pitch": 0,
-                    "yaw": 0,
-                    "type": "scene",
-                    "text": "Office",
-                    "sceneId": "office1"
-                },
-                {
-                    "pitch": 0,
-                    "yaw": 305,
-                    "type": "scene",
-                    "text": "Office",
-                    "sceneId": "office2"
-                },
-                {
-                    "pitch": 0,
-                    "yaw": 25,
-                    "type": "scene",
-                    "text": "Dining",
-                    "sceneId": "dining3"
-                },
-            ]
-        },
-
-        "office4": {
-            "title": "Office",
-            "hfov": 110,
-            "pitch": 0,
-            "yaw": 180,
-            "type": "equirectangular",
-            "panorama": "./images/Dining_3.jpg",
-            "hotSpots": [
-                {
-                    "pitch": 0,
-                    "yaw": 25,
-                    "type": "scene",
-                    "text": "Dining",
-                    "sceneId": "dining1"
-                },
-                {
-                    "pitch": 0,
-                    "yaw": 185,
-                    "type": "scene",
-                    "text": "Office",
-                    "sceneId": "office2"
-                },
-            ]
-        },
-
-        "dining1": {
-            "title": "Dining",
-            "hfov": 110,
-            "pitch": 0,
-            "yaw": -10,
-            "type": "equirectangular",
-            "panorama": "./images/Dining_1.jpg",
-            "hotSpots": [
-            {
-                    "pitch": 0,
-                    "yaw": -25,
-                    "type": "scene",
-                    "text": "Dining",
-                    "sceneId": "dining2"
-                },
-            ]
-        },
-
-        "dining2": {
-            "title": "Dining",
-            "hfov": 110,
-            "pitch": 0,
-            "yaw": 0,
-            "type": "equirectangular",
-            "panorama": "./images/Dining_2.jpg",
-            "hotSpots": [
-                {
-                    "pitch": 0,
-                    "yaw": -25,
-                    "type": "scene",
-                    "text": "Dining",
-                    "sceneId": "dining1"
-                },
-                {
-                    "pitch": 0,
-                    "yaw": 62.5,
-                    "type": "scene",
-                    "text": "Office",
-                    "sceneId": "office4"
-                },
-            ]
-        },
-
-        "dining3": {
-            "title": "Dining",
-            "hfov": 110,
-            "pitch": 0,
-            "yaw": 0,
-            "type": "equirectangular",
-            "panorama": "./images/Dining_3.jpg",
-            "hotSpots": [
-                {
-                    "pitch": 0,
-                    "yaw": 25,
-                    "type": "scene",
-                    "text": "Dining",
-                    "sceneId": "dining1"
-                },
-            ]
-        },
-    }
-});
-</script>
-
-</body>
+    <div id="floorplan-window">
+      <img
+        id="floorplan-img"
+        src="./images/floorplan.jpg"
+        alt="Floorplan"
+      />
+    </div>
+    <div id="scene-container">
+      <canvas></canvas>
+    </div>
+    <script src="main.js"></script>
+  </body> 
 </html>

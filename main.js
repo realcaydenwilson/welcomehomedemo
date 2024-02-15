@@ -39,6 +39,27 @@ let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastDragTime = Date.now();
 
+// Function to handle device orientation
+function handleOrientation(event) {
+  if (!isDragging) return;
+
+  const now = Date.now();
+  const deltaTime = now - lastDragTime;
+  const gamma = event.gamma || 0; // Rotation around the y-axis (tilt left/right)
+  const beta = event.beta || 0;   // Rotation around the x-axis (tilt front/back)
+
+  rotationSpeedY = gamma / 90 * 0.01; // Normalize and adjust rotation speed
+  rotationSpeedX = beta / 90 * 0.01;
+
+  sphere.rotation.y += gamma * 0.0015;
+  sphere.rotation.x += beta * 0.0015;
+
+  lastDragTime = now;
+}
+
+// Event listener for device orientation
+window.addEventListener('deviceorientation', handleOrientation);
+
 document.addEventListener('pointerdown', function(event) {
     isDragging = true;
     previousMouseX = event.clientX;

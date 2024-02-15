@@ -67,8 +67,8 @@ document.addEventListener('mousemove', function (event) {
     rotationSpeedX = deltaY / deltaTime * 0.01;
 
     // Apply rotation while dragging
-    sphere.rotation.y += deltaX * 0.005;
-    sphere.rotation.x += deltaY * 0.005;
+    sphere.rotation.y += deltaX * 0.001;
+    sphere.rotation.x += deltaY * 0.001;
   
     // Update last positions and time
     previousMouseX = event.clientX;
@@ -85,8 +85,8 @@ function animate() {
     sphere.rotation.x += rotationSpeedX;
 
     // Slow down rotation
-    rotationSpeedY *= 0.85;
-    rotationSpeedX *= 0.85;
+    rotationSpeedY *= 0.95;
+    rotationSpeedX *= 0.95;
   }
 
   renderer.render(scene, camera);

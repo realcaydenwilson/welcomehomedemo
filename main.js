@@ -67,8 +67,8 @@ document.addEventListener('mousemove', function (event) {
     rotationSpeedX = deltaY / deltaTime * 0.01;
 
     // Apply rotation while dragging
-    sphere.rotation.y += deltaX * 0.005;
-    sphere.rotation.x += deltaY * 0.005;
+    sphere.rotation.y += deltaX * 0.0025;
+    sphere.rotation.x += deltaY * 0.0025;
   
     // Update last positions and time
     previousMouseX = event.clientX;

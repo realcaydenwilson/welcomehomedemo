@@ -95,6 +95,8 @@ document.addEventListener('pointermove', function (event) {
     previousMouseX = event.clientX;
     previousMouseY = event.clientY;
     lastDragTime = now;
+
+    event.preventDefault(); // Prevent default touchmove behavior (scrolling)
   });
 
 function animate() {

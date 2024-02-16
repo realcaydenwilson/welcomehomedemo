@@ -2,6 +2,11 @@ body {
   margin: 0;
 }
 
+body,
+html {
+  position: fixed;
+}
+
 #scene-container {
   /* tell our scene container to take up the full page */
   position: absolute;

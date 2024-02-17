@@ -97,7 +97,27 @@ document.addEventListener('pointermove', function (event) {
     lastDragTime = now;
 
     event.preventDefault(); // Prevent default touchmove behavior (scrolling)
-  });
+});
+
+// Function to toggle fullscreen mode
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(console.log);
+  } else {
+      if (document.exitFullscreen) {
+          document.exitFullscreen().catch(console.log);
+      }
+  }
+}
+
+// Create fullscreen button
+const fullscreenButton = document.createElement('button');
+fullscreenButton.textContent = 'Fullscreen';
+fullscreenButton.style.position = 'absolute';
+fullscreenButton.style.top = '10px';
+fullscreenButton.style.left = '10px';
+fullscreenButton.addEventListener('click', toggleFullScreen);
+document.body.appendChild(fullscreenButton);
 
 function animate() {
   requestAnimationFrame(animate);

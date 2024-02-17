@@ -102,10 +102,18 @@ document.addEventListener('pointermove', function (event) {
 // Function to toggle fullscreen mode
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(console.log);
+      if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(console.log);
+      } else if (document.documentElement.webkitRequestFullscreen) { // Safari
+          document.documentElement.webkitRequestFullscreen().catch(console.log);
+          // On Safari, prompt the user to enter fullscreen using a gesture
+          alert('Please use the "Share" button and then select "Add to Home Screen" to enable fullscreen mode.');
+      }
   } else {
       if (document.exitFullscreen) {
           document.exitFullscreen().catch(console.log);
+      } else if (document.webkitExitFullscreen) { // Safari
+          document.webkitExitFullscreen().catch(console.log);
       }
   }
 }

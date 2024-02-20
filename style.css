@@ -38,6 +38,18 @@ html {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+#fullscreen-button {
+  position: absolute;
+  bottom: 0.5em;
+  left: 10em;
+  padding: 1em;
+  background-color: #00d4e8;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 1px;
+}
+
 #floorplan-button {
   position: absolute;
   bottom: 0.5em;

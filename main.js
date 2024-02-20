@@ -60,44 +60,72 @@ function handleOrientation(event) {
 // Event listener for device orientation
 window.addEventListener('deviceorientation', handleOrientation);
 
-document.addEventListener('pointerdown', function(event) {
+var isDragging = false;
+var previousMouseX = 0;
+var previousMouseY = 0;
+
+// Function to handle mouse down event
+function onMouseDown(event) {
     isDragging = true;
     previousMouseX = event.clientX;
     previousMouseY = event.clientY;
     lastDragTime = Date.now();
-  });
-  
-  document.addEventListener('pointerup', function() {
-    isDragging = false;
-  });
-  
-  document.addEventListener('pointerleave', function() {
-    isDragging = false;
-  });
+}
 
-document.addEventListener('pointermove', function (event) {
+// Function to handle touch start event
+function onTouchStart(event) {
+    isDragging = true;
+    previousMouseX = event.touches[0].clientX;
+    previousMouseY = event.touches[0].clientY;
+    lastDragTime = Date.now();
+}
+
+// Function to handle pointer up event
+function onPointerUp() {
+    isDragging = false;
+}
+
+// Function to handle pointer move event
+function onPointerMove(event) {
     if (!isDragging) return;
-  
+
     const now = Date.now();
     const deltaTime = now - lastDragTime;
-    const deltaX = event.clientX - previousMouseX;
-    const deltaY = event.clientY - previousMouseY;
-  
+    const clientX = event.clientX || event.touches[0].clientX;
+    const clientY = event.clientY || event.touches[0].clientY;
+    const deltaX = clientX - previousMouseX;
+    const deltaY = clientY - previousMouseY;
+
+    // Adjust sensitivity for touch devices
+    const sensitivity = event.touches ? 0.005 : 0.015;
+
     // Calculate rotation speed based on movement and time
-    rotationSpeedY = deltaX / deltaTime * 0.01;
-    rotationSpeedX = deltaY / deltaTime * 0.01;
+    rotationSpeedY = deltaX / deltaTime * sensitivity;
+    rotationSpeedX = deltaY / deltaTime * sensitivity;
 
     // Apply rotation while dragging
     sphere.rotation.y += deltaX * 0.0015;
     sphere.rotation.x += deltaY * 0.0015;
-  
+
     // Update last positions and time
-    previousMouseX = event.clientX;
-    previousMouseY = event.clientY;
+    previousMouseX = clientX;
+    previousMouseY = clientY;
     lastDragTime = now;
 
-    event.preventDefault(); // Prevent default touchmove behavior (scrolling)
-});
+    if (event.touches) {
+        event.preventDefault(); // Prevent default touchmove behavior (scrolling)
+    }
+}
+
+// Add event listeners for mouse interaction
+document.addEventListener('mousedown', onMouseDown);
+document.addEventListener('mouseup', onPointerUp);
+document.addEventListener('mousemove', onPointerMove);
+
+// Add event listeners for touch interaction
+document.addEventListener('touchstart', onTouchStart);
+document.addEventListener('touchend', onPointerUp);
+document.addEventListener('touchmove', onPointerMove);
 
 // Function to toggle fullscreen mode
 function toggleFullScreen() {

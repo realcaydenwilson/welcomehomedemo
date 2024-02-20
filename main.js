@@ -119,11 +119,7 @@ function toggleFullScreen() {
 }
 
 // Create fullscreen button
-const fullscreenButton = document.createElement('button');
-fullscreenButton.textContent = 'Fullscreen';
-fullscreenButton.style.position = 'absolute';
-fullscreenButton.style.top = '10px';
-fullscreenButton.style.left = '10px';
+const fullscreenButton = document.getElementById("fullscreen-button");
 fullscreenButton.addEventListener('click', toggleFullScreen);
 document.body.appendChild(fullscreenButton);
 

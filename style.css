@@ -26,13 +26,13 @@ html {
 }
 
 #client-logo {
-  width: 12em; /* Adjust the width as needed */
+  width: 8em; /* Adjust the width as needed */
   height: auto;
   margin: auto;
 }
 
 #project-name {
-  font-size: 1em;
+  font-size: 0.75em;
   padding-top: 0.5em;
   color: rgb(255,255,255);
   font-family: Arial, Helvetica, sans-serif;

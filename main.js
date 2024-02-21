@@ -131,22 +131,22 @@ document.addEventListener('touchmove', onPointerMove);
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
       if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen().catch(console.log);
-      } else if (document.documentElement.webkitRequestFullscreen) { // Safari
+          document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitEnterFullscreen) { // Safari
           document.documentElement.webkitRequestFullscreen().catch(console.log);
           // On Safari, prompt the user to enter fullscreen using a gesture
           alert('Please use the "Share" button and then select "Add to Home Screen" to enable fullscreen mode.');
       }
   } else {
       if (document.exitFullscreen) {
-          document.exitFullscreen().catch(console.log);
+          document.exitFullscreen();
       } else if (document.webkitExitFullscreen) { // Safari
-          document.webkitExitFullscreen().catch(console.log);
+          document.webkitExitFullscreen();
       }
   }
 }
 
-// Create fullscreen button
+// Get fullscreen button
 const fullscreenButton = document.getElementById("fullscreen-button");
 fullscreenButton.addEventListener('click', toggleFullScreen);
 document.body.appendChild(fullscreenButton);

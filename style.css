@@ -41,7 +41,7 @@ html {
 #fullscreen-button {
   position: absolute;
   bottom: 0.5em;
-  left: 10em;
+  left: 0.5em;
   padding: 1em;
   background-color: #00d4e8;
   color: #fff;

@@ -14,6 +14,8 @@
     />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include Eruda library -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   </head>
   <body>
     <div id="info-box">
@@ -38,6 +40,11 @@
     <div id="scene-container">
       <canvas></canvas>
     </div>
+    <!-- Initialize Eruda -->
+    <script>
+      // Call Eruda.init() to initialize Eruda
+      Eruda.init();
+    </script>
     <script src="main.js"></script>
   </body> 
 </html>

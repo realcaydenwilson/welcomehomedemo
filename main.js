@@ -10,6 +10,16 @@ if (isWebkit) {
     console.log('Webkit is not supported.');
 }
 
+// Check if motion and orientation data via webkit is supported
+const isMotionOrientationSupported = ('DeviceOrientationEvent' in window) &&
+                                      ('webkitRequestDeviceMotion' in window);
+
+if (isMotionOrientationSupported) {
+    console.log('Motion and orientation data via webkit is supported.');
+} else {
+    console.log('Motion and orientation data via webkit is not supported.');
+}
+
 // Set up scene
 var scene = new THREE.Scene();
 

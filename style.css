@@ -2,11 +2,12 @@ body,
 html {
   position: fixed;
   margin: 0;
-    padding: 0;
-    overflow: hidden;
-    overscroll-behavior: none;
-    width: 100vw;
-    height: 100vh;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  width: 100vw;
+  height: 100vh;
+  display: block;
 }
 
 #scene-container {

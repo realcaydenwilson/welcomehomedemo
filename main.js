@@ -1,32 +1,16 @@
-var isAppleWebKit = 'WebkitAppearance' in document.documentElement.style && typeof document.body.style.webkitAppearance !== 'undefined';
+// Enhanced check for webkit and other browsers' fullscreen support
+const isFullscreenSupported = 'requestFullscreen' in document.documentElement || 
+                              'webkitRequestFullscreen' in document.documentElement || 
+                              'mozRequestFullScreen' in document.documentElement || 
+                              'msRequestFullscreen' in document.documentElement;
 
-if (isAppleWebKit) {
-    console.log('Apple WebKit is working for this website.');
-} else {
-    console.log('Apple WebKit is not working for this website.');
-}
+console.log(isFullscreenSupported ? 'Fullscreen is supported.' : 'Fullscreen is not supported.');
 
-// Check if webkit prefix is available
-const isWebkit = 'webkitRequestFullscreen' in document.documentElement ||
-                  'webkitExitFullscreen' in document ||
-                  'webkitFullscreenEnabled' in document ||
-                  'webkitFullscreenElement' in document;
+// Check for motion and orientation event support without webkit prefix
+const isMotionOrientationSupported = 'DeviceOrientationEvent' in window || 
+                                     'DeviceMotionEvent' in window;
 
-if (isWebkit) {
-    console.log('Webkit is supported.');
-} else {
-    console.log('Webkit is not supported.');
-}
-
-// Check if motion and orientation data via webkit is supported
-const isMotionOrientationSupported = ('DeviceOrientationEvent' in window) &&
-                                      ('webkitRequestDeviceMotion' in window);
-
-if (isMotionOrientationSupported) {
-    console.log('Motion and orientation data via webkit is supported.');
-} else {
-    console.log('Motion and orientation data via webkit is not supported.');
-}
+console.log(isMotionOrientationSupported ? 'Motion and orientation data is supported.' : 'Motion and orientation data is not supported.');
 
 // Set up scene
 var scene = new THREE.Scene();
@@ -157,21 +141,26 @@ document.addEventListener('touchstart', onTouchStart);
 document.addEventListener('touchend', onPointerUp);
 document.addEventListener('touchmove', onPointerMove);
 
-// Function to toggle fullscreen mode
 function toggleFullScreen() {
-  if (!document.fullscreenElement) {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
       if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen();
-      } else if (document.documentElement.webkitEnterFullscreen) { // Safari
-          document.documentElement.webkitRequestFullscreen().catch(console.log);
-          // On Safari, prompt the user to enter fullscreen using a gesture
-          alert('Please use the "Share" button and then select "Add to Home Screen" to enable fullscreen mode.');
+      } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+          document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+          document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+          document.documentElement.msRequestFullscreen();
       }
   } else {
       if (document.exitFullscreen) {
           document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) { // Safari
+      } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
           document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) { // Firefox
+          document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) { // IE/Edge
+          document.msExitFullscreen();
       }
   }
 }

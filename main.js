@@ -1,3 +1,11 @@
+var isAppleWebKit = 'WebkitAppearance' in document.documentElement.style && typeof document.body.style.webkitAppearance !== 'undefined';
+
+if (isAppleWebKit) {
+    console.log('Apple WebKit is working for this website.');
+} else {
+    console.log('Apple WebKit is not working for this website.');
+}
+
 // Check if webkit prefix is available
 const isWebkit = 'webkitRequestFullscreen' in document.documentElement ||
                   'webkitExitFullscreen' in document ||

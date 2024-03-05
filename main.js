@@ -6,24 +6,53 @@ const isFullscreenSupported = 'requestFullscreen' in document.documentElement ||
 
 console.log(isFullscreenSupported ? 'Fullscreen is supported.' : 'Fullscreen is not supported.');
 
-if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-  DeviceOrientationEvent.requestPermission()
+// Check if DeviceOrientationEvent and DeviceMotionEvent are supported
+if ('DeviceOrientationEvent' in window && 'DeviceMotionEvent' in window) {
+  // Request permission for iOS 13+ devices
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
       .then(permissionState => {
-          if (permissionState === 'granted') {
-              window.addEventListener('deviceorientation', handleOrientation);
-          }
+        if (permissionState === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation);
+        } else {
+          console.error('Permission to access orientation was denied');
+        }
       })
       .catch(console.error);
+  } else {
+    // Non-iOS 13+ devices do not need to request permission
+    window.addEventListener('deviceorientation', handleOrientation);
+  }
+
+  // Similarly, request permission for DeviceMotionEvent
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === 'granted') {
+          window.addEventListener('devicemotion', handleMotion);
+        } else {
+          console.error('Permission to access motion was denied');
+        }
+      })
+      .catch(console.error);
+  } else {
+    // Non-iOS 13+ devices do not need to request permission
+    window.addEventListener('devicemotion', handleMotion);
+  }
 } else {
-  // Automatically listen if permission request is not necessary
-  window.addEventListener('deviceorientation', handleOrientation);
+  console.log('Device orientation and motion events are not supported by your browser.');
 }
 
-// Check for motion and orientation event support without webkit prefix
-const isMotionOrientationSupported = 'DeviceOrientationEvent' in window || 
-                                     'DeviceMotionEvent' in window;
+// Define your event handlers
+function handleOrientation(event) {
+  // Handle device orientation event
+  console.log(event.alpha, event.beta, event.gamma);
+}
 
-console.log(isMotionOrientationSupported ? 'Motion and orientation data is supported.' : 'Motion and orientation data is not supported.');
+function handleMotion(event) {
+  // Handle device motion event
+  console.log(event.acceleration, event.accelerationIncludingGravity, event.rotationRate, event.interval);
+}
 
 // Set up scene
 var scene = new THREE.Scene();

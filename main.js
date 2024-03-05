@@ -6,6 +6,19 @@ const isFullscreenSupported = 'requestFullscreen' in document.documentElement ||
 
 console.log(isFullscreenSupported ? 'Fullscreen is supported.' : 'Fullscreen is not supported.');
 
+if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+  DeviceOrientationEvent.requestPermission()
+      .then(permissionState => {
+          if (permissionState === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation);
+          }
+      })
+      .catch(console.error);
+} else {
+  // Automatically listen if permission request is not necessary
+  window.addEventListener('deviceorientation', handleOrientation);
+}
+
 // Check for motion and orientation event support without webkit prefix
 const isMotionOrientationSupported = 'DeviceOrientationEvent' in window || 
                                      'DeviceMotionEvent' in window;
@@ -62,8 +75,8 @@ function handleOrientation(event) {
   const gamma = event.gamma || 0; // Rotation around the y-axis (tilt left/right)
   const beta = event.beta || 0;   // Rotation around the x-axis (tilt front/back)
 
-  rotationSpeedY = gamma / 90 * 0.01; // Normalize and adjust rotation speed
-  rotationSpeedX = beta / 90 * 0.01;
+  rotationSpeedY = gamma / 90 * 0.001; // Normalize and adjust rotation speed
+  rotationSpeedX = beta / 90 * 0.001;
 
   sphere.rotation.y += gamma * 0.0015;
   sphere.rotation.x += beta * 0.0015;
@@ -118,8 +131,8 @@ function onPointerMove(event) {
     rotationSpeedX = deltaY / deltaTime * sensitivity;
 
     // Apply rotation while dragging
-    sphere.rotation.y += deltaX * 0.0015;
-    sphere.rotation.x += deltaY * 0.0015;
+    sphere.rotation.y += deltaX * 0.001;
+    sphere.rotation.x += deltaY * 0.001;
 
     // Update last positions and time
     previousMouseX = clientX;

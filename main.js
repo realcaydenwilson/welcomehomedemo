@@ -1,3 +1,15 @@
+// Check if webkit prefix is available
+const isWebkit = 'webkitRequestFullscreen' in document.documentElement ||
+                  'webkitExitFullscreen' in document ||
+                  'webkitFullscreenEnabled' in document ||
+                  'webkitFullscreenElement' in document;
+
+if (isWebkit) {
+    console.log('Webkit is supported.');
+} else {
+    console.log('Webkit is not supported.');
+}
+
 // Set up scene
 var scene = new THREE.Scene();
 

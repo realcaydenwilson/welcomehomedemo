@@ -61,8 +61,12 @@ p {
 }
 
 button {
-  position: absolute;
-  padding: 1em;
+  width: 3em;
+  height: 3em;
+  font-size: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #00d4e8;
   color: #fff;
   cursor: pointer;
@@ -70,28 +74,17 @@ button {
   border-radius: 1px;
 }
 
-#fullscreen-button {
-  bottom: 0.5em;
-  left: 0.5em;
-}
-
-#vr-button {
-  bottom: 0.5em;
-  left: 8em;
-}
-
-#floorplan-window {
-  display: none;
+#button-container {
   position: absolute;
-  top: 50px;
-  left: 50px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 1); 
-  border-radius: 1px;
-  z-index: 1;
+  right: 0.5em;
+  bottom: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 1000; /* High z-index to ensure visibility */
 }
 
-#floorplan-img {
-  width: 300px; /* Adjust the width as needed */
-  height: auto;
+#fullscreen-button,
+#vr-button {
+  margin-top: 0.5em;
 }

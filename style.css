@@ -71,7 +71,7 @@ button {
   color: #fff;
   cursor: pointer;
   border: none;
-  border-radius: 1px;
+  border-radius: 1em;
 }
 
 #button-container {

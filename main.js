@@ -156,7 +156,7 @@ function onPointerMove(event) {
     const deltaY = clientY - previousMouseY;
 
     // Adjust sensitivity for touch devices
-    const sensitivity = event.touches ? 0.005 : 0.0125; //mobile : desktop (increasing value - greater resistance)
+    const sensitivity = event.touches ? 0.004 : 0.006; //mobile : desktop (decreasing value - greater resistance)
 
     // Calculate rotation speed based on movement and time
     rotationSpeedY = deltaX / deltaTime * sensitivity;

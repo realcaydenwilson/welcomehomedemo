@@ -106,7 +106,7 @@ let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
-let baseOrientation = { x: 0, y: 0 };
+let baseOrientation = { x: 0, y: 90 };
 
 // Function to handle device orientation
 function handleOrientation(event) {

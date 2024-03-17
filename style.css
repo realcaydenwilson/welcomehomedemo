@@ -23,7 +23,7 @@ html {
   position: absolute;
   margin: 0.5em;
   padding: 0.5em;
-  background-color: rgba(0, 0, 0, 0.4); /*change to black upon loading of panorama images*/
+  background-color: rgba(0, 0, 0, 0.55); /*change to black upon loading of panorama images*/
   border-radius: 0.25em;
   display: flex;
   flex-direction: column;

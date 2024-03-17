@@ -1,23 +1,41 @@
-function setupDeviceOrientationListeners() {
-    // Function to add the deviceorientation event listener
-    const addOrientationListener = () => {
-        window.addEventListener('deviceorientation', handleOrientation, true);
-    };
-
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        // Request permission for iOS 13+ devices
-        DeviceOrientationEvent.requestPermission().then(permissionState => {
-            if (permissionState === 'granted') {
-                addOrientationListener();
-            } else {
-                console.error('DeviceOrientation permission not granted.');
-            }
-        }).catch(console.error);
+const vrButton = document.getElementById("vr-button");
+vrButton.addEventListener('click', function() {
+    // Check if DeviceOrientationEvent and DeviceMotionEvent are supported
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // Request permission for device orientation
+        DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    window.addEventListener('deviceorientation', handleOrientation, true);
+                } else {
+                    alert('Permission to access device orientation was denied.');
+                }
+            })
+            .catch(console.error);
     } else {
-        // Automatically listen if permission request is not necessary
-        addOrientationListener();
+        // Handle devices that do not support DeviceOrientationEvent.requestPermission
+        window.addEventListener('deviceorientation', handleOrientation, true);
     }
-}
+
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+        // Request permission for device motion
+        DeviceMotionEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    window.addEventListener('devicemotion', handleMotion, true);
+                } else {
+                    alert('Permission to access device motion was denied.');
+                }
+            })
+            .catch(console.error);
+    } else {
+        // Handle devices that do not support DeviceMotionEvent.requestPermission
+        window.addEventListener('devicemotion', handleMotion, true);
+    }
+
+    // Hide the button after requesting permissions
+    this.style.display = 'none';
+});
 
 // Set up scene
 var scene = new THREE.Scene();
@@ -74,17 +92,12 @@ function toggleFullScreen() {
             document.msExitFullscreen();
         }
     }
-  }
+}
   
-  // Get fullscreen button
-  const fullscreenButton = document.getElementById("fullscreen-button");
-  fullscreenButton.addEventListener('click', toggleFullScreen);
-  document.body.appendChild(fullscreenButton);
-  
-  // Get vr button
-  const vrButton = document.getElementById("vr-button");
-  fullscreenButton.addEventListener('click', toggleFullScreen);
-  document.body.appendChild(vrButton);
+// Get fullscreen button
+const fullscreenButton = document.getElementById("fullscreen-button");
+fullscreenButton.addEventListener('click', toggleFullScreen);
+document.body.appendChild(fullscreenButton);
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;
@@ -93,6 +106,7 @@ var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastDragTime = Date.now();
+let usingDeviceOrientation = false;
 
 // Function to handle device orientation
 function handleOrientation(event) {
@@ -118,10 +132,6 @@ function handleOrientation(event) {
 
 // Event listener for device orientation
 window.addEventListener('deviceorientation', handleOrientation);
-
-var isDragging = false;
-var previousMouseX = 0;
-var previousMouseY = 0;
 
 // Function to handle mouse down event
 function onMouseDown(event) {
@@ -185,20 +195,6 @@ document.addEventListener('mousemove', onPointerMove);
 document.addEventListener('touchstart', onTouchStart);
 document.addEventListener('touchend', onPointerUp);
 document.addEventListener('touchmove', onPointerMove);
-
-if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    // Request permission for iOS 13+ devices
-    DeviceOrientationEvent.requestPermission().then(permissionState => {
-      if (permissionState === 'granted') {
-        window.addEventListener('deviceorientation', handleOrientation);
-      }
-    }).catch(console.error);
-  } else {
-    // For non-iOS 13 devices, just add the event listener
-    window.addEventListener('deviceorientation', handleOrientation);
-}
-
-setupDeviceOrientationListeners();
 
 function animate() {
   requestAnimationFrame(animate);

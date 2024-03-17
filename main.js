@@ -1,58 +1,21 @@
-// Enhanced check for webkit and other browsers' fullscreen support
-const isFullscreenSupported = 'requestFullscreen' in document.documentElement || 
-                              'webkitRequestFullscreen' in document.documentElement || 
-                              'mozRequestFullScreen' in document.documentElement || 
-                              'msRequestFullscreen' in document.documentElement;
-
-console.log(isFullscreenSupported ? 'Fullscreen is supported.' : 'Fullscreen is not supported.');
-
-// Check if DeviceOrientationEvent and DeviceMotionEvent are supported
-if ('DeviceOrientationEvent' in window && 'DeviceMotionEvent' in window) {
-  // Request permission for iOS 13+ devices
-  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    DeviceOrientationEvent.requestPermission()
+if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+  DeviceOrientationEvent.requestPermission()
       .then(permissionState => {
-        if (permissionState === 'granted') {
-          window.addEventListener('deviceorientation', handleOrientation);
-        } else {
-          console.error('Permission to access orientation was denied');
-        }
+          if (permissionState === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation);
+          }
       })
       .catch(console.error);
-  } else {
-    // Non-iOS 13+ devices do not need to request permission
-    window.addEventListener('deviceorientation', handleOrientation);
-  }
-
-  // Similarly, request permission for DeviceMotionEvent
-  if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    DeviceMotionEvent.requestPermission()
-      .then(permissionState => {
-        if (permissionState === 'granted') {
-          window.addEventListener('devicemotion', handleMotion);
-        } else {
-          console.error('Permission to access motion was denied');
-        }
-      })
-      .catch(console.error);
-  } else {
-    // Non-iOS 13+ devices do not need to request permission
-    window.addEventListener('devicemotion', handleMotion);
-  }
 } else {
-  console.log('Device orientation and motion events are not supported by your browser.');
+  // Automatically listen if permission request is not necessary
+  window.addEventListener('deviceorientation', handleOrientation);
 }
 
-// Define your event handlers
-function handleOrientation(event) {
-  // Handle device orientation event
-  console.log(event.alpha, event.beta, event.gamma);
-}
+// Check for motion and orientation event support without webkit prefix
+const isMotionOrientationSupported = 'DeviceOrientationEvent' in window || 
+                                     'DeviceMotionEvent' in window;
 
-function handleMotion(event) {
-  // Handle device motion event
-  console.log(event.acceleration, event.accelerationIncludingGravity, event.rotationRate, event.interval);
-}
+console.log(isMotionOrientationSupported ? 'Motion and orientation data is supported.' : 'Motion and orientation data is not supported.');
 
 // Set up scene
 var scene = new THREE.Scene();
@@ -87,6 +50,40 @@ window.addEventListener('resize', function () {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            document.documentElement.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) { // Firefox
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) { // IE/Edge
+            document.msExitFullscreen();
+        }
+    }
+  }
+  
+  // Get fullscreen button
+  const fullscreenButton = document.getElementById("fullscreen-button");
+  fullscreenButton.addEventListener('click', toggleFullScreen);
+  document.body.appendChild(fullscreenButton);
+  
+  // Get vr button
+  const vrButton = document.getElementById("vr-button");
+  fullscreenButton.addEventListener('click', toggleFullScreen);
+  document.body.appendChild(vrButton);
+
 // Allow user interaction to control sphere rotation
 var isDragging = false;
 var previousMouseX = 0;
@@ -97,20 +94,24 @@ let lastDragTime = Date.now();
 
 // Function to handle device orientation
 function handleOrientation(event) {
-  if (!isDragging) return;
-
-  const now = Date.now();
-  const deltaTime = now - lastDragTime;
-  const gamma = event.gamma || 0; // Rotation around the y-axis (tilt left/right)
-  const beta = event.beta || 0;   // Rotation around the x-axis (tilt front/back)
-
-  rotationSpeedY = gamma / 90 * 0.001; // Normalize and adjust rotation speed
-  rotationSpeedX = beta / 90 * 0.001;
-
-  sphere.rotation.y += gamma * 0.0015;
-  sphere.rotation.x += beta * 0.0015;
-
-  lastDragTime = now;
+    if (isDragging) {
+      usingDeviceOrientation = false;
+      return; // Skip updating from orientation if dragging
+    }
+  
+    // Mark that we're using device orientation data
+    usingDeviceOrientation = true;
+  
+    const gamma = event.gamma || 0; // Rotation around the y-axis (tilt left/right)
+    const beta = event.beta || 0;   // Rotation around the x-axis (tilt front/back)
+  
+    // Normalize and adjust rotation speed
+    rotationSpeedY = gamma / 90 * 0.001;
+    rotationSpeedX = beta / 90 * 0.001;
+  
+    // Directly apply rotation based on orientation
+    sphere.rotation.y += rotationSpeedY;
+    sphere.rotation.x += rotationSpeedX;
 }
 
 // Event listener for device orientation
@@ -125,7 +126,7 @@ function onMouseDown(event) {
     isDragging = true;
     previousMouseX = event.clientX;
     previousMouseY = event.clientY;
-    lastDragTime = Date.now();
+    usingDeviceOrientation = false;
 }
 
 // Function to handle touch start event
@@ -133,7 +134,7 @@ function onTouchStart(event) {
     isDragging = true;
     previousMouseX = event.touches[0].clientX;
     previousMouseY = event.touches[0].clientY;
-    lastDragTime = Date.now();
+    usingDeviceOrientation = false;
 }
 
 // Function to handle pointer up event
@@ -153,7 +154,7 @@ function onPointerMove(event) {
     const deltaY = clientY - previousMouseY;
 
     // Adjust sensitivity for touch devices
-    const sensitivity = event.touches ? 0.005 : 0.015;
+    const sensitivity = event.touches ? 0.005 : 0.0125; //mobile : desktop (increasing value - greater resistance)
 
     // Calculate rotation speed based on movement and time
     rotationSpeedY = deltaX / deltaTime * sensitivity;
@@ -183,34 +184,17 @@ document.addEventListener('touchstart', onTouchStart);
 document.addEventListener('touchend', onPointerUp);
 document.addEventListener('touchmove', onPointerMove);
 
-function toggleFullScreen() {
-  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-      if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-      } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
-          document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-          document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-          document.documentElement.msRequestFullscreen();
+if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    // Request permission for iOS 13+ devices
+    DeviceOrientationEvent.requestPermission().then(permissionState => {
+      if (permissionState === 'granted') {
+        window.addEventListener('deviceorientation', handleOrientation);
       }
+    }).catch(console.error);
   } else {
-      if (document.exitFullscreen) {
-          document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-          document.webkitExitFullscreen();
-      } else if (document.mozCancelFullScreen) { // Firefox
-          document.mozCancelFullScreen();
-      } else if (document.msExitFullscreen) { // IE/Edge
-          document.msExitFullscreen();
-      }
-  }
+    // For non-iOS 13 devices, just add the event listener
+    window.addEventListener('deviceorientation', handleOrientation);
 }
-
-// Get fullscreen button
-const fullscreenButton = document.getElementById("fullscreen-button");
-fullscreenButton.addEventListener('click', toggleFullScreen);
-document.body.appendChild(fullscreenButton);
 
 function animate() {
   requestAnimationFrame(animate);

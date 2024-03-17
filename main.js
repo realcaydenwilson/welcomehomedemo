@@ -1,4 +1,4 @@
-const vrButton = document.getElementById("vr-button");
+const vrButton = document.getElementById("moa-button");
 vrButton.addEventListener('click', function() {
     // Check if DeviceOrientationEvent and DeviceMotionEvent are supported
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {

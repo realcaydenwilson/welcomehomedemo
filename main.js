@@ -142,7 +142,6 @@ function onManualStart() {
 function onMouseDown(event) {
     isDragging = true;
     usingDeviceOrientation = false;
-    onManualStart(); // Capture the current orientation as the new base
     previousMouseX = event.clientX;
     previousMouseY = event.clientY;
 }
@@ -150,7 +149,6 @@ function onMouseDown(event) {
 function onTouchStart(event) {
     isDragging = true;
     usingDeviceOrientation = false;
-    onManualStart(); // Capture the current orientation as the new base
     previousMouseX = event.touches[0].clientX;
     previousMouseY = event.touches[0].clientY;
 }
@@ -158,6 +156,8 @@ function onTouchStart(event) {
 // Function to handle pointer up event
 function onPointerUp() {
     isDragging = false;
+    baseOrientation.x = sphere.rotation.x;
+    baseOrientation.y = sphere.rotation.y;
 }
 
 // Function to handle pointer move event

@@ -1,21 +1,23 @@
-if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-  DeviceOrientationEvent.requestPermission()
-      .then(permissionState => {
-          if (permissionState === 'granted') {
-              window.addEventListener('deviceorientation', handleOrientation);
-          }
-      })
-      .catch(console.error);
-} else {
-  // Automatically listen if permission request is not necessary
-  window.addEventListener('deviceorientation', handleOrientation);
+function setupDeviceOrientationListeners() {
+    // Function to add the deviceorientation event listener
+    const addOrientationListener = () => {
+        window.addEventListener('deviceorientation', handleOrientation, true);
+    };
+
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // Request permission for iOS 13+ devices
+        DeviceOrientationEvent.requestPermission().then(permissionState => {
+            if (permissionState === 'granted') {
+                addOrientationListener();
+            } else {
+                console.error('DeviceOrientation permission not granted.');
+            }
+        }).catch(console.error);
+    } else {
+        // Automatically listen if permission request is not necessary
+        addOrientationListener();
+    }
 }
-
-// Check for motion and orientation event support without webkit prefix
-const isMotionOrientationSupported = 'DeviceOrientationEvent' in window || 
-                                     'DeviceMotionEvent' in window;
-
-console.log(isMotionOrientationSupported ? 'Motion and orientation data is supported.' : 'Motion and orientation data is not supported.');
 
 // Set up scene
 var scene = new THREE.Scene();
@@ -195,6 +197,8 @@ if (typeof DeviceOrientationEvent.requestPermission === 'function') {
     // For non-iOS 13 devices, just add the event listener
     window.addEventListener('deviceorientation', handleOrientation);
 }
+
+setupDeviceOrientationListeners();
 
 function animate() {
   requestAnimationFrame(animate);

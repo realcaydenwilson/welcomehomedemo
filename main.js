@@ -106,46 +106,53 @@ let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
+let baseOrientation = { x: 0, y: 0 };
 
 // Function to handle device orientation
 function handleOrientation(event) {
-    if (isDragging) {
-      usingDeviceOrientation = false;
-      return; // Skip updating from orientation if dragging
-    }
-  
-    // Mark that we're using device orientation data
-    usingDeviceOrientation = true;
-  
+    if (isDragging) return;
+
     const gamma = event.gamma || 0; // Rotation around the y-axis (tilt left/right)
     const beta = event.beta || 0;   // Rotation around the x-axis (tilt front/back)
-  
-    // Normalize and adjust rotation speed
-    rotationSpeedY = gamma / 90 * 0.001;
-    rotationSpeedX = beta / 90 * 0.001;
-  
-    // Directly apply rotation based on orientation
-    sphere.rotation.y += rotationSpeedY;
-    sphere.rotation.x += rotationSpeedX;
+
+    // Assuming gamma and beta map directly to y and x rotations:
+    // Calculate the deltas based on the base orientation
+    let deltaY = (gamma / 90) * Math.PI / 2 - baseOrientation.y;
+    let deltaX = (beta / 90) * Math.PI / 2 - baseOrientation.x;
+
+    // Apply rotation
+    sphere.rotation.y += deltaY;
+    sphere.rotation.x += deltaX;
+
+    // Update the base orientation for continuous movement
+    baseOrientation.x += deltaX;
+    baseOrientation.y += deltaY;
 }
 
 // Event listener for device orientation
 window.addEventListener('deviceorientation', handleOrientation);
 
-// Function to handle mouse down event
-function onMouseDown(event) {
-    isDragging = true;
-    previousMouseX = event.clientX;
-    previousMouseY = event.clientY;
-    usingDeviceOrientation = false;
+// When manual drag starts, capture the current orientation as the base
+function onManualStart() {
+    baseOrientation.x = sphere.rotation.x;
+    baseOrientation.y = sphere.rotation.y;
 }
 
-// Function to handle touch start event
+
+function onMouseDown(event) {
+    isDragging = true;
+    usingDeviceOrientation = false;
+    onManualStart(); // Capture the current orientation as the new base
+    previousMouseX = event.clientX;
+    previousMouseY = event.clientY;
+}
+
 function onTouchStart(event) {
     isDragging = true;
+    usingDeviceOrientation = false;
+    onManualStart(); // Capture the current orientation as the new base
     previousMouseX = event.touches[0].clientX;
     previousMouseY = event.touches[0].clientY;
-    usingDeviceOrientation = false;
 }
 
 // Function to handle pointer up event

@@ -13,6 +13,9 @@
       href="./images/favicon.png"
     />
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- Adding icons for buttons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   </head>
   <body>
@@ -27,29 +30,14 @@
       <p id="client-name">by Welcome Home</p>
     </div>
 
-    <!--<button id="floorplan-button">View Floorplan</button>-->
-    <button id="fullscreen-button">Fullscreen</button>
-    <button id="vr-button">VR</button>
-
-    <div id="floorplan-window">
-      <img
-        id="floorplan-img"
-        src="./images/floorplan.jpg"
-        alt="Floorplan"
-      />
+    <div id="button-container">
+      <button type="button" id="vr-button" title="Virtual Reality"><i class="fas fa-vr-cardboard"></i></button>
+      <button type="button" id="fullscreen-button" title="Fullscreen"><i class="fas fa-expand"></i></button>
     </div>
+
     <div id="scene-container">
       <canvas></canvas>
     </div>
-
-    <!--Definition Scripts-->
-    <script src="MyHome.js" defer></script>
-    <script src="UserPosition.js" defer></script>
-    <script src="HelperFunctions.js" defer></script>
-
-    <!--Application Scripts-->
-    <script src="main.js" defer></script>
-    <script src="mainExtendedFeatures.js" defer></script>
-    
+    <script src="main.js"></script>
   </body> 
 </html>

@@ -37,6 +37,10 @@ vrButton.addEventListener('click', function() {
     this.style.display = 'none';
 });
 
+// Get fullscreen button
+const fullscreenButton = document.getElementById("fullscreen-button");
+fullscreenButton.addEventListener('click', toggleFullScreen);
+
 // Set up scene
 var scene = new THREE.Scene();
 
@@ -93,11 +97,6 @@ function toggleFullScreen() {
         }
     }
 }
-  
-// Get fullscreen button
-const fullscreenButton = document.getElementById("fullscreen-button");
-fullscreenButton.addEventListener('click', toggleFullScreen);
-document.body.appendChild(fullscreenButton);
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

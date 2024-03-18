@@ -120,7 +120,6 @@ button {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   background-color: rgba(0,0,0,0.4); /* Semi-transparent background */
-  display: flex;
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
 }
@@ -129,8 +128,7 @@ button {
   background-color: #fefefe;
   margin: auto; /* Helps with centering in some scenarios */
   padding: 2.5%;
-  border: 1px solid #888;
-  width: 90%; /* Adjust based on your preference */
+  width: 70%; /* Adjust based on your preference */
   max-width: 600px; /* Prevents the modal from becoming too wide */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /* Adds depth with shadow */
   display: flex;
@@ -140,17 +138,17 @@ button {
 }
 
 .close-button {
-  color: #aaa;
+  color: black;
   position: absolute;
   top: 0;
   right: 10px;
-  font-size: 28px;
+  font-size: 2em;
   font-weight: bold;
 }
 
 .close-button:hover,
 .close-button:focus {
-  color: black;
+  color: #00d4e8;
   text-decoration: none;
   cursor: pointer;
 }
@@ -159,8 +157,8 @@ button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 4em;
+  height: 4em;
   margin: 5px;
   border-radius: 50%;
   background-color: #000; /* Black background for icons */
@@ -170,7 +168,7 @@ button {
 }
 
 .modal-content i {
-  font-size: 20px; /* Adjust icon size as needed */
+  font-size: 2em; /* Adjust icon size as needed */
 }
 
 .modal-content a:hover {
@@ -181,5 +179,5 @@ button {
   display: flex;
   justify-content: center; /* Center icons horizontally */
   flex-wrap: wrap; /* Allow icons to wrap on small screens */
-  margin-top: 20px; /* Add some space above the icons */
+  margin-top: 2.5%; /* Add some space above the icons */
 }

@@ -41,12 +41,14 @@
       <div class="modal-content">
         <span class="close-button">×</span>
         <h2>Share This Home</h2>
-        <a href="#" onclick="shareToPlatform('email')">Email</a>
-        <a href="#" onclick="shareToPlatform('facebook')">Facebook</a>
-        <a href="#" onclick="shareToPlatform('whatsapp')">WhatsApp</a>
-        <a href="#" onclick="shareToPlatform('twitter')">Twitter</a>
-        <a href="#" onclick="copyLink()">Copy Link</a>
-        <!-- Add more platforms as needed -->
+        <div class="share-icons-container"> <!-- Container for icons -->
+          <a href="#" onclick="shareToPlatform('email')" title="Share via Email"><i class="fas fa-envelope"></i></a>
+          <a href="#" onclick="shareToPlatform('facebook')" title="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" onclick="shareToPlatform('whatsapp')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" onclick="shareToPlatform('twitter')" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" onclick="shareToPlatform('linkedin')" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" onclick="copyLink()" title="Copy Link"><i class="fas fa-copy"></i></a>
+        </div>
       </div>
     </div>
 

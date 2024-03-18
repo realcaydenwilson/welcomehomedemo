@@ -197,7 +197,7 @@ function handleOrientationChange(orientationType) {
     // This might include logic to adjust how you interpret beta and gamma values.
     console.log(`Orientation changed to ${orientationType}`);
     // Example adjustment
-    baseOrientation = { x: 0, y: 0 }; // Adjust based on actual needs
+    baseOrientation = { x: Math.PI/2, y: 0 }; // Adjust based on actual needs
 }
 
 function handleOrientation(event) {

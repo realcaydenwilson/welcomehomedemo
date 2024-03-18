@@ -33,7 +33,21 @@
     <div id="button-container">
       <button type="button" id="moa-button" title="Motion and Orientation"><i class="fas fa-compass"></i></button>
       <button type="button" id="vr-button" title="Virtual Reality"><i class="fas fa-vr-cardboard"></i></button>
+      <button type="button" id="share-button" title="Share"><i class="fas fa-share-alt"></i></button>
       <button type="button" id="fullscreen-button" title="Fullscreen"><i class="fas fa-expand"></i></button>
+    </div>
+
+    <div id="share-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">×</span>
+        <h2>Share This Home</h2>
+        <a href="#" onclick="shareToPlatform('email')">Email</a>
+        <a href="#" onclick="shareToPlatform('facebook')">Facebook</a>
+        <a href="#" onclick="shareToPlatform('whatsapp')">WhatsApp</a>
+        <a href="#" onclick="shareToPlatform('twitter')">Twitter</a>
+        <a href="#" onclick="copyLink()">Copy Link</a>
+        <!-- Add more platforms as needed -->
+      </div>
     </div>
 
     <div id="scene-container">

@@ -181,7 +181,7 @@ let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
-let baseOrientation = { x: Math.PI / 2, y: 0 };
+let baseOrientation = { x: -Math.PI / 2, y: 0 };
 
 function handleOrientation(event) {
     if (isDragging || !motionAndOrientationActive) return;

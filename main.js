@@ -59,11 +59,15 @@ vrButton.addEventListener('click', function() {
     }
 });
 
-// Function to open/close the share modal
 function toggleShareModal() {
     const modal = document.getElementById('share-modal');
-    // Toggle between 'none' and 'flex' to correctly apply Flexbox centering
-    modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+    if (modal.style.display === "flex") {
+        modal.style.display = "none";
+        allowSphereInteraction = true; // Enable sphere interaction
+    } else {
+        modal.style.display = "flex";
+        allowSphereInteraction = false; // Disable sphere interaction
+    }
 }
   
 // Function to share to specific platforms
@@ -176,6 +180,7 @@ let rotationSpeedY = 0;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
+let allowSphereInteraction = true;
 let baseOrientation = { x: Math.PI / 2, y: 0 };
 
 function handleOrientation(event) {
@@ -208,6 +213,7 @@ function onManualStart() {
 }
 
 function onMouseDown(event) {
+    if (!allowSphereInteraction) return;
     isDragging = true;
     usingDeviceOrientation = false;
     previousMouseX = event.clientX;
@@ -215,6 +221,7 @@ function onMouseDown(event) {
 }
 
 function onTouchStart(event) {
+    if (!allowSphereInteraction) return;
     isDragging = true;
     usingDeviceOrientation = false;
     previousMouseX = event.touches[0].clientX;
@@ -224,8 +231,10 @@ function onTouchStart(event) {
 // Function to handle pointer up event
 function onPointerUp() {
     isDragging = false;
-    baseOrientation.x = sphere.rotation.x;
-    baseOrientation.y = sphere.rotation.y;
+    if (motionAndOrientationActive) { // Only update if motion/orientation is active
+        baseOrientation.x = sphere.rotation.x;
+        baseOrientation.y = sphere.rotation.y;
+    }
 }
 
 // Function to handle pointer move event

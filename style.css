@@ -128,9 +128,9 @@ button {
   background-color: #fefefe;
   margin: auto; /* Helps with centering in some scenarios */
   padding: 2.5%;
-  width: 70%; /* Adjust based on your preference */
+  width: 85%; /* Adjust based on your preference */
   max-width: 600px; /* Prevents the modal from becoming too wide */
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /* Adds depth with shadow */
+  box-shadow: 0 0.5em 0.5em 0 rgba(0, 0, 0, 0.2), 0 0.75em 0.75em 0 rgba(0, 0, 0, 0.19); /* Adds depth with shadow */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -159,10 +159,10 @@ button {
   align-items: center;
   width: 4em;
   height: 4em;
-  margin: 5px;
+  margin: 0.5em;
   border-radius: 50%;
   background-color: #000; /* Black background for icons */
-  margin: 0 5px; /* Spacing between icons */
+  margin: 0.5em 0.5em; /* Spacing between icons */
   color: white; /* Icon color */
   text-decoration: none; /* Removes underline */
 }

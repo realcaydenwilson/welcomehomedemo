@@ -204,6 +204,15 @@ function handleOrientation(event) {
     baseOrientation.y += deltaY;
 }
 
+window.addEventListener('orientationchange', function() {
+    // Reset or adjust baseOrientation based on the new orientation
+    // You might need to adjust the logic here based on the specific behavior you observe
+    // after an orientation change.
+    baseOrientation = { x: Math.PI / 2, y: 0 };
+    // You might also want to recalculate or adjust any relevant variables here
+    // to ensure a smooth transition between orientations.
+});
+
 // Event listener for device orientation
 window.addEventListener('deviceorientation', handleOrientation);
 
@@ -231,11 +240,15 @@ function onTouchStart(event) {
 
 function onPointerUp() {
     isDragging = false;
+    // Update base orientation immediately after drag ends to capture the new neutral.
+    baseOrientation.x = sphere.rotation.x;
+    baseOrientation.y = sphere.rotation.y;
+    
     setTimeout(() => {
-        if (motionAndOrientationActive) { // Check inside timeout to see if it's still active
-            baseOrientation.x = sphere.rotation.x;
-            baseOrientation.y = sphere.rotation.y;
-            usingDeviceOrientation = true; // Re-enable device orientation after the delay
+        if (motionAndOrientationActive) { 
+            // Only re-enable device orientation handling after the delay,
+            // ensuring any immediate adjustments post-drag are manual.
+            usingDeviceOrientation = true;
         }
     }, reengageDelay);
 }

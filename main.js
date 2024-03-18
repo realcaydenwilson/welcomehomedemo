@@ -177,6 +177,7 @@ var previousMouseX = 0;
 var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
+const dampingFactor = 0.1; 
 let reengageDelay = 1000;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
@@ -184,31 +185,43 @@ let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
 let baseOrientation = { x: Math.PI / 2, y: 0 };
 
+screen.orientation.addEventListener('change', function() {
+    // You can access screen.orientation.type and screen.orientation.angle here
+    const orientationType = screen.orientation.type; // e.g., "landscape-primary"
+    handleOrientationChange(orientationType);
+});
+
+function handleOrientationChange(orientationType) {
+    // Reset or adjust baseOrientation and other relevant variables here
+    // based on the new orientation type.
+    // This might include logic to adjust how you interpret beta and gamma values.
+    console.log(`Orientation changed to ${orientationType}`);
+    // Example adjustment
+    baseOrientation = { x: Math.PI / 2, y: 0 }; // Adjust based on actual needs
+}
+
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
-    const alpha = event.alpha * Math.PI / 180; // Convert degrees to radians
-    const beta = event.beta * Math.PI / 180;
-    const gamma = event.gamma * Math.PI / 180;
+    const orientationType = screen.orientation.type;
+    let xRotation, yRotation;
 
-    // Convert device orientation to sphere rotation, adjusting axes as necessary
-    // These mappings may need to be adjusted based on your application's needs
-    const xRotation = -beta + baseOrientation.x;
-    const yRotation = -gamma + baseOrientation.y;
-
-    // Apply the calculated rotation to the sphere
-    sphere.rotation.x = xRotation;
-    sphere.rotation.y = yRotation;
+    // Adjust how you use beta and gamma based on the orientation type
+    if (orientationType.startsWith('portrait')) {
+        // Portrait adjustments
+        xRotation = -event.beta * Math.PI / 180 + baseOrientation.x;
+        yRotation = -event.gamma * Math.PI / 180 + baseOrientation.y;
+    } else {
+        // Landscape adjustments - may need to swap beta and gamma
+        // or apply different logic based on landscape-primary or landscape-secondary
+        xRotation = -event.gamma * Math.PI / 180 + baseOrientation.x;
+        yRotation = -event.beta * Math.PI / 180 + baseOrientation.y;
+    }
+    
+    // Apply rotation with potential damping (if used)
+    sphere.rotation.x += (xRotation - sphere.rotation.x) * dampingFactor; // Define dampingFactor as needed
+    sphere.rotation.y += (yRotation - sphere.rotation.y) * dampingFactor;
 }
-
-window.addEventListener('orientationchange', function() {
-    // Reset or adjust baseOrientation based on the new orientation
-    // You might need to adjust the logic here based on the specific behavior you observe
-    // after an orientation change.
-    baseOrientation = { x: Math.PI / 2, y: 0 };
-    // You might also want to recalculate or adjust any relevant variables here
-    // to ensure a smooth transition between orientations.
-});
 
 // Event listener for device orientation
 window.addEventListener('deviceorientation', handleOrientation);
@@ -237,13 +250,17 @@ function onTouchStart(event) {
 
 function onPointerUp() {
     isDragging = false;
-
-    // Delay before re-engaging device orientation to ensure manual adjustments "settle"
+    
+    // Capture the new base orientation immediately
+    const newBaseX = sphere.rotation.x;
+    const newBaseY = sphere.rotation.y;
+    
     setTimeout(() => {
         if (motionAndOrientationActive) {
-            // No need to update baseOrientation here if you're capturing the end state
-            // directly in handleOrientation or applying deltas in onPointerMove
             usingDeviceOrientation = true;
+            // Smoothly transition to the new base orientation after the delay
+            baseOrientation.x = newBaseX;
+            baseOrientation.y = newBaseY;
         }
     }, reengageDelay);
 }

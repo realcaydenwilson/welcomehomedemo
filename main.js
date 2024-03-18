@@ -203,24 +203,42 @@ function handleOrientationChange(orientationType) {
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
-    const orientationType = screen.orientation.type;
-    let xRotation, yRotation;
+    // Direct mapping of device orientation to sphere rotation with adjustments for real-world matching
+    let alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
+    let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)
+    let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)
 
-    // Adjust how you use beta and gamma based on the orientation type
-    if (orientationType.startsWith('portrait')) {
-        // Portrait adjustments
-        xRotation = -event.beta * Math.PI / 180 + baseOrientation.x;
-        yRotation = -event.gamma * Math.PI / 180 + baseOrientation.y;
-    } else {
-        // Landscape adjustments - may need to swap beta and gamma
-        // or apply different logic based on landscape-primary or landscape-secondary
-        xRotation = -event.gamma * Math.PI / 180 + baseOrientation.x;
-        yRotation = -event.beta * Math.PI / 180 + baseOrientation.y;
+    // Adjusting based on the current screen orientation
+    switch(screen.orientation.type) {
+        case 'portrait-primary':
+            // Apply rotation directly for portrait mode
+            break;
+        case 'landscape-primary':
+            // Adjust for landscape mode - might involve swapping beta/gamma and adding offsets
+            let temp = beta;
+            beta = -gamma;
+            gamma = temp;
+            break;
+        case 'landscape-secondary':
+            // Similar adjustments as landscape-primary but with different offsets
+            let temp2 = beta;
+            beta = gamma;
+            gamma = -temp2;
+            break;
+        case 'portrait-secondary':
+            // Adjust for upside-down portrait mode, if necessary
+            beta = -beta;
+            gamma = -gamma;
+            break;
     }
-    
-    // Apply rotation with potential damping (if used)
-    sphere.rotation.x += (xRotation - sphere.rotation.x) * dampingFactor; // Define dampingFactor as needed
-    sphere.rotation.y += (yRotation - sphere.rotation.y) * dampingFactor;
+
+    // Assuming the sphere's rotation.x and rotation.y should match beta and gamma respectively
+    // Apply dampening if needed
+    const newXRotation = beta + baseOrientation.x;
+    const newYRotation = gamma + baseOrientation.y;
+
+    sphere.rotation.x += (newXRotation - sphere.rotation.x) * dampingFactor;
+    sphere.rotation.y += (newYRotation - sphere.rotation.y) * dampingFactor;
 }
 
 // Event listener for device orientation
@@ -250,17 +268,12 @@ function onTouchStart(event) {
 
 function onPointerUp() {
     isDragging = false;
-    
-    // Capture the new base orientation immediately
-    const newBaseX = sphere.rotation.x;
-    const newBaseY = sphere.rotation.y;
-    
+
+    // Introduce a delay before re-enabling device orientation control
+    // to ensure a smooth transition from manual to automatic control
     setTimeout(() => {
         if (motionAndOrientationActive) {
-            usingDeviceOrientation = true;
-            // Smoothly transition to the new base orientation after the delay
-            baseOrientation.x = newBaseX;
-            baseOrientation.y = newBaseY;
+            usingDeviceOrientation = true; // Re-enable device orientation control
         }
     }, reengageDelay);
 }

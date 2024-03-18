@@ -185,23 +185,20 @@ let allowSphereInteraction = true;
 let baseOrientation = { x: Math.PI / 2, y: 0 };
 
 function handleOrientation(event) {
-    if (isDragging || !motionAndOrientationActive) return;
+    if (!motionAndOrientationActive || isDragging) return;
 
-    const gamma = event.gamma || 0; // Rotation around the y-axis (tilt left/right)
-    const beta = event.beta || 0;   // Rotation around the x-axis (tilt front/back)
+    const alpha = event.alpha * Math.PI / 180; // Convert degrees to radians
+    const beta = event.beta * Math.PI / 180;
+    const gamma = event.gamma * Math.PI / 180;
 
-    // Assuming gamma and beta map directly to y and x rotations:
-    // Calculate the deltas based on the base orientation
-    let deltaY = (gamma / 90) * Math.PI / 2 - baseOrientation.y;
-    let deltaX = (beta / 90) * Math.PI / 2 - baseOrientation.x;
+    // Convert device orientation to sphere rotation, adjusting axes as necessary
+    // These mappings may need to be adjusted based on your application's needs
+    const xRotation = -beta + baseOrientation.x;
+    const yRotation = -gamma + baseOrientation.y;
 
-    // Apply rotation
-    sphere.rotation.y += deltaY;
-    sphere.rotation.x += deltaX;
-
-    // Update the base orientation for continuous movement
-    baseOrientation.x += deltaX;
-    baseOrientation.y += deltaY;
+    // Apply the calculated rotation to the sphere
+    sphere.rotation.x = xRotation;
+    sphere.rotation.y = yRotation;
 }
 
 window.addEventListener('orientationchange', function() {
@@ -240,14 +237,12 @@ function onTouchStart(event) {
 
 function onPointerUp() {
     isDragging = false;
-    // Update base orientation immediately after drag ends to capture the new neutral.
-    baseOrientation.x = sphere.rotation.x;
-    baseOrientation.y = sphere.rotation.y;
-    
+
+    // Delay before re-engaging device orientation to ensure manual adjustments "settle"
     setTimeout(() => {
-        if (motionAndOrientationActive) { 
-            // Only re-enable device orientation handling after the delay,
-            // ensuring any immediate adjustments post-drag are manual.
+        if (motionAndOrientationActive) {
+            // No need to update baseOrientation here if you're capturing the end state
+            // directly in handleOrientation or applying deltas in onPointerMove
             usingDeviceOrientation = true;
         }
     }, reengageDelay);

@@ -37,6 +37,49 @@ vrButton.addEventListener('click', function() {
     this.style.display = 'none';
 });
 
+// Function to open the share modal
+function toggleShareModal() {
+    const modal = document.getElementById('share-modal');
+    modal.style.display = modal.style.display === "block" ? "none" : "block";
+  }
+  
+  // Function to share to specific platforms
+  function shareToPlatform(platform) {
+    const url = encodeURIComponent(window.location.href);
+    let shareUrl = "";
+  
+    switch(platform) {
+      case 'email':
+        shareUrl = `mailto:?subject=Check this out&body=Check out this link: ${url}`;
+        break;
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'whatsapp':
+        shareUrl = `https://api.whatsapp.com/send?text=Check out this link: ${url}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=Check this out`;
+        break;
+      // Add more cases for other platforms
+    }
+  
+    if (shareUrl) {
+      window.open(shareUrl, '_blank').focus();
+    }
+  }
+  
+  // Function to copy the current URL to the clipboard
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => alert('Link copied to clipboard!'))
+      .catch(err => console.error('Error copying link: ', err));
+  }
+  
+  // Event listeners
+  document.getElementById('share-button').addEventListener('click', toggleShareModal);
+  document.querySelector('.close-button').addEventListener('click', toggleShareModal);
+
 // Get fullscreen button
 const fullscreenButton = document.getElementById("fullscreen-button");
 fullscreenButton.addEventListener('click', toggleFullScreen);
@@ -106,9 +149,8 @@ let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
-let baseOrientation = { x: 0, y: Math.PI / 2 };
+let baseOrientation = { x: Math.PI / 2, y: 0 };
 
-// Function to handle device orientation
 function handleOrientation(event) {
     if (isDragging) return;
 

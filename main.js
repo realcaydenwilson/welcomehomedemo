@@ -1,40 +1,62 @@
 const vrButton = document.getElementById("moa-button");
 vrButton.addEventListener('click', function() {
-    // Check if DeviceOrientationEvent and DeviceMotionEvent are supported
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        // Request permission for device orientation
-        DeviceOrientationEvent.requestPermission()
-            .then(permissionState => {
-                if (permissionState === 'granted') {
-                    window.addEventListener('deviceorientation', handleOrientation, true);
-                } else {
-                    alert('Permission to access device orientation was denied.');
-                }
-            })
-            .catch(console.error);
-    } else {
-        // Handle devices that do not support DeviceOrientationEvent.requestPermission
-        window.addEventListener('deviceorientation', handleOrientation, true);
-    }
+    // Only proceed if the DeviceOrientationEvent is supported and the permission is needed/granted.
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceMotionEvent !== 'undefined') {
+        let permissionsGranted = false;
 
-    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-        // Request permission for device motion
-        DeviceMotionEvent.requestPermission()
-            .then(permissionState => {
-                if (permissionState === 'granted') {
-                    window.addEventListener('devicemotion', handleMotion, true);
-                } else {
-                    alert('Permission to access device motion was denied.');
-                }
-            })
-            .catch(console.error);
-    } else {
-        // Handle devices that do not support DeviceMotionEvent.requestPermission
-        window.addEventListener('devicemotion', handleMotion, true);
-    }
+        const requestOrientationPermission = () => {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        permissionsGranted = true;
+                        window.addEventListener('deviceorientation', handleOrientation, true);
+                        motionAndOrientationActive = true;
+                    } else {
+                        alert('Permission to access device orientation was denied.');
+                    }
+                })
+                .catch(console.error);
+            } else {
+                // Automatically assume permission is granted if no requestPermission method exists
+                permissionsGranted = true;
+                window.addEventListener('deviceorientation', handleOrientation, true);
+                motionAndOrientationActive = true;
+            }
+        };
 
-    // Hide the button after requesting permissions
-    this.style.display = 'none';
+        const requestMotionPermission = () => {
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        permissionsGranted = true;
+                        window.addEventListener('devicemotion', handleMotion, true);
+                        motionAndOrientationActive = true;
+                    } else {
+                        alert('Permission to access device motion was denied.');
+                    }
+                })
+                .catch(console.error);
+            } else {
+                // Automatically assume permission is granted if no requestPermission method exists
+                permissionsGranted = true;
+                window.addEventListener('devicemotion', handleMotion, true);
+                motionAndOrientationActive = true;
+            }
+        };
+
+        // Request permissions
+        requestOrientationPermission();
+        requestMotionPermission();
+
+        // Hide the button after requesting permissions
+        if (permissionsGranted) {
+            this.style.display = 'none';
+        }
+    } else {
+        console.log("Device does not support DeviceOrientationEvent or DeviceMotionEvent.");
+    }
 });
 
 // Function to open the share modal
@@ -149,10 +171,11 @@ let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
+let motionAndOrientationActive = false;
 let baseOrientation = { x: Math.PI / 2, y: 0 };
 
 function handleOrientation(event) {
-    if (isDragging) return;
+    if (isDragging || !motionAndOrientationActive) return;
 
     const gamma = event.gamma || 0; // Rotation around the y-axis (tilt left/right)
     const beta = event.beta || 0;   // Rotation around the x-axis (tilt front/back)
@@ -179,7 +202,6 @@ function onManualStart() {
     baseOrientation.x = sphere.rotation.x;
     baseOrientation.y = sphere.rotation.y;
 }
-
 
 function onMouseDown(event) {
     isDragging = true;

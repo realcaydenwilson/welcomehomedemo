@@ -177,11 +177,12 @@ var previousMouseX = 0;
 var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
+let reengageDelay = 1000;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
-let baseOrientation = { x: -Math.PI / 2, y: 0 };
+let baseOrientation = { x: Math.PI / 2, y: 0 };
 
 function handleOrientation(event) {
     if (isDragging || !motionAndOrientationActive) return;
@@ -228,13 +229,15 @@ function onTouchStart(event) {
     previousMouseY = event.touches[0].clientY;
 }
 
-// Function to handle pointer up event
 function onPointerUp() {
     isDragging = false;
-    if (motionAndOrientationActive) { // Only update if motion/orientation is active
-        baseOrientation.x = sphere.rotation.x;
-        baseOrientation.y = sphere.rotation.y;
-    }
+    setTimeout(() => {
+        if (motionAndOrientationActive) { // Check inside timeout to see if it's still active
+            baseOrientation.x = sphere.rotation.x;
+            baseOrientation.y = sphere.rotation.y;
+            usingDeviceOrientation = true; // Re-enable device orientation after the delay
+        }
+    }, reengageDelay);
 }
 
 // Function to handle pointer move event
@@ -249,7 +252,7 @@ function onPointerMove(event) {
     const deltaY = clientY - previousMouseY;
 
     // Adjust sensitivity for touch devices
-    const sensitivity = event.touches ? 0.004 : 0.006; //mobile : desktop (decreasing value - greater resistance)
+    const sensitivity = event.touches ? 0.005 : 0.0025; //mobile : desktop (decreasing value - greater resistance)
 
     // Calculate rotation speed based on movement and time
     rotationSpeedY = deltaX / deltaTime * sensitivity;

@@ -225,7 +225,7 @@ function handleOrientation(event) {
         let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)
 
         // Override device's beta value by adding 90 degrees (PI/2 radians) to rotate vertically by 90 degrees
-        beta += Math.PI; // This adjusts the tilt to simulate a 90-degree vertical rotation
+        //eta += Math.PI; // This adjusts the tilt to simulate a 90-degree vertical rotation
 
         // Adjust orientation data based on the screen orientation4
         /*

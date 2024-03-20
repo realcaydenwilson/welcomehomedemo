@@ -218,37 +218,37 @@ window.addEventListener('deviceorientation', function(event) {
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
+    // Assuming motionAndOrientationActive is true when motion and orientation data should control the rotation
     if (motionAndOrientationActive) {
-        $('active')
-    }
-    const alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
-    let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)
-    let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)
+        const alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
+        let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)
+        let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)
 
-    // Adjust orientation data based on the screen orientation
-    switch(screen.orientation.type) {
-        case 'portrait-primary':
-            // No additional rotation needed
-            break;
-        case 'landscape-primary':
-            // Adjust for landscape orientation
-            [beta, gamma] = [gamma, -beta];
-            break;
-        case 'landscape-secondary':
-            // Adjust for reverse landscape orientation
-            [beta, gamma] = [-gamma, beta];
-            break;
-        case 'portrait-secondary':
-            // Adjust for upside-down portrait orientation
-            beta = -beta;
-            gamma = -gamma;
-            break;
-    }
+        // Override device's beta value by adding 90 degrees (PI/2 radians) to rotate vertically by 90 degrees
+        beta += Math.PI / 2; // This adjusts the tilt to simulate a 90-degree vertical rotation
 
-    // Apply the orientation data directly to the sphere's rotation, 
-    // assuming the device's beta and gamma map to the sphere's x and y rotations.
-    sphere.rotation.x = beta * dampingFactor + baseOrientation.x;
-    sphere.rotation.y = gamma * dampingFactor + baseOrientation.y;
+        // Adjust orientation data based on the screen orientation
+        switch(screen.orientation.type) {
+            case 'portrait-primary':
+                // The beta and gamma adjustments remain the same for portrait-primary
+                break;
+            case 'landscape-primary':
+                // For landscape orientations, you might need to adjust how beta and gamma are used
+                [beta, gamma] = [gamma, -beta];
+                break;
+            case 'landscape-secondary':
+                [beta, gamma] = [-gamma, beta];
+                break;
+            case 'portrait-secondary':
+                beta = -beta;
+                gamma = -gamma;
+                break;
+        }
+
+        // Apply the orientation data directly to the sphere's rotation
+        sphere.rotation.x = beta + baseOrientation.x;
+        sphere.rotation.y = gamma + baseOrientation.y;
+    }
 }
 
 // Event listener for device orientation

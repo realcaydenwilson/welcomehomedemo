@@ -249,3 +249,34 @@ button {
   font-weight: bold;
   margin-right: 5px;
 }
+
+@media (max-width: 768px) {
+  .modal-content a {
+    width: 3em;
+    height: 3em;
+    margin: 0.35em;
+    margin: 0.35em 0.35em;
+  }
+
+  .rep-info h3, .rep-info p {
+    justify-content: left;
+  }
+
+  .modal-content i {
+    font-size: 1.5em;
+  }
+
+  .contact-rep {
+    flex-direction: column; /* Stack flex items vertically */
+    align-items: center; /* Center align items for small screens */
+  }
+
+  .rep-image {
+    margin-right: 0; /* Remove the margin to center the image above the text */
+    margin-bottom: 20px; /* Add some space below the image */
+  }
+
+  .rep-info {
+    align-items: center; /* Center align items for small screens */
+  }
+}

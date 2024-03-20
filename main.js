@@ -199,7 +199,7 @@ function handleOrientationChange(orientationType) {
     // Example adjustment
     baseOrientation = { x: 0, y: 0 }; // Adjust based on actual needs
 }
-
+/*
 window.addEventListener('deviceorientation', function(event) {
     // Check if event data is available
     if (event.alpha !== null && event.beta !== null && event.gamma !== null) {
@@ -212,7 +212,7 @@ window.addEventListener('deviceorientation', function(event) {
         }
     }
 });
-
+*/
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 

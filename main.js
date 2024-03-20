@@ -120,13 +120,51 @@ var scene = new THREE.Scene();
 // Create a sphere
 const sphereGeometry = new THREE.SphereGeometry(500, 64, 32);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
-const textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load('./panoramas/Panorama.jpg');
-//texture.encoding = THREE.sRGBEncoding;
-var material = new THREE.MeshBasicMaterial({
-  map: texture,
-})
-var sphere = new THREE.Mesh(sphereGeometry, material);
+
+// Vertex shader
+const vertexShader = `
+    varying vec2 vUv;
+
+    void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+
+// Fragment shader
+const fragmentShader = `
+    uniform sampler2D map;
+    uniform float rotation; // Rotation in radians
+    varying vec2 vUv;
+
+    void main() {
+        vec2 centeredCoord = vUv - 0.5;
+        float cosRot = cos(rotation);
+        float sinRot = sin(rotation);
+        vec2 rotatedCoord;
+        rotatedCoord.x = cosRot * centeredCoord.x - sinRot * centeredCoord.y;
+        rotatedCoord.y = sinRot * centeredCoord.x + cosRot * centeredCoord.y;
+        rotatedCoord += 0.5;
+
+        gl_FragColor = texture2D(map, rotatedCoord);
+    }
+`;
+
+// Loading the texture
+const texture = new THREE.TextureLoader().load('./panoramas/Panorama.jpg');
+
+// Custom shader material
+const material = new THREE.ShaderMaterial({
+    uniforms: {
+        map: { value: texture },
+        rotation: { value: -Math.PI } // 90 degrees rotation
+    },
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader
+});
+
+// Applying the material to your sphere geometry
+const sphere = new THREE.Mesh(sphereGeometry, material);
 scene.add(sphere);
 
 // Set up camera
@@ -185,6 +223,7 @@ let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
 let baseOrientation = { x: 0, y: 0 };
 
+texture.matrixAutoUpdate = false;
 screen.orientation.addEventListener('change', function() {
     // You can access screen.orientation.type and screen.orientation.angle here
     const orientationType = screen.orientation.type; // e.g., "landscape-primary"
@@ -217,13 +256,14 @@ function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
     if (motionAndOrientationActive) {
-        // Now you can apply your orientation logic here, knowing that
-        // it's specifically being controlled by device orientation
-        // For example, applying a 90-degree vertical rotation:
-        sphere.rotation.x = Math.PI / 2;
-        // Plus, any other adjustments needed based on the deviceorientation event data
+        // Apply a 90-degree rotation to the texture
+        // Assuming 'texture' is the texture applied to your sphere
+        texture.matrix.identity();
+        texture.matrix.translate(-0.5, -0.5); // Move texture to center
+        texture.matrix.rotate(Math.PI / 2); // Rotate 90 degrees
+        texture.matrix.translate(0.5, 0.5); // Move texture back to original position
+        texture.needsUpdate = true; // Flag the texture to be updated
     }
-
     const alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
     let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)
     let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)

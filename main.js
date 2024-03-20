@@ -120,51 +120,14 @@ var scene = new THREE.Scene();
 // Create a sphere
 const sphereGeometry = new THREE.SphereGeometry(500, 64, 32);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
+const textureLoader = new THREE.TextureLoader();
+var texture = textureLoader.load('./panoramas/Panorama.jpg');
 
-// Vertex shader
-const vertexShader = `
-    varying vec2 vUv;
+var material = new THREE.MeshBasicMaterial({
+  map: texture,
+})
+var sphere = new THREE.Mesh(sphereGeometry, material);
 
-    void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-`;
-
-// Fragment shader
-const fragmentShader = `
-    uniform sampler2D map;
-    uniform float rotation; // Rotation in radians
-    varying vec2 vUv;
-
-    void main() {
-        vec2 centeredCoord = vUv - 0.5;
-        float cosRot = cos(rotation);
-        float sinRot = sin(rotation);
-        vec2 rotatedCoord;
-        rotatedCoord.x = cosRot * centeredCoord.x - sinRot * centeredCoord.y;
-        rotatedCoord.y = sinRot * centeredCoord.x + cosRot * centeredCoord.y;
-        rotatedCoord += 0.5;
-
-        gl_FragColor = texture2D(map, rotatedCoord);
-    }
-`;
-
-// Loading the texture
-const texture = new THREE.TextureLoader().load('./panoramas/Panorama.jpg');
-
-// Custom shader material
-const material = new THREE.ShaderMaterial({
-    uniforms: {
-        map: { value: texture },
-        rotation: { value: -Math.PI } // 90 degrees rotation
-    },
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader
-});
-
-// Applying the material to your sphere geometry
-const sphere = new THREE.Mesh(sphereGeometry, material);
 scene.add(sphere);
 
 // Set up camera

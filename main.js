@@ -219,13 +219,7 @@ function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
     if (motionAndOrientationActive) {
-        // Apply a 90-degree rotation to the texture
-        // Assuming 'texture' is the texture applied to your sphere
-        texture.matrix.identity();
-        texture.matrix.translate(-0.5, -0.5); // Move texture to center
-        texture.matrix.rotate(Math.PI / 2); // Rotate 90 degrees
-        texture.matrix.translate(0.5, 0.5); // Move texture back to original position
-        texture.needsUpdate = true; // Flag the texture to be updated
+        $('active')
     }
     const alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
     let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)

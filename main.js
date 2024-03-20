@@ -183,7 +183,7 @@ let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
-let baseOrientation = { x: Math.PI/2, y: Math.PI/2 };
+let baseOrientation = { x: 0, y: 0 };
 
 screen.orientation.addEventListener('change', function() {
     // You can access screen.orientation.type and screen.orientation.angle here
@@ -197,7 +197,7 @@ function handleOrientationChange(orientationType) {
     // This might include logic to adjust how you interpret beta and gamma values.
     console.log(`Orientation changed to ${orientationType}`);
     // Example adjustment
-    baseOrientation = { x: Math.PI/2, y: 0 }; // Adjust based on actual needs
+    baseOrientation = { x: 0, y: Math.PI/2 }; // Adjust based on actual needs
 }
 
 function handleOrientation(event) {
@@ -242,7 +242,7 @@ function handleOrientation(event) {
 }
 
 // Event listener for device orientation
-//window.addEventListener('deviceorientation', handleOrientation);
+window.addEventListener('deviceorientation', handleOrientation);
 
 // When manual drag starts, capture the current orientation as the base
 function onManualStart() {

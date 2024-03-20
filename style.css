@@ -11,7 +11,6 @@ html {
 }
 
 #scene-container {
-  /* tell our scene container to take up the full page */
   position: absolute;
   width: 100%;
   height: 100%;
@@ -23,7 +22,7 @@ html {
   position: absolute;
   margin: 0.5em;
   padding: 0.5em;
-  background-color: rgba(0, 0, 0, 0.75); /*change to black upon loading of panorama images*/
+  background-color: rgba(0, 0, 0, 0.75);
   border-radius: 0.25em;
   display: flex;
   flex-direction: column;
@@ -31,7 +30,7 @@ html {
 }
 
 #client-logo {
-  width: 12.5em; /* Adjust the width as needed */
+  width: 12.5em;
   max-width: 200px;
   height: auto;
   margin: auto;
@@ -45,52 +44,52 @@ h1 {
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(255,255,255);
   font-size: 1.25em;
-  line-height: 1.25; /* Adjust this value as needed, can be less than 1 for tighter line spacing */
+  line-height: 1.25;
   text-align: left;
-  margin: 0; /* Removes default margin */
-  padding: 0; /* Removes default padding */
+  margin: 0;
+  padding: 0;
 }
 
 h2 {
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(0,0,0);
   font-size: 1.5em;
-  line-height: 1.25; /* Adjust this value as needed, can be less than 1 for tighter line spacing */
+  line-height: 1.25;
   text-align: left;
-  margin: 0; /* Removes default margin */
-  padding: 0; /* Removes default padding */
+  margin: 0;
+  padding: 0;
 }
 
 h3 {
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(0,0,0);
   font-size: 1em;
-  line-height: 1.25; /* Adjust this value as needed, can be less than 1 for tighter line spacing */
+  line-height: 1.25;
   text-align: left;
-  margin: 0; /* Removes default margin */
-  padding: 0; /* Removes default padding */
+  margin: 0;
+  padding: 0;
 }
 
 p {
   color: rgb(255,255,255);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.75em;
-  line-height: 1.5; /* Adjust this value as needed */
+  line-height: 1.5;
   text-align: left;
-  margin: 0; /* Removes default margin */
-  padding: 0; /* Removes default padding */
+  margin: 0;
+  padding: 0;
 }
 
 a {
   color: rgb(0,0,0);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.75em;
-  line-height: 1.5; /* Adjust this value as needed */
+  line-height: 1.5;
   text-align: left;
-  margin: 0; /* Removes default margin */
-  padding: 0; /* Removes default padding */
+  margin: 0;
+  padding: 0;
   white-space: normal; /* Override the nowrapping rule from above */
-  overflow: visible; /* Allow the link to be fully visible */
+  overflow: visible;
   text-overflow: clip;
 }
 
@@ -115,7 +114,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  z-index: 1; /* High z-index to ensure visibility */
+  z-index: 1;
 }
 
 #fullscreen-button, 
@@ -126,24 +125,24 @@ button {
 }
 
 .modal {
-  display: none; /* Keep modal hidden initially */
-  position: fixed; /* Use fixed positioning */
-  z-index: 2; /* Ensure it's on top of other content */
+  display: none;
+  position: fixed;
+  z-index: 2;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  background-color: rgba(0,0,0,0.4); /* Semi-transparent background */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
   background-color: #fefefe;
-  margin: auto; /* Helps with centering in some scenarios */
+  margin: auto;
   padding: 2.5%;
-  width: 85%; /* Adjust based on your preference */
-  max-width: 600px; /* Prevents the modal from becoming too wide */
+  width: 85%;
+  max-width: 600px;
   box-shadow: 0 0.5em 0.5em 0 rgba(0, 0, 0, 0.2), 0 0.75em 0.75em 0 rgba(0, 0, 0, 0.19); /* Adds depth with shadow */
   display: flex;
   flex-direction: column;
@@ -175,25 +174,25 @@ button {
   height: 4em;
   margin: 0.5em;
   border-radius: 50%;
-  background-color: #000; /* Black background for icons */
-  margin: 0.5em 0.5em; /* Spacing between icons */
-  color: white; /* Icon color */
-  text-decoration: none; /* Removes underline */
+  background-color: #000;
+  margin: 0.5em 0.5em;
+  color: white;
+  text-decoration: none;
 }
 
 .modal-content i {
-  font-size: 2em; /* Adjust icon size as needed */
+  font-size: 2em;
 }
 
 .modal-content a:hover {
-  background-color: #00d4e8; /* Darker shade on hover */
+  background-color: #00d4e8;
 }
 
 .share-icons-container {
   display: flex;
-  justify-content: center; /* Center icons horizontally */
-  flex-wrap: wrap; /* Allow icons to wrap on small screens */
-  margin-top: 2.5%; /* Add some space above the icons */
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2.5%;
 }
 
 .contact-rep {
@@ -203,61 +202,50 @@ button {
 }
 
 .rep-image {
-  width: 8em; /* Adjust based on your needs */
+  width: 8em;
   max-width: 20vw;
-  border-radius: 50%; /* Creates circular images */
-  object-fit: cover; /* Ensure the image covers the area without distortion */
-  margin-right: 20px; /* Space between image and info container */
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
 }
 
 .rep-info h3 {
   margin: 0;
   padding: 0;
-  font-size: 1.25em; /* Adjust size as needed */
+  font-size: 1.25em;
 }
 
 .rep-info p {
   color: black;
-  display: flex; /* Makes the <p> a flex container */
-  flex-wrap: wrap; /* Allows content to wrap */
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  margin: 5px 0; /* Consistent margin for all elements */
+  margin: 5px 0;
   line-height: 1.5;
 }
 
-.rep-info {
-  flex: 1; /* Take up the remaining space */
-}
-
-.rep-info p,
 .rep-info a {
-  margin: 5px 0; /* Consistent margin for all elements */
-  padding: 0;
-  color: black; /* Color for paragraphs */
-}
-
-.rep-info a {
-  background-color: transparent; /* Ensures no background color */
-  border-radius: 0; /* Removes border radius */
-  color: black; /* Adjust link color to fit your design */
-  cursor: pointer; /* Indicates a clickable link */
+  background-color: transparent;
+  border-radius: 0;
+  color: black;
+  cursor: pointer;
   justify-content: left;
   height: inherit;
   margin: 0;
-  color: inherit; /* Inherits the text color from .rep-info p */
-  font-size: inherit; /* Inherits the font size from .rep-info p */
-  line-height: inherit; /* Inherits the line height from .rep-info p */
-  text-decoration: none; /* Removes underline */
-  transition: color 0.3s; /* Smooth transition for color changes */
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-decoration: none;
+  transition: color 0.3s;
 }
 
 .rep-info a:hover {
-  text-decoration: underline; /* Underline on hover for clarity */
-  color: #00d4e8; /* Slightly darker color on hover for contrast */
-  background-color: transparent; /* Ensures no background color */
+  text-decoration: underline;
+  color: #00d4e8;
+  background-color: transparent;
 }
 
 .label {
-  font-weight: bold; /* Make labels bold */
-  margin-right: 5px; /* Space after the label */
+  font-weight: bold;
+  margin-right: 5px;
 }

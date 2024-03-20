@@ -184,7 +184,7 @@ let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
-let baseOrientation = { x: 0, y: 0 };
+let baseOrientation = { x: 0, y: 0, z: 0};
 
 texture.matrixAutoUpdate = false;
 screen.orientation.addEventListener('change', function() {
@@ -199,7 +199,7 @@ function handleOrientationChange(orientationType) {
     // This might include logic to adjust how you interpret beta and gamma values.
     console.log(`Orientation changed to ${orientationType}`);
     // Example adjustment
-    baseOrientation = { x: 0, y: 0 }; // Adjust based on actual needs
+    baseOrientation = { x: 0, y: 0, z: 0 }; // Adjust based on actual needs
 }
 
 function handleOrientation(event) {
@@ -214,7 +214,7 @@ function handleOrientation(event) {
     beta += Math.PI / 2;
 
     // Create target quaternion from beta and gamma
-    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, gamma, 0, 'YXZ'));
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, gamma, alpha, 'YXZ'));
 
     // Smoothly interpolate the sphere's current quaternion towards the target
     sphere.quaternion.slerp(targetQuaternion, 0.1); // Adjust the 0.1 factor for smoothing

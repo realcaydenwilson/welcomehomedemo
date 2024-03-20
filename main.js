@@ -197,48 +197,53 @@ function handleOrientationChange(orientationType) {
     // This might include logic to adjust how you interpret beta and gamma values.
     console.log(`Orientation changed to ${orientationType}`);
     // Example adjustment
-    baseOrientation = { x: 0, y: Math.PI/2 }; // Adjust based on actual needs
+    baseOrientation = { x: 0, y: 0 }; // Adjust based on actual needs
 }
+
+window.addEventListener('deviceorientation', function(event) {
+    // Check if event data is available
+    if (event.alpha !== null && event.beta !== null && event.gamma !== null) {
+        usingMotionAndOrientation = true;
+
+        // Apply the 90-degree rotation when motion and orientation data are first used
+        // This condition prevents the rotation from being applied repeatedly
+        if (sphere.rotation.x !== Math.PI / 2) {
+            sphere.rotation.x = Math.PI / 2;
+        }
+    }
+});
 
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
-    // Direct mapping of device orientation to sphere rotation with adjustments for real-world matching
-    let alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
+    const alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
     let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)
     let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)
 
-    // Adjusting based on the current screen orientation
+    // Adjust orientation data based on the screen orientation
     switch(screen.orientation.type) {
         case 'portrait-primary':
-            // Apply rotation directly for portrait mode
+            // No additional rotation needed
             break;
         case 'landscape-primary':
-            // Adjust for landscape mode - might involve swapping beta/gamma and adding offsets
-            let temp = beta;
-            beta = -gamma;
-            gamma = temp;
+            // Adjust for landscape orientation
+            [beta, gamma] = [gamma, -beta];
             break;
         case 'landscape-secondary':
-            // Similar adjustments as landscape-primary but with different offsets
-            let temp2 = beta;
-            beta = gamma;
-            gamma = -temp2;
+            // Adjust for reverse landscape orientation
+            [beta, gamma] = [-gamma, beta];
             break;
         case 'portrait-secondary':
-            // Adjust for upside-down portrait mode, if necessary
+            // Adjust for upside-down portrait orientation
             beta = -beta;
             gamma = -gamma;
             break;
     }
 
-    // Assuming the sphere's rotation.x and rotation.y should match beta and gamma respectively
-    // Apply dampening if needed
-    const newXRotation = beta + baseOrientation.x;
-    const newYRotation = gamma + baseOrientation.y;
-
-    sphere.rotation.x += (newXRotation - sphere.rotation.x) * dampingFactor;
-    sphere.rotation.y += (newYRotation - sphere.rotation.y) * dampingFactor;
+    // Apply the orientation data directly to the sphere's rotation, 
+    // assuming the device's beta and gamma map to the sphere's x and y rotations.
+    sphere.rotation.x = beta * dampingFactor + baseOrientation.x;
+    sphere.rotation.y = gamma * dampingFactor + baseOrientation.y;
 }
 
 // Event listener for device orientation

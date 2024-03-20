@@ -216,6 +216,14 @@ window.addEventListener('deviceorientation', function(event) {
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
+    if (motionAndOrientationActive) {
+        // Now you can apply your orientation logic here, knowing that
+        // it's specifically being controlled by device orientation
+        // For example, applying a 90-degree vertical rotation:
+        sphere.rotation.x = Math.PI / 2;
+        // Plus, any other adjustments needed based on the deviceorientation event data
+    }
+
     const alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
     let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)
     let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)
@@ -248,12 +256,6 @@ function handleOrientation(event) {
 
 // Event listener for device orientation
 window.addEventListener('deviceorientation', handleOrientation);
-
-// When manual drag starts, capture the current orientation as the base
-function onManualStart() {
-    baseOrientation.x = sphere.rotation.x;
-    baseOrientation.y = sphere.rotation.y;
-}
 
 function onMouseDown(event) {
     if (!allowSphereInteraction) return;

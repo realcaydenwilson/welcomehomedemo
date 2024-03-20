@@ -218,38 +218,18 @@ window.addEventListener('deviceorientation', function(event) {
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
-    // Assuming motionAndOrientationActive is true when motion and orientation data should control the rotation
-    if (motionAndOrientationActive) {
-        const alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0; // Z-axis rotation (in radians)
-        let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // X-axis rotation (in radians)
-        let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Y-axis rotation (in radians)
+    let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // Convert beta to radians
+    let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Convert gamma to radians
 
-        // Override device's beta value by adding 90 degrees (PI/2 radians) to rotate vertically by 90 degrees
-        //eta += Math.PI; // This adjusts the tilt to simulate a 90-degree vertical rotation
+    // Assuming alpha is not used for vertical rotation
+    // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
+    beta += Math.PI / 2;
 
-        // Adjust orientation data based on the screen orientation4
-        /*
-        switch(screen.orientation.type) {
-            case 'portrait-primary':
-                // The beta and gamma adjustments remain the same for portrait-primary
-                break;
-            case 'landscape-primary':
-                // For landscape orientations, you might need to adjust how beta and gamma are used
-                [beta, gamma] = [gamma, -beta];
-                break;
-            case 'landscape-secondary':
-                [beta, gamma] = [-gamma, beta];
-                break;
-            case 'portrait-secondary':
-                beta = -beta;
-                gamma = -gamma;
-                break;
-        }
-        */
-        // Apply the orientation data directly to the sphere's rotation
-        sphere.rotation.x = beta + baseOrientation.x;
-        sphere.rotation.y = gamma + baseOrientation.y;
-    }
+    // Create target quaternion from beta and gamma
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, gamma, 0, 'YXZ'));
+
+    // Smoothly interpolate the sphere's current quaternion towards the target
+    sphere.quaternion.slerp(targetQuaternion, 0.1); // Adjust the 0.1 factor for smoothing
 }
 
 // Event listener for device orientation

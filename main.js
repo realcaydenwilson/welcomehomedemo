@@ -217,7 +217,7 @@ function handleOrientation(event) {
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, gamma, alpha, 'YXZ'));
 
     // Smoothly interpolate the sphere's current quaternion towards the target
-    sphere.quaternion.slerp(targetQuaternion, 0.1); // Adjust the 0.1 factor for smoothing
+    //sphere.quaternion.slerp(targetQuaternion, 0.1); // Adjust the 0.1 factor for smoothing
 }
 
 // Event listener for device orientation

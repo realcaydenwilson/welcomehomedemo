@@ -227,7 +227,8 @@ function handleOrientation(event) {
         // Override device's beta value by adding 90 degrees (PI/2 radians) to rotate vertically by 90 degrees
         beta += Math.PI / 2; // This adjusts the tilt to simulate a 90-degree vertical rotation
 
-        // Adjust orientation data based on the screen orientation
+        // Adjust orientation data based on the screen orientation4
+        /*
         switch(screen.orientation.type) {
             case 'portrait-primary':
                 // The beta and gamma adjustments remain the same for portrait-primary
@@ -244,7 +245,7 @@ function handleOrientation(event) {
                 gamma = -gamma;
                 break;
         }
-
+        */
         // Apply the orientation data directly to the sphere's rotation
         sphere.rotation.x = beta + baseOrientation.x;
         sphere.rotation.y = gamma + baseOrientation.y;

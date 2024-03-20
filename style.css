@@ -32,6 +32,7 @@ html {
 
 #client-logo {
   width: 12.5em; /* Adjust the width as needed */
+  max-width: 200px;
   height: auto;
   margin: auto;
 }
@@ -60,6 +61,16 @@ h2 {
   padding: 0; /* Removes default padding */
 }
 
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(0,0,0);
+  font-size: 1em;
+  line-height: 1.25; /* Adjust this value as needed, can be less than 1 for tighter line spacing */
+  text-align: left;
+  margin: 0; /* Removes default margin */
+  padding: 0; /* Removes default padding */
+}
+
 p {
   color: rgb(255,255,255);
   font-family: Arial, Helvetica, sans-serif;
@@ -78,6 +89,9 @@ a {
   text-align: left;
   margin: 0; /* Removes default margin */
   padding: 0; /* Removes default padding */
+  white-space: normal; /* Override the nowrapping rule from above */
+  overflow: visible; /* Allow the link to be fully visible */
+  text-overflow: clip;
 }
 
 button {
@@ -180,4 +194,70 @@ button {
   justify-content: center; /* Center icons horizontally */
   flex-wrap: wrap; /* Allow icons to wrap on small screens */
   margin-top: 2.5%; /* Add some space above the icons */
+}
+
+.contact-rep {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.rep-image {
+  width: 8em; /* Adjust based on your needs */
+  max-width: 20vw;
+  border-radius: 50%; /* Creates circular images */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
+  margin-right: 20px; /* Space between image and info container */
+}
+
+.rep-info h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 1.25em; /* Adjust size as needed */
+}
+
+.rep-info p {
+  color: black;
+  display: flex; /* Makes the <p> a flex container */
+  flex-wrap: wrap; /* Allows content to wrap */
+  align-items: center;
+  margin: 5px 0; /* Consistent margin for all elements */
+  line-height: 1.5;
+}
+
+.rep-info {
+  flex: 1; /* Take up the remaining space */
+}
+
+.rep-info p,
+.rep-info a {
+  margin: 5px 0; /* Consistent margin for all elements */
+  padding: 0;
+  color: black; /* Color for paragraphs */
+}
+
+.rep-info a {
+  background-color: transparent; /* Ensures no background color */
+  border-radius: 0; /* Removes border radius */
+  color: black; /* Adjust link color to fit your design */
+  cursor: pointer; /* Indicates a clickable link */
+  justify-content: left;
+  height: inherit;
+  margin: 0;
+  color: inherit; /* Inherits the text color from .rep-info p */
+  font-size: inherit; /* Inherits the font size from .rep-info p */
+  line-height: inherit; /* Inherits the line height from .rep-info p */
+  text-decoration: none; /* Removes underline */
+  transition: color 0.3s; /* Smooth transition for color changes */
+}
+
+.rep-info a:hover {
+  text-decoration: underline; /* Underline on hover for clarity */
+  color: #00d4e8; /* Slightly darker color on hover for contrast */
+  background-color: transparent; /* Ensures no background color */
+}
+
+.label {
+  font-weight: bold; /* Make labels bold */
+  margin-right: 5px; /* Space after the label */
 }

@@ -183,7 +183,7 @@ let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
-let baseOrientation = { x: 0, y: Math.PI/2 };
+let baseOrientation = { x: Math.PI/2, y: Math.PI/2 };
 
 screen.orientation.addEventListener('change', function() {
     // You can access screen.orientation.type and screen.orientation.angle here

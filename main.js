@@ -186,7 +186,6 @@ let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
 let baseOrientation = { x: 0, y: 0, z: 0};
 
-texture.matrixAutoUpdate = false;
 screen.orientation.addEventListener('change', function() {
     // You can access screen.orientation.type and screen.orientation.angle here
     const orientationType = screen.orientation.type; // e.g., "landscape-primary"
@@ -211,7 +210,7 @@ function handleOrientation(event) {
 
     // Assuming alpha is not used for vertical rotation
     // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
-    beta += Math.PI / 2;
+    beta += -Math.PI / 2;
 
     // Create target quaternion from beta and gamma
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, gamma, alpha, 'YXZ'));

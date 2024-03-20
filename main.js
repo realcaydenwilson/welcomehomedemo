@@ -201,23 +201,11 @@ function handleOrientationChange(orientationType) {
     // Example adjustment
     baseOrientation = { x: 0, y: 0 }; // Adjust based on actual needs
 }
-/*
-window.addEventListener('deviceorientation', function(event) {
-    // Check if event data is available
-    if (event.alpha !== null && event.beta !== null && event.gamma !== null) {
-        usingMotionAndOrientation = true;
 
-        // Apply the 90-degree rotation when motion and orientation data are first used
-        // This condition prevents the rotation from being applied repeatedly
-        if (sphere.rotation.x !== Math.PI / 2) {
-            sphere.rotation.x = Math.PI / 2;
-        }
-    }
-});
-*/
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
+    let alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0;
     let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // Convert beta to radians
     let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Convert gamma to radians
 

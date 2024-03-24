@@ -184,24 +184,15 @@ let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
-let baseOrientation = { x: 0, y: 0, z: 0};
 
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
-    let alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0;
-    let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // Convert beta to radians
-    let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Convert gamma to radians
+    let alpha = event.alpha;
+    let beta = event.beta;
+    let gamma = event.gamma;
 
-    // Assuming alpha is not used for vertical rotation
-    // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
-    beta += -Math.PI / 2;
-
-    // Create target quaternion from beta and gamma
-    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'YXZ'));
-
-    // Smoothly interpolate the sphere's current quaternion towards the target
-    sphere.quaternion.slerp(targetQuaternion, 0.1); // Adjust the 0.1 factor for smoothing
+    sphere.style.transform = 'rotateX(' + beta + 'deg) rotateY(' + gamma + 'deg) rotateZ(' + alpha + 'deg)';    
 }
 
 // Event listener for device orientation

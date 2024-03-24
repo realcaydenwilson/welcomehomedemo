@@ -179,12 +179,10 @@ var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 const dampingFactor = 1; 
-let reengageDelay = 1000;
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
-let baseOrientation = { x: 0, y: 0, z: 0};
 
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
@@ -195,13 +193,13 @@ function handleOrientation(event) {
 
     // Assuming alpha is not used for vertical rotation
     // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
-    //beta += -Math.PI / 2;
+    beta += -Math.PI / 2;
 
     // Create target quaternion from beta and gamma
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
 
     // Smoothly interpolate the sphere's current quaternion towards the target
-    sphere.quaternion.slerp(targetQuaternion, 0.1); // Adjust the 0.1 factor for smoothing
+    sphere.quaternion.slerp(targetQuaternion, 1); // Adjust the 0.1 factor for smoothing
 }
 
 // Event listener for device orientation
@@ -225,16 +223,6 @@ function onTouchStart(event) {
 
 function onPointerUp() {
     isDragging = false;
-
-    // Introduce a delay before re-enabling device orientation control
-    // to ensure a smooth transition from manual to automatic control
-    /*
-    setTimeout(() => {
-        if (motionAndOrientationActive) {
-            usingDeviceOrientation = true; // Re-enable device orientation control
-        }
-    }, reengageDelay);
-    */
 }
 
 // Function to handle pointer move event

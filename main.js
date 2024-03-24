@@ -186,21 +186,6 @@ let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
 let baseOrientation = { x: 0, y: 0, z: 0};
 
-screen.orientation.addEventListener('change', function() {
-    // You can access screen.orientation.type and screen.orientation.angle here
-    const orientationType = screen.orientation.type; // e.g., "landscape-primary"
-    handleOrientationChange(orientationType);
-});
-
-function handleOrientationChange(orientationType) {
-    // Reset or adjust baseOrientation and other relevant variables here
-    // based on the new orientation type.
-    // This might include logic to adjust how you interpret beta and gamma values.
-    console.log(`Orientation changed to ${orientationType}`);
-    // Example adjustment
-    baseOrientation = { x: 0, y: 0, z: 0 }; // Adjust based on actual needs
-}
-
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 

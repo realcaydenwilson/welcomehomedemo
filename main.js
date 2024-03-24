@@ -188,11 +188,19 @@ let allowSphereInteraction = true;
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
-    let alpha = event.alpha;
-    let beta = event.beta;
-    let gamma = event.gamma;
+    let alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0;
+    let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // Convert beta to radians
+    let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Convert gamma to radians
 
-    sphere.style.transform = 'rotateX(' + beta + 'deg) rotateY(' + gamma + 'deg) rotateZ(' + alpha + 'deg)';    
+    // Assuming alpha is not used for vertical rotation
+    // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
+    //beta += -Math.PI / 2;
+
+    // Create target quaternion from beta and gamma
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
+
+    // Smoothly interpolate the sphere's current quaternion towards the target
+    sphere.quaternion.setFromEuler(targetQuaternion); // Adjust the 0.1 factor for smoothing
 }
 
 // Event listener for device orientation
@@ -216,14 +224,6 @@ function onTouchStart(event) {
 
 function onPointerUp() {
     isDragging = false;
-
-    // Introduce a delay before re-enabling device orientation control
-    // to ensure a smooth transition from manual to automatic control
-    setTimeout(() => {
-        if (motionAndOrientationActive) {
-            usingDeviceOrientation = true; // Re-enable device orientation control
-        }
-    }, reengageDelay);
 }
 
 // Function to handle pointer move event

@@ -193,7 +193,7 @@ function handleOrientation(event) {
 
     // Assuming alpha is not used for vertical rotation
     // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
-    beta += -Math.PI / 2;
+    //beta += -Math.PI / 2;
 
     // Create target quaternion from beta and gamma
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));

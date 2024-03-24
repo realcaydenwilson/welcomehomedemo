@@ -200,7 +200,7 @@ function handleOrientation(event) {
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
 
     // Smoothly interpolate the sphere's current quaternion towards the target
-    camera.quaternion.slerp(targetQuaternion, 1); // Adjust the 0.1 factor for smoothing
+    sphere.quaternion.slerp(targetQuaternion, 1); // Adjust the 0.1 factor for smoothing
 }
 
 // Event listener for device orientation

@@ -187,9 +187,9 @@ let allowSphereInteraction = true;
 function handleOrientation(event) {
     if (!motionAndOrientationActive || isDragging) return;
 
-    let alpha = event.alpha ? THREE.Math.degToRad(event.alpha) : 0;
-    let beta = event.beta ? THREE.Math.degToRad(event.beta) : 0; // Convert beta to radians
-    let gamma = event.gamma ? THREE.Math.degToRad(event.gamma) : 0; // Convert gamma to radians
+    let alpha = THREE.Math.degToRad(event.alpha);
+    let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta);
+    let gamma = THREE.Math.degToRad(event.gamma);
 
     // Assuming alpha is not used for vertical rotation
     // Adjust beta by PI/2 if needed to rotate 90 degrees vertically

@@ -191,16 +191,11 @@ function handleOrientation(event) {
     let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta);
     let gamma = THREE.Math.degToRad(event.gamma);
 
-    // Assuming alpha is not used for vertical rotation
-    // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
-    //beta += -Math.PI / 2;
-    //sphere.rotateZ(-Math.PI/2);
-
     // Create target quaternion from beta and gamma
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
 
     // Smoothly interpolate the sphere's current quaternion towards the target
-    sphere.quaternion.slerp(targetQuaternion, 1); // Adjust the 0.1 factor for smoothing
+    camera.quaternion.slerp(targetQuaternion, 1); // Adjust the 0.1 factor for smoothing
 }
 
 // Event listener for device orientation

@@ -195,7 +195,7 @@ function handleOrientation(event) {
 
     // Assuming alpha is not used for vertical rotation
     // Adjust beta by PI/2 if needed to rotate 90 degrees vertically
-    beta += -Math.PI / 2;
+    //beta += -Math.PI / 2;
 
     // Create target quaternion from beta and gamma
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
@@ -228,11 +228,13 @@ function onPointerUp() {
 
     // Introduce a delay before re-enabling device orientation control
     // to ensure a smooth transition from manual to automatic control
+    /*
     setTimeout(() => {
         if (motionAndOrientationActive) {
             usingDeviceOrientation = true; // Re-enable device orientation control
         }
     }, reengageDelay);
+    */
 }
 
 // Function to handle pointer move event

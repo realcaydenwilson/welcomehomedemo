@@ -193,6 +193,7 @@ function handleOrientation(event) {
 
     // Create target quaternion from beta and gamma
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
+    console.log(targetQuaternion);
 
     // Smoothly interpolate the sphere's current quaternion towards the target
     camera.quaternion.slerp(targetQuaternion, 1); // Adjust the 0.1 factor for smoothing

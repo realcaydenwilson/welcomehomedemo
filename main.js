@@ -178,32 +178,38 @@ var previousMouseX = 0;
 var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
-const dampingFactor = 1; 
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
 
 function handleOrientation(event) {
-    if (!motionAndOrientationActive || isDragging) return;
+    // Check if device orientation should control the camera
+    if (!motionAndOrientationActive) return;
+
+    // Activate device orientation control and disable manual control
+    usingDeviceOrientation = true;
 
     let alpha = THREE.Math.degToRad(event.alpha);
-    let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta);
+    let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta); // Adjusting beta
     let gamma = THREE.Math.degToRad(event.gamma);
 
-    // Create target quaternion from beta and gamma
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
-    console.log(targetQuaternion);
 
-    // Smoothly interpolate the sphere's current quaternion towards the target
-    camera.quaternion.slerp(targetQuaternion, 1); // Adjust the 0.1 factor for smoothing
+    // Smoothly interpolate the camera's current quaternion towards the target
+    camera.quaternion.slerp(targetQuaternion, 1); // The slerp factor can be adjusted for smoothing
 }
 
-// Event listener for device orientation
-window.addEventListener('deviceorientation', handleOrientation);
+// Function to disable manual controls when device orientation is active
+function disableManualControls() {
+    if (usingDeviceOrientation) {
+        isDragging = false; // Disable dragging
+        // Optionally, disable other manual controls here
+    }
+}
 
 function onMouseDown(event) {
-    if (!allowSphereInteraction) return;
+    if (!allowSphereInteraction || usingDeviceOrientation) return;
     isDragging = true;
     usingDeviceOrientation = false;
     previousMouseX = event.clientX;
@@ -211,7 +217,7 @@ function onMouseDown(event) {
 }
 
 function onTouchStart(event) {
-    if (!allowSphereInteraction) return;
+    if (!allowSphereInteraction || usingDeviceOrientation) return;
     isDragging = true;
     usingDeviceOrientation = false;
     previousMouseX = event.touches[0].clientX;
@@ -250,9 +256,12 @@ function onPointerMove(event) {
     lastDragTime = now;
 
     if (event.touches) {
-        event.preventDefault(); // Prevent default touchmove behavior (scrolling)
+        event.preventDefault();
     }
 }
+
+// Add event listener for device orientation
+window.addEventListener('deviceorientation', handleOrientation, true);
 
 // Add event listeners for mouse interaction
 document.addEventListener('mousedown', onMouseDown);

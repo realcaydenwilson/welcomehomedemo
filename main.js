@@ -178,10 +178,18 @@ var previousMouseX = 0;
 var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
+let lastUpdateTime = 0;
+const updateThreshold = 100; // milliseconds
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
+
+function dynamicSlerp(currentQuat, targetQuat, deltaTime) {
+    let angle = currentQuat.angleTo(targetQuat);
+    let factor = Math.min(deltaTime * angle * 0.5, 1); // Example calculation
+    currentQuat.slerp(targetQuat, factor);
+}
 
 function handleOrientation(event) {
     // Check if device orientation should control the camera
@@ -189,6 +197,11 @@ function handleOrientation(event) {
 
     // Activate device orientation control and disable manual control
     usingDeviceOrientation = true;
+
+    let currentTime = Date.now();
+    if (currentTime - lastUpdateTime < updateThreshold) return;
+
+    lastUpdateTime = currentTime;
 
     let alpha = THREE.Math.degToRad(event.alpha);
     let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta); // Adjusting beta
@@ -198,7 +211,7 @@ function handleOrientation(event) {
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'YXZ'));//
 
     // Smoothly interpolate the camera's current quaternion towards the target
-    camera.quaternion.slerp(targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing
+    dynamicSlerp(camera.quaternion, targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing
 }
 
 // Function to disable manual controls when device orientation is active

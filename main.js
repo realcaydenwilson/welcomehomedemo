@@ -198,7 +198,7 @@ function handleOrientation(event) {
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'YXZ'));//
 
     // Smoothly interpolate the camera's current quaternion towards the target
-    camera.quaternion.slerp(targetQuaternion, 0.01); // The slerp factor can be adjusted for smoothing
+    camera.quaternion.slerp(targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing
 }
 
 // Function to disable manual controls when device orientation is active

@@ -212,7 +212,7 @@ function handleOrientation(event) {
     let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'YXZ'));//
 
     // Smoothly interpolate the camera's current quaternion towards the target
-    dynamicSlerp(camera.quaternion, targetQuaternion, 0.5); // The slerp factor can be adjusted for smoothing
+    dynamicSlerp(camera.quaternion, targetQuaternion, 0.01); // The slerp factor can be adjusted for smoothing
 
     lastAlpha = alpha;
 }

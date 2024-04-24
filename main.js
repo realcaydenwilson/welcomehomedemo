@@ -208,13 +208,11 @@ function handleOrientation(event) {
     let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta); // Adjusting beta
     let gamma = THREE.Math.degToRad(event.gamma);
 
-    if (alpha >= lastAlpha + 0.1) {
-        //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
-        let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'YXZ'));//
+    //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'YXZ'));//
 
-        // Smoothly interpolate the camera's current quaternion towards the target
-        dynamicSlerp(camera.quaternion, targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing
-    }
+    // Smoothly interpolate the camera's current quaternion towards the target
+    dynamicSlerp(camera.quaternion, targetQuaternion, 0.5); // The slerp factor can be adjusted for smoothing
 
     lastAlpha = alpha;
 }

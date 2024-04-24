@@ -179,8 +179,7 @@ var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastUpdateTime = 0;
-let lastAlpha = 0;
-const updateThreshold = 100; // milliseconds
+const updateThreshold = 50; // milliseconds
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
@@ -213,8 +212,6 @@ function handleOrientation(event) {
 
     // Smoothly interpolate the camera's current quaternion towards the target
     dynamicSlerp(camera.quaternion, targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing
-
-    lastAlpha = alpha;
 }
 
 // Function to disable manual controls when device orientation is active

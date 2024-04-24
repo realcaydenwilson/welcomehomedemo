@@ -199,7 +199,7 @@ function handleOrientation(event) {
     usingDeviceOrientation = true;
 
     let currentTime = Date.now();
-    if (currentTime - lastUpdateTime < updateThreshold) return;
+    // if (currentTime - lastUpdateTime < updateThreshold) return;
 
     lastUpdateTime = currentTime;
 

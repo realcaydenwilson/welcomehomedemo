@@ -185,6 +185,23 @@ let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
 
+var promise = new FULLTILT.getDeviceOrientation({ 'type': 'world' });
+
+// FULLTILT.DeviceOrientation instance placeholder
+var deviceOrientation;
+
+promise
+.then(function(controller) {
+    // Store the returned FULLTILT.DeviceOrientation object
+    deviceOrientation = controller;
+})
+.catch(function(message) {
+    console.error(message);
+
+    // Optionally set up fallback controls...
+    // initManualControls();
+});
+
 function dynamicSlerp(currentQuat, targetQuat, deltaTime) {
     let angle = currentQuat.angleTo(targetQuat);
     let factor = Math.min(deltaTime * angle * 0.5, 1); // Example calculation
@@ -203,13 +220,17 @@ function handleOrientation(event) {
 
     lastUpdateTime = currentTime;
 
-    let alpha = THREE.Math.degToRad(event.alpha);
+    /* let alpha = THREE.Math.degToRad(event.alpha);
     let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta); // Adjusting beta
-    let gamma = THREE.Math.degToRad(event.gamma);
+    let gamma = THREE.Math.degToRad(event.gamma); */
+
+    let fulltiltEuler = deviceOrientation.getScreenAdjustedEuler();
 
     //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
-    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, 0, 'YXZ'));//
+    //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, 0, 'YXZ'));
 
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(THREE.Math.degToRad(fulltiltEuler.beta), THREE.Math.degToRad(fulltiltEuler.gamma), THREE.Math.degToRad(fulltiltEuler.alpha),  'ZXY'));
+    
     // Smoothly interpolate the camera's current quaternion towards the target
     dynamicSlerp(camera.quaternion, targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing
 }

@@ -227,7 +227,7 @@ function handleOrientation(event) {
     let gamma = THREE.Math.degToRad(fulltiltEuler.gamma);
 
     //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
-    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'YXZ'));
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, 0, 'YXZ'));
 
     // Smoothly interpolate the camera's current quaternion towards the target
     dynamicSlerp(camera.quaternion, targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing

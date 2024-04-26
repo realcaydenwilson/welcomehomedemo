@@ -203,13 +203,8 @@ promise
 });
 
 function dynamicSlerp(currentQuat, targetQuat, deltaTime) {
-    // World frame quaternion transform (-PI/2 around the x-axis)
-    var worldTransform = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));
-    currentQuat.multiplyQuaternions( worldTransform, targetQuat );
-
     let angle = currentQuat.angleTo(targetQuat);
     let factor = Math.min(deltaTime * angle * 0.5, 1); // Example calculation
-
     currentQuat.slerp(targetQuat, factor);
 }
 
@@ -228,8 +223,7 @@ function handleOrientation(event) {
     let fulltiltEuler = deviceOrientation.getScreenAdjustedEuler();
 
     let alpha = THREE.Math.degToRad(fulltiltEuler.alpha);
-    //let beta = -Math.PI / 2 + THREE.Math.degToRad(fulltiltEuler.beta); // Adjusting beta
-    let beta = THREE.Math.degToRad(fulltiltEuler.beta); // Adjusting beta
+    let beta = -Math.PI / 2 + THREE.Math.degToRad(fulltiltEuler.beta); // Adjusting beta
     let gamma = THREE.Math.degToRad(fulltiltEuler.gamma);
 
     //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));

@@ -220,16 +220,14 @@ function handleOrientation(event) {
 
     lastUpdateTime = currentTime;
 
-    /* let alpha = THREE.Math.degToRad(event.alpha);
-    let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta); // Adjusting beta
-    let gamma = THREE.Math.degToRad(event.gamma); */
+    let alpha = THREE.Math.degToRad(fulltiltEuler.alpha);
+    let beta = -Math.PI / 2 + THREE.Math.degToRad(fulltiltEuler.beta); // Adjusting beta
+    let gamma = THREE.Math.degToRad(fulltiltEuler.gamma);
 
     let fulltiltEuler = deviceOrientation.getScreenAdjustedEuler();
 
     //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
-    //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, 0, 'YXZ'));
-
-    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(THREE.Math.degToRad(fulltiltEuler.beta), THREE.Math.degToRad(fulltiltEuler.alpha), 0, 'YXZ'));
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, 0, 'YXZ'));
     
     // Smoothly interpolate the camera's current quaternion towards the target
     dynamicSlerp(camera.quaternion, targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing

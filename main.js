@@ -205,7 +205,7 @@ promise
 function dynamicSlerp(currentQuat, targetQuat, deltaTime) {
     let angle = currentQuat.angleTo(targetQuat);
     let factor = Math.min(deltaTime * angle * 0.5, 1); // Example calculation
-    currentQuat.slerp(targetQuat, factor);
+    currentQuat.slerp(targetQuat, deltaTime * angle * 0.5);
 }
 
 function handleOrientation(event) {

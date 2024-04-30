@@ -131,7 +131,7 @@ var sphere = new THREE.Mesh(sphereGeometry, material);
 scene.add(sphere);
 
 // Set up camera
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
+var camera = new THREE.PerspectiveCamera(80, window.innerWidth/window.innerHeight, 1, 1000);
 //camera.target = new THREE.Vector3(0, 0, 0);
 camera.position.set(0, 0, 0);
 scene.add(camera);

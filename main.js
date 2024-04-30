@@ -118,7 +118,7 @@ fullscreenButton.addEventListener('click', toggleFullScreen);
 var scene = new THREE.Scene();
 
 // Create a sphere
-const sphereGeometry = new THREE.SphereGeometry(1, 256, 128);
+const sphereGeometry = new THREE.SphereGeometry(100, 256, 128);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
 const textureLoader = new THREE.TextureLoader();
 var texture = textureLoader.load('./panoramas/ThomasPano.webp');

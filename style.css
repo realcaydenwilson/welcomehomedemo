@@ -1,21 +1,24 @@
-body,
-html {
+body, html {
   position: fixed;
   margin: 0;
   padding: 0;
   overflow: hidden;
   overscroll-behavior: none;
-  width: 100vw;
   height: 100%;
   display: block;
 }
 
 #scene-container {
   position: absolute;
-  width: 100%;
+  width: 80vw;  /* Default width */
   height: 100%;
   top: 0;
   left: 0;
+  transition: width 0.3s ease;
+}
+
+#scene-container.narrow {
+  width: 100vw;  /* Adjusted width when modal is visible */
 }
 
 #info-box {
@@ -43,7 +46,8 @@ hr {
 h1 {
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(255,255,255);
-  font-size: 1.25em;
+  font-size: 2em;
+  font-weight: normal;
   line-height: 1.25;
   text-align: left;
   margin: 0;
@@ -52,8 +56,9 @@ h1 {
 
 h2 {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(0,0,0);
+  color: rgb(255,255,255);
   font-size: 1.5em;
+  font-weight: normal;
   line-height: 1.25;
   text-align: left;
   margin: 0;
@@ -62,8 +67,20 @@ h2 {
 
 h3 {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(0,0,0);
-  font-size: 1em;
+  color: rgb(255,255,255);
+  font-size: 1.25em;
+  font-weight: normal;
+  line-height: 1.25;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+h4 {
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(255,255,255);
+  font-size: 0.5em;
+  font-weight: normal;
   line-height: 1.25;
   text-align: left;
   margin: 0;
@@ -105,6 +122,7 @@ button {
   cursor: pointer;
   border: none;
   border-radius: 1em;
+  margin-top: 0.5em;
 }
 
 #button-container {
@@ -117,106 +135,117 @@ button {
   z-index: 1;
 }
 
-#fullscreen-button, 
-#moa-button,
-#share-button,
-#vr-button {
-  margin-top: 0.5em;
+.modal {
+  display: none; /* Start as hidden */
+  position: fixed;
+  z-index: 2; /* Above the main container, below the buttons */
+  right: 0;
+  top: 0;
+  width: 20%; /* Modal width */
+  min-width:450px;
+  height: 100%; /* Full height */
+  background-color: rgb(0,0,0);
+  overflow-y: auto; /* Scrollable content */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  transition: transform 0.3s ease-out; /* Smooth transition for transform */
+  transform: translateX(100%); /* Initially off-screen to the right */
 }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 2;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.4);
-  justify-content: center;
-  align-items: center;
+.modal.show {
+  display: flex; /* Flex ensures content is laid out properly */
+  flex-direction: column; /* Aligns children vertically */
+  transform: translateX(0); /* Bring into view */
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 2.5%;
-  width: 85%;
-  max-width: 600px;
-  box-shadow: 0 0.5em 0.5em 0 rgba(0, 0, 0, 0.2), 0 0.75em 0.75em 0 rgba(0, 0, 0, 0.19); /* Adds depth with shadow */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+  margin: 5%;
+  padding-top: 10%;
+  width: 90%; /* Adjust width to prevent overflow, considering padding and margin */
+  height: auto;
+  max-width: 100%; /* Ensure it does not exceed the modal width */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  word-wrap: break-word; /* Ensures that words do not overflow the container */
+  overflow-x: hidden; /* Additional precaution to hide any accidental horizontal overflow */
 }
 
-.close-button {
-  color: black;
-  position: absolute;
-  top: 0;
-  right: 10px;
-  font-size: 2em;
-  font-weight: bold;
+.modal-content h3 {
+  font-weight: 300;
+  color:#fff;
 }
 
-.close-button:hover,
-.close-button:focus {
-  color: #00d4e8;
-  text-decoration: none;
-  cursor: pointer;
+.modal-content p {
+  line-height: 1.5;
+  color:#fff;
+}
+
+.about {
+  padding-top: 5%;
+  padding-bottom: 2.5%;
+}
+
+.about p {
+  line-height: 2;
 }
 
 .modal-content a {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 4em;
-  height: 4em;
-  margin: 0.5em;
+  width: 3em;
+  height: 3em;
   border-radius: 50%;
-  background-color: #000;
-  margin: 0.5em 0.5em;
-  color: white;
+  background-color: white;
+  margin-right: 1em;
+  color: black;
   text-decoration: none;
-}
-
-.modal-content i {
-  font-size: 2em;
 }
 
 .modal-content a:hover {
   background-color: #00d4e8;
 }
 
+.modal-content i {
+  font-size: 1.5em; /* Size of Icons*/
+  color: black;
+}
+
 .share-icons-container {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   flex-wrap: wrap;
-  margin-top: 2.5%;
+  margin-top: 5%;
+  margin-bottom: 2.5%;
 }
 
 .contact-rep {
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .rep-image {
   width: 8em;
-  max-width: 20vw;
+  height: 8em; /* Set a specific height to match the width */
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 20px;
 }
 
-.rep-info h3 {
+.rep-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  padding-left: 20px;
+}
+
+.rep-info h2, .rep-info h4 {
+  color: #fff;  /* Assuming you want white text */
   margin: 0;
   padding: 0;
-  font-size: 1.25em;
 }
 
 .rep-info p {
-  color: black;
+  color: white;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -245,38 +274,53 @@ button {
   background-color: transparent;
 }
 
-.label {
-  font-weight: bold;
-  margin-right: 5px;
+.rep-info .icon {
+  margin-right: 10px; /* Space between icon and text */
+  vertical-align: middle; /* Aligns the icon with the text vertically */
+  color: white !important; /* Force the icon color to white and ensure it takes precedence */
 }
 
-@media (max-width: 768px) {
+.label {
+  display: flex;
+  align-items: center; /* Ensures the label (icon + text) aligns correctly */
+}
+
+@media (max-width: 768px) { /* Adjust this breakpoint based on the devices you're targeting */
+  .modal {
+    width: 85%; /* Adjusts modal to take up 85% of screen */
+    right: 7.5%; /* Center modal horizontally */
+    left: 7.5%;
+  }
+
+  .modal-content {
+    font-size: 0.9em; /* Smaller font size for smaller screens */
+    padding: 5%; /* Reduced padding */
+  }
+
+  .modal-content h3, .modal-content h2, .modal-content h4 {
+    font-size: 16px; /* Slightly larger font for headings */
+  }
+
+  .modal-content p, .rep-info p, .about p {
+    font-size: 14px; /* Ensure text is not too small */
+    line-height: 1.4; /* Increase line height for better readability */
+  }
+
   .modal-content a {
-    width: 3em;
-    height: 3em;
-    margin: 0.35em;
-    margin: 0.35em 0.35em;
-  }
-
-  .rep-info h3, .rep-info p {
-    justify-content: left;
-  }
-
-  .modal-content i {
-    font-size: 1.5em;
-  }
-
-  .contact-rep {
-    flex-direction: column; /* Stack flex items vertically */
-    align-items: center; /* Center align items for small screens */
+    font-size: 12px; /* Adjust link font size to fit smaller layout */
   }
 
   .rep-image {
-    margin-right: 0; /* Remove the margin to center the image above the text */
-    margin-bottom: 20px; /* Add some space below the image */
+    width: 6em; /* Reduce image size to fit the modal */
+    height: 6em; /* Maintain aspect ratio */
+  }
+
+  .contact-rep {
+    flex-direction: row; /* Stack image and information vertically */
+    align-items: start; /* Center-align the contents */
   }
 
   .rep-info {
-    align-items: center; /* Center align items for small screens */
+    padding-top: 10px; /* Provide some space above the text */
   }
 }

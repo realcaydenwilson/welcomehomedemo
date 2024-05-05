@@ -13,59 +13,61 @@
       href="./images/favicon.png"
     />
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <!-- Adding icons for buttons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="/library/fulltilt.min.js"></script>
+    
   </head>
-  <body>
-    <div id="info-box">
-      <img
-        id="client-logo"
-        src="./images/welcome_home_logo.png"
-        alt="Client Logo"
-      />
-      <hr>
-      <h1 id="project-name">Builder Demo</h1>
-      <p id="client-name">by Welcome Home</p>
-    </div>
+  <body> 
+    <div id="main-content">
+      <!-- All your main content goes here -->
+      <div id="info-box">
+        <img id="client-logo" src="./images/welcome_home_logo.png" alt="Client Logo" />
+        <hr>
+        <h3 id="project-name"><b>Builder Demo</b></h3>
+        <p id="client-name">by Welcome Home</p>
+      </div>
 
-    <div id="button-container">
-      <button type="button" id="moa-button" title="Motion and Orientation"><i class="fas fa-compass"></i></button>
-      <button type="button" id="vr-button" title="Virtual Reality"><i class="fas fa-vr-cardboard"></i></button>
-      <button type="button" id="share-button" title="Share"><i class="fas fa-share-alt"></i></button>
-      <button type="button" id="fullscreen-button" title="Fullscreen"><i class="fas fa-expand"></i></button>
+      <div id="button-container">
+        <button type="button" id="moa-button" title="Motion and Orientation"><i class="fas fa-compass"></i></button>
+        <button type="button" id="vr-button" title="Virtual Reality"><i class="fas fa-vr-cardboard"></i></button>
+        <button type="button" id="share-button" title="Share"><i class="fas fa-share-alt"></i></button>
+        <button type="button" id="fullscreen-button" title="Fullscreen"><i class="fas fa-expand"></i></button>
+      </div>
+
+      <div id="scene-container">
+        <canvas></canvas>
+      </div>
     </div>
 
     <div id="share-modal" class="modal">
       <div class="modal-content">
-        <span class="close-button">×</span>
-        <h2>Share This Home</h2>
+        <h1>ABOUT THIS PROPERTY</h1>
+        <p class="about">Struggling to close deals because clients can't visualize their dream home? Imagine turning simple blueprints into interactive, life-like spaces. Welcome Home does just that. Our immersive tours, created from your floor plans, offer “to-scale”, photorealistic renderings accessible on any device. Say goodbye to design uncertainties and hello to faster sales and satisfied clients.</p>
+        <hr>
+        <h2>SHARE</h2>
         <div class="share-icons-container"> <!-- Container for icons -->
-          <a href="#" onclick="shareToPlatform('email')" title="Share via Email"><i class="fas fa-envelope"></i></a>
           <a href="#" onclick="shareToPlatform('facebook')" title="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
           <a href="#" onclick="shareToPlatform('whatsapp')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
           <a href="#" onclick="shareToPlatform('twitter')" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
           <a href="#" onclick="shareToPlatform('linkedin')" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
           <a href="#" onclick="copyLink()" title="Copy Link"><i class="fas fa-copy"></i></a>
         </div>
+        <hr>
+        <h2>CONTACT</h2>
         <div class="contact-rep">
           <img src="./images/profile-image.jpg" alt="Rep Name" class="rep-image">
           <div class="rep-info">
-            <h3>Cayden Wilson</h3>
-            <p><i>Founder - Welcome Home</i></p>
-            <p><span class="label">Email:</span>cayden@caydenwilson.me</p>
-            <p><span class="label">Phone:</span>+1 (877) 276-0629</p>
-            <p><span class="label">Website:</span><a href="https://saywelcomehome.com" target="_blank">saywelcomehome.com</a></p>
+            <h2>cayden wilson</h2>
+            <h4>WELCOME HOME</h4>
+            <p><span class="label"><i class="fas fa-envelope icon"></i></span><a href="mailto:cayden@saywelcomehome.com">cayden@saywelcomehome.com</a></p>
+            <p><span class="label"><i class="fas fa-phone icon"></i></span>+1(614) 205-0799</p>
+            <p><span class="label"><i class="fas fa-globe icon"></i></span><a href="https://saywelcomehome.com" target="_blank">saywelcomehome.com</a></p>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="scene-container">
-      <canvas></canvas>
-    </div>
     <script src="main.js"></script>
-  </body> 
+  </body>
 </html>

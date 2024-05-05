@@ -58,17 +58,6 @@ vrButton.addEventListener('click', function() {
         console.log("Device does not support DeviceOrientationEvent or DeviceMotionEvent.");
     }
 });
-
-function toggleShareModal() {
-    const modal = document.getElementById('share-modal');
-    if (modal.style.display === "flex") {
-        modal.style.display = "none";
-        allowSphereInteraction = true; // Enable sphere interaction
-    } else {
-        modal.style.display = "flex";
-        allowSphereInteraction = false; // Disable sphere interaction
-    }
-}
   
 // Function to share to specific platforms
 function shareToPlatform(platform) {
@@ -106,30 +95,75 @@ navigator.clipboard.writeText(window.location.href)
     .catch(err => console.error('Error copying link: ', err));
 }
 
-// Event listeners
+// Toggle share modal and adjust scene container width
 document.getElementById('share-button').addEventListener('click', function() {
-    const modal = document.querySelector('.modal');
+    toggleShareModal();
+});
+
+function toggleShareModal() {
+    const modal = document.getElementById('share-modal');
     const sceneContainer = document.getElementById('scene-container');
 
+    // Toggle the 'show' class to either show or hide the modal
     modal.classList.toggle('show');
 
+    // Toggle the 'narrow' class on sceneContainer based on modal visibility
     if (modal.classList.contains('show')) {
-        sceneContainer.style.width = "75%";
+        sceneContainer.classList.add('narrow'); // Apply narrow class
+        document.body.classList.add('modal-active'); // Indicate that the modal is active
     } else {
-        sceneContainer.style.width = "100%";
+        sceneContainer.classList.remove('narrow'); // Remove narrow class
+        document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
     }
 
-    document.body.classList.toggle('modal-active');
-});
+    // Update renderer size after container resize
+    updateRenderer(sceneContainer);
+}
 
-document.querySelector('.close-button').addEventListener('click', function() {
-    document.querySelector('.modal').classList.remove('show');
-    document.body.classList.remove('modal-active');
-});
+function updateRenderer(container) {
+    if (renderer && camera) {
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+    } else {
+        console.error('Renderer or camera not defined');
+    }
+}
 
 // Get fullscreen button
 const fullscreenButton = document.getElementById("fullscreen-button");
 fullscreenButton.addEventListener('click', toggleFullScreen);
+
+// Handle window resizing
+window.addEventListener('resize', function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+  
+function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            document.documentElement.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) { // Firefox
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) { // IE/Edge
+            document.msExitFullscreen();
+        }
+    }
+}
 
 // Set up scene
 var scene = new THREE.Scene();
@@ -158,37 +192,6 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
-
-// Handle window resizing
-window.addEventListener('resize', function () {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-function toggleFullScreen() {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
-            document.documentElement.webkitRequestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-            document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-            document.documentElement.msRequestFullscreen();
-        }
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-            document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) { // Firefox
-            document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) { // IE/Edge
-            document.msExitFullscreen();
-        }
-    }
-}
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

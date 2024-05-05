@@ -107,8 +107,25 @@ navigator.clipboard.writeText(window.location.href)
 }
 
 // Event listeners
-document.getElementById('share-button').addEventListener('click', toggleShareModal);
-document.querySelector('.close-button').addEventListener('click', toggleShareModal);
+document.getElementById('share-button').addEventListener('click', function() {
+    const modal = document.querySelector('.modal');
+    const sceneContainer = document.getElementById('scene-container');
+
+    modal.classList.toggle('show');
+
+    if (modal.classList.contains('show')) {
+        sceneContainer.style.width = "75%";
+    } else {
+        sceneContainer.style.width = "100%";
+    }
+
+    document.body.classList.toggle('modal-active');
+});
+
+document.querySelector('.close-button').addEventListener('click', function() {
+    document.querySelector('.modal').classList.remove('show');
+    document.body.classList.remove('modal-active');
+});
 
 // Get fullscreen button
 const fullscreenButton = document.getElementById("fullscreen-button");
@@ -118,7 +135,7 @@ fullscreenButton.addEventListener('click', toggleFullScreen);
 var scene = new THREE.Scene();
 
 // Create a sphere
-const sphereGeometry = new THREE.SphereGeometry(100, 512, 256);
+const sphereGeometry = new THREE.SphereGeometry(100, 256, 128);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
 const textureLoader = new THREE.TextureLoader();
 var texture = textureLoader.load('./panoramas/ThomasPano.webp');
@@ -131,7 +148,7 @@ var sphere = new THREE.Mesh(sphereGeometry, material);
 scene.add(sphere);
 
 // Set up camera
-var camera = new THREE.PerspectiveCamera(80, window.innerWidth/window.innerHeight, 1, 1000);
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
 //camera.target = new THREE.Vector3(0, 0, 0);
 camera.position.set(0, 0, 0);
 scene.add(camera);
@@ -139,6 +156,7 @@ scene.add(camera);
 // Set up renderer
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 // Handle window resizing
@@ -179,33 +197,16 @@ var previousMouseY = 0;
 let rotationSpeedX = 0;
 let rotationSpeedY = 0;
 let lastUpdateTime = 0;
-const updateThreshold = 20; // milliseconds
+const updateThreshold = 100; // milliseconds
 let lastDragTime = Date.now();
 let usingDeviceOrientation = false;
 let motionAndOrientationActive = false;
 let allowSphereInteraction = true;
 
-var promise = new FULLTILT.getDeviceOrientation({ 'type': 'world' });
-
-// FULLTILT.DeviceOrientation instance placeholder
-var deviceOrientation;
-
-promise
-.then(function(controller) {
-    // Store the returned FULLTILT.DeviceOrientation object
-    deviceOrientation = controller;
-})
-.catch(function(message) {
-    console.error(message);
-
-    // Optionally set up fallback controls...
-    // initManualControls();
-});
-
 function dynamicSlerp(currentQuat, targetQuat, deltaTime) {
     let angle = currentQuat.angleTo(targetQuat);
     let factor = Math.min(deltaTime * angle * 0.5, 1); // Example calculation
-    currentQuat.slerp(targetQuat, deltaTime * angle * 0.25);
+    currentQuat.slerp(targetQuat, factor);
 }
 
 function handleOrientation(event) {
@@ -220,14 +221,12 @@ function handleOrientation(event) {
 
     lastUpdateTime = currentTime;
 
-    let fulltiltEuler = deviceOrientation.getScreenAdjustedEuler();
-
-    let alpha = THREE.Math.degToRad(fulltiltEuler.alpha);
-    let beta = -Math.PI / 2 + THREE.Math.degToRad(fulltiltEuler.beta); // Adjusting beta
-    let gamma = THREE.Math.degToRad(fulltiltEuler.gamma);
+    let alpha = THREE.Math.degToRad(event.alpha);
+    let beta = -Math.PI / 2 + THREE.Math.degToRad(event.beta); // Adjusting beta
+    let gamma = THREE.Math.degToRad(event.gamma);
 
     //let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, gamma, 'XYZ'));
-    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, 0, 'YXZ'));
+    let targetQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(beta, alpha, 0, 'YXZ'));//
 
     // Smoothly interpolate the camera's current quaternion towards the target
     dynamicSlerp(camera.quaternion, targetQuaternion, 0.05); // The slerp factor can be adjusted for smoothing

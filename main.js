@@ -172,7 +172,7 @@ var scene = new THREE.Scene();
 const sphereGeometry = new THREE.SphereGeometry(100, 256, 128);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
 const textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load('./panoramas/ThomasPano.webp');
+var texture = textureLoader.load('./panoramas/Panorama.jpg');
 
 var material = new THREE.MeshBasicMaterial({
   map: texture,

@@ -7,73 +7,88 @@ function isPCorLaptop() {
     return /windows nt|macintosh/.test(userAgent) && !/iphone|ipad|android/.test(userAgent);
 }
 
-// Check if the browser supports the Permissions API and if it's not a PC or laptop
-if (typeof navigator.permissions === 'undefined' || isPCorLaptop()) {
-    // Hide the buttons if the Permissions API is not supported or if the device is a PC or laptop
+// Hide the buttons if the device is a PC or laptop before the DOM is fully loaded
+if (isPCorLaptop()) {
     moaButton.style.display = 'none';
     vrButton.style.display = 'none';
-} else {
-    // Add event listener to the motion and orientation button
-    moaButton.addEventListener('click', function() {
-        // Function to request motion and orientation permissions
-        const requestMotionAndOrientationPermissions = () => {
-            let permissionsGranted = false;
+}
 
-            const requestOrientationPermission = () => {
-                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                    DeviceOrientationEvent.requestPermission()
-                    .then(permissionState => {
-                        if (permissionState === 'granted') {
-                            permissionsGranted = true;
-                            window.addEventListener('deviceorientation', handleOrientation, true);
-                            motionAndOrientationActive = true;
-                        } else {
-                            alert('Permission to access device orientation was denied.');
-                        }
-                    })
-                    .catch(console.error);
-                } else {
-                    // Automatically assume permission is granted if no requestPermission method exists
+// Function to request motion and orientation permissions
+function requestMotionAndOrientationPermissions() {
+    let permissionsGranted = false;
+
+    const requestOrientationPermission = () => {
+        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
                     permissionsGranted = true;
                     window.addEventListener('deviceorientation', handleOrientation, true);
                     motionAndOrientationActive = true;
-                }
-            };
-
-            const requestMotionPermission = () => {
-                if (typeof DeviceMotionEvent.requestPermission === 'function') {
-                    DeviceMotionEvent.requestPermission()
-                    .then(permissionState => {
-                        if (permissionState === 'granted') {
-                            permissionsGranted = true;
-                            window.addEventListener('devicemotion', handleMotion, true);
-                            motionAndOrientationActive = true;
-                        } else {
-                            alert('Permission to access device motion was denied.');
-                        }
-                    })
-                    .catch(console.error);
                 } else {
-                    // Automatically assume permission is granted if no requestPermission method exists
+                    alert('Permission to access device orientation was denied.');
+                }
+            })
+            .catch(console.error);
+        } else {
+            // Automatically assume permission is granted if no requestPermission method exists
+            permissionsGranted = true;
+            window.addEventListener('deviceorientation', handleOrientation, true);
+            motionAndOrientationActive = true;
+        }
+    };
+
+    const requestMotionPermission = () => {
+        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
                     permissionsGranted = true;
                     window.addEventListener('devicemotion', handleMotion, true);
                     motionAndOrientationActive = true;
+                } else {
+                    alert('Permission to access device motion was denied.');
                 }
-            };
+            })
+            .catch(console.error);
+        } else {
+            // Automatically assume permission is granted if no requestPermission method exists
+            permissionsGranted = true;
+            window.addEventListener('devicemotion', handleMotion, true);
+            motionAndOrientationActive = true;
+        }
+    };
 
-            // Request permissions
-            requestOrientationPermission();
-            requestMotionPermission();
+    // Request permissions
+    requestOrientationPermission();
+    requestMotionPermission();
 
-            // Hide the motion and orientation button after requesting permissions
-            if (permissionsGranted) {
-                moaButton.style.display = 'none';
-            }
-        };
+    // Hide the motion and orientation button after requesting permissions
+    if (permissionsGranted) {
+        moaButton.style.display = 'none';
+    }
+}
 
-        // Request motion and orientation permissions
+// Add event listener to the motion and orientation button
+moaButton.addEventListener('click', function() {
+    // Check if the device is a PC or laptop
+    if (isPCorLaptop()) {
+        alert('Motion and orientation features are not supported on PC or laptop devices.');
+        return;
+    }
+
+    // Request motion and orientation permissions
+    requestMotionAndOrientationPermissions();
+});
+
+// Add event listener to the VR button
+vrButton.addEventListener('click', function() {
+    // Check if motion and orientation data permissions are granted and enabled
+    if (!motionAndOrientationActive) {
+        // If not, request motion and orientation permissions
         requestMotionAndOrientationPermissions();
-    });
+        return; // Exit function to avoid proceeding further
+    }
 
     // Check if the browser supports the WebXR API
     if (navigator.xr && typeof navigator.xr.isSessionSupported === 'function') {
@@ -187,7 +202,7 @@ if (typeof navigator.permissions === 'undefined' || isPCorLaptop()) {
         // WebXR API not supported, hide the VR button
         vrButton.style.display = 'none';
     }
-}
+});
   
 // Function to share to specific platforms
 function shareToPlatform(platform) {

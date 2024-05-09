@@ -1,9 +1,11 @@
 const moaButton = document.getElementById("moa-button");
+const vrButton = document.getElementById("vr-button");
 
 // Check if the browser supports the Permissions API
 if (typeof navigator.permissions === 'undefined') {
     // Hide the button if the Permissions API is not supported
     moaButton.style.display = 'none';
+    vrButton.style.display = 'none';
 } else {
     // Add event listener to the button
     moaButton.addEventListener('click', function() {
@@ -60,11 +62,187 @@ if (typeof navigator.permissions === 'undefined') {
             this.style.display = 'none';
         }
     });
+}
 
-    // Hide the button when the document is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        moaButton.style.display = 'none';
+// Check if the browser supports the Permissions API for motion and orientation
+if (typeof DeviceOrientationEvent === 'undefined' || typeof DeviceMotionEvent === 'undefined' || typeof navigator.permissions === 'undefined') {
+    // Hide the motion and orientation button and the VR button if necessary APIs are not supported
+    vrButton.style.display = 'none';
+} else {
+    // Add event listener to the motion and orientation button
+    moaButton.addEventListener('click', function() {
+        // Function to request motion and orientation permissions
+        const requestMotionAndOrientationPermissions = () => {
+            let permissionsGranted = false;
+
+            const requestOrientationPermission = () => {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            permissionsGranted = true;
+                            window.addEventListener('deviceorientation', handleOrientation, true);
+                            motionAndOrientationActive = true;
+                        } else {
+                            alert('Permission to access device orientation was denied.');
+                        }
+                    })
+                    .catch(console.error);
+                } else {
+                    // Automatically assume permission is granted if no requestPermission method exists
+                    permissionsGranted = true;
+                    window.addEventListener('deviceorientation', handleOrientation, true);
+                    motionAndOrientationActive = true;
+                }
+            };
+
+            const requestMotionPermission = () => {
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    DeviceMotionEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            permissionsGranted = true;
+                            window.addEventListener('devicemotion', handleMotion, true);
+                            motionAndOrientationActive = true;
+                        } else {
+                            alert('Permission to access device motion was denied.');
+                        }
+                    })
+                    .catch(console.error);
+                } else {
+                    // Automatically assume permission is granted if no requestPermission method exists
+                    permissionsGranted = true;
+                    window.addEventListener('devicemotion', handleMotion, true);
+                    motionAndOrientationActive = true;
+                }
+            };
+
+            // Request permissions
+            requestOrientationPermission();
+            requestMotionPermission();
+
+            // Hide the motion and orientation button after requesting permissions
+            if (permissionsGranted) {
+                moaButton.style.display = 'none';
+            }
+        };
+
+        // Request motion and orientation permissions
+        requestMotionAndOrientationPermissions();
     });
+
+    // Check if the browser supports the WebXR API
+    if (navigator.xr && typeof navigator.xr.isSessionSupported === 'function') {
+        // Add event listener to the VR button
+        vrButton.addEventListener('click', function() {
+            // Check if motion and orientation data permissions are granted and enabled
+            if (!motionAndOrientationActive) {
+                // If not, request motion and orientation permissions
+                requestMotionAndOrientationPermissions();
+                return; // Exit function to avoid proceeding further
+            }
+
+            // Function to check and request landscape mode
+            const requestLandscapeMode = () => {
+                if (screen.orientation && typeof screen.orientation.lock === 'function') {
+                    // Check if the device is already in landscape mode
+                    if (screen.orientation.type.startsWith('landscape')) {
+                        // Proceed to load VR environment
+                        loadVREnvironment();
+                    } else {
+                        // Request landscape mode
+                        screen.orientation.lock('landscape')
+                        .then(() => {
+                            // Once the device is in landscape mode, load VR environment
+                            loadVREnvironment();
+                        })
+                        .catch(error => {
+                            console.error('Failed to lock screen orientation:', error);
+                        });
+                    }
+                } else {
+                    // Screen orientation API not supported, cannot request landscape mode
+                    alert('Screen orientation lock is not supported on this device.');
+                }
+            };
+
+            // Function to load VR environment
+            function loadVREnvironment() {
+                // Check if WebXR is supported
+                navigator.xr.isSessionSupported('immersive-vr')
+                .then(supported => {
+                    if (supported) {
+                        // Request a WebXR session
+                        navigator.xr.requestSession('immersive-vr')
+                        .then(session => {
+                            // Set up the XR environment
+                            const xrReferenceSpaceType = 'local'; // Or 'local-floor' depending on your preference
+                            session.requestReferenceSpace(xrReferenceSpaceType)
+                            .then(referenceSpace => {
+                                // Create the XRLayer for rendering
+                                const xrLayer = new XRWebGLLayer(session, renderer);
+            
+                                // Create the XR Space for rendering
+                                const xrSpace = new XRRigidTransform();
+            
+                                // Set up the XR Session
+                                session.updateRenderState({ baseLayer: xrLayer });
+            
+                                // Enter the XR Session
+                                session.requestAnimationFrame((time, frame) => {
+                                    // Render the scene in VR mode
+                                    renderer.xr.enabled = true;
+                                    renderer.setAnimationLoop(() => {
+                                        renderer.render(scene, camera);
+                                    });
+                                });
+            
+                                // Handle session end
+                                session.addEventListener('end', () => {
+                                    // Reset XR-related settings
+                                    renderer.xr.enabled = false;
+                                    renderer.setAnimationLoop(null);
+                                });
+            
+                                // Handle session errors
+                                session.addEventListener('error', (event) => {
+                                    console.error('XR Session Error:', event);
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Failed to create XR reference space:', error);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Failed to request XR session:', error);
+                        });
+                    } else {
+                        alert('WebXR is not supported in this browser.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking WebXR support:', error);
+                });
+            }
+
+            // Check if the WebXR API is supported
+            navigator.xr.isSessionSupported('immersive-vr')
+            .then(supported => {
+                if (supported) {
+                    // Check and request landscape mode
+                    requestLandscapeMode();
+                } else {
+                    alert('WebXR API is not supported in this browser.');
+                }
+            })
+            .catch(error => {
+                console.error('Error checking WebXR support:', error);
+            });
+        });
+    } else {
+        // WebXR API not supported, hide the VR button
+        vrButton.style.display = 'none';
+    }
 }
   
 // Function to share to specific platforms

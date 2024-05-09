@@ -1,7 +1,12 @@
-const vrButton = document.getElementById("moa-button");
-vrButton.addEventListener('click', function() {
-    // Only proceed if the DeviceOrientationEvent is supported and the permission is needed/granted.
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceMotionEvent !== 'undefined') {
+const moaButton = document.getElementById("moa-button");
+
+// Check if the browser supports the Permissions API
+if (typeof navigator.permissions === 'undefined') {
+    // Hide the button if the Permissions API is not supported
+    moaButton.style.display = 'none';
+} else {
+    // Add event listener to the button
+    moaButton.addEventListener('click', function() {
         let permissionsGranted = false;
 
         const requestOrientationPermission = () => {
@@ -54,10 +59,13 @@ vrButton.addEventListener('click', function() {
         if (permissionsGranted) {
             this.style.display = 'none';
         }
-    } else {
-        console.log("Device does not support DeviceOrientationEvent or DeviceMotionEvent.");
-    }
-});
+    });
+
+    // Hide the button when the document is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        moaButton.style.display = 'none';
+    });
+}
   
 // Function to share to specific platforms
 function shareToPlatform(platform) {
@@ -132,6 +140,16 @@ function updateRenderer(container) {
 
 // Get fullscreen button
 const fullscreenButton = document.getElementById("fullscreen-button");
+
+// Check if the browser supports the Permissions API for fullscreen
+if (typeof document.documentElement.requestFullscreen === 'undefined' &&
+    typeof document.documentElement.webkitRequestFullscreen === 'undefined' &&
+    typeof document.documentElement.mozRequestFullScreen === 'undefined' &&
+    typeof document.documentElement.msRequestFullscreen === 'undefined') {
+    // Hide the fullscreen button if fullscreen permissions are not supported
+    fullscreenButton.style.display = 'none';
+}
+
 fullscreenButton.addEventListener('click', toggleFullScreen);
 
 // Handle window resizing
@@ -172,7 +190,7 @@ var scene = new THREE.Scene();
 const sphereGeometry = new THREE.SphereGeometry(100, 256, 128);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
 const textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load('./panoramas/Panorama.jpg');
+var texture = textureLoader.load('./panoramas/ThomasPano.webp');
 
 var material = new THREE.MeshBasicMaterial({
   map: texture,

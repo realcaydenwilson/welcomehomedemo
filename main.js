@@ -328,7 +328,7 @@ window.addEventListener('load', function() {
     updateRenderer();  // This will set everything up correctly on initial load
 });
 
-/*Testing was performed. It appears that the modal resizes efficiently when shrinking, but when expanding the window, it ends up exposing part of the background as the modal moves faster than the THREE.js application can render. This may be a timing or a render issue. Code needs optimization for this reason.*/
+/*Testing was performed. It appears that the modal resizes efficiently when shrinking, but when expanding the window, it ends up exposing part of the background as the modal moves faster than the THREE.js application can render. This may be a timing or a render issue. Code needs optimization for this reason. Also, buttons appear along with inf-box, which we only want the buttons when in mobile.*/
 
 window.addEventListener('resize', function () {
     const modal = document.getElementById('share-modal');

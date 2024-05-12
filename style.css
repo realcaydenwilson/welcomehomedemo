@@ -6,19 +6,33 @@ body, html {
   overscroll-behavior: none;
   height: 100%;
   display: block;
+  background: black;
+}
+#three-canvas {
+  height: 100%;
+  width: 100%;
 }
 
-#scene-container {
-  position: absolute;
-  width: 80vw;  /* Default width */
+#scene-container script {
+  width: 100%;
   height: 100%;
+  /* Other styles */
+}
+
+#main-content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
   top: 0;
   left: 0;
   transition: width 0.3s ease;
+  z-index: 2;
 }
 
-#scene-container.narrow {
-  width: 100vw;  /* Adjusted width when modal is visible */
+#scene-container {
+  position: absolute; /* Change to relative positioning */
+  width: 100%; /* Ensure it takes full width of its parent */
+  height: 100%; /* Ensure it takes full height of its parent */
 }
 
 #info-box {
@@ -30,6 +44,7 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  z-index: 2;
 }
 
 #client-logo {
@@ -132,29 +147,34 @@ button {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  z-index: 1;
+  z-index: 10 !important;
 }
 
 .modal {
-  display: none; /* Start as hidden */
+  visibility: hidden; /* Initially hidden */
+  opacity: 0; /* Fully transparent */
   position: fixed;
-  z-index: 2; /* Above the main container, below the buttons */
+  z-index: 1; /* Above the main container, below the buttons */
   right: 0;
   top: 0;
   width: 20%; /* Modal width */
-  min-width:450px;
+  min-width: 450px;
   height: 100%; /* Full height */
   background-color: rgb(0,0,0);
   overflow-y: auto; /* Scrollable content */
   overflow-x: hidden; /* Prevent horizontal scrolling */
-  transition: transform 0.3s ease-out; /* Smooth transition for transform */
   transform: translateX(100%); /* Initially off-screen to the right */
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0s linear 0.3s; /* Delay visibility transition */
 }
 
 .modal.show {
+  visibility: visible; /* Make visible */
+  opacity: 1; /* Fully opaque */
+  transform: translateX(0%); /* Slide in from the right */
   display: flex; /* Flex ensures content is laid out properly */
   flex-direction: column; /* Aligns children vertically */
-  transform: translateX(0); /* Bring into view */
+  align-items: flex-end; /* Align modal to the right */
+  transition-delay: 0s; /* Remove delay when showing the modal */
 }
 
 .modal-content {
@@ -285,16 +305,21 @@ button {
   align-items: center; /* Ensures the label (icon + text) aligns correctly */
 }
 
-@media (max-width: 768px) { /* Adjust this breakpoint based on the devices you're targeting */
+@media (max-width: 450px) { /* Adjust this breakpoint based on the devices you're targeting */
   .modal {
-    width: 85%; /* Adjusts modal to take up 85% of screen */
-    right: 7.5%; /* Center modal horizontally */
-    left: 7.5%;
+    width: 100%;
+    display: flex; /* Flex ensures content is laid out properly */
+    flex-direction: column; /* Aligns children vertically */
+    align-items: center /* Align modal to the right */
+  }
+
+  .main-content {
+    width: 100vw !important; /* Ensure it takes full width of its parent */
   }
 
   .modal-content {
     font-size: 0.9em; /* Smaller font size for smaller screens */
-    padding: 5%; /* Reduced padding */
+    padding: 10%; /* Reduced padding */
   }
 
   .modal-content h3, .modal-content h2, .modal-content h4 {
@@ -307,7 +332,7 @@ button {
   }
 
   .modal-content a {
-    font-size: 12px; /* Adjust link font size to fit smaller layout */
+    font-size: 10px; /* Adjust link font size to fit smaller layout */
   }
 
   .rep-image {

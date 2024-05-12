@@ -329,7 +329,7 @@ button {
   }
 
   .modal-content p, .rep-info p, .about p {
-    font-size: 14px; /* Ensure text is not too small */
+    font-size: 10px; /* Ensure text is not too small */
     line-height: 1.4; /* Increase line height for better readability */
   }
 

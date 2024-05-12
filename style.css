@@ -52,6 +52,8 @@ body, html {
   max-width: 200px;
   height: auto;
   margin: auto;
+  margin-left: 0; /* Aligns the logo to the left by removing auto margin */
+  align-self: flex-start;
 }
 
 hr {

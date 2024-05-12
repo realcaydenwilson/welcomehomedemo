@@ -232,48 +232,6 @@ function shareToPlatform(platform) {
         window.open(shareUrl, '_blank').focus();
     }
 }
-  
-// Function to copy the current URL to the clipboard
-function copyLink() {
-navigator.clipboard.writeText(window.location.href)
-    .then(() => alert('Link copied to clipboard!'))
-    .catch(err => console.error('Error copying link: ', err));
-}
-
-// Toggle share modal and adjust scene container width
-document.getElementById('share-button').addEventListener('click', function() {
-    toggleShareModal();
-});
-
-function toggleShareModal() {
-    const modal = document.getElementById('share-modal');
-    const sceneContainer = document.getElementById('scene-container');
-
-    // Toggle the 'show' class to either show or hide the modal
-    modal.classList.toggle('show');
-
-    // Toggle the 'narrow' class on sceneContainer based on modal visibility
-    if (modal.classList.contains('show')) {
-        sceneContainer.classList.add('narrow'); // Apply narrow class
-        document.body.classList.add('modal-active'); // Indicate that the modal is active
-    } else {
-        sceneContainer.classList.remove('narrow'); // Remove narrow class
-        document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
-    }
-
-    // Update renderer size after container resize
-    updateRenderer(sceneContainer);
-}
-
-function updateRenderer(container) {
-    if (renderer && camera) {
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-    } else {
-        console.error('Renderer or camera not defined');
-    }
-}
 
 // Get fullscreen button
 const fullscreenButton = document.getElementById("fullscreen-button");
@@ -287,15 +245,6 @@ if (typeof document.documentElement.requestFullscreen === 'undefined' &&
     fullscreenButton.style.display = 'none';
 }
 
-fullscreenButton.addEventListener('click', toggleFullScreen);
-
-// Handle window resizing
-window.addEventListener('resize', function () {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-  
 function toggleFullScreen() {
     if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
         if (document.documentElement.requestFullscreen) {
@@ -320,6 +269,90 @@ function toggleFullScreen() {
     }
 }
 
+fullscreenButton.addEventListener('click', toggleFullScreen);
+
+// Set up renderer
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+document.getElementById('share-button').addEventListener('click', function() {
+    toggleShareModal();
+});
+
+function toggleShareModal() {
+    const modal = document.getElementById('share-modal');
+    const mainContent = document.getElementById('main-content');
+
+    // Toggle the 'show' class to either show or hide the modal
+    modal.classList.toggle('show');
+
+    // Toggle the width of mainContent based on modal visibility
+    if (modal.classList.contains('show')) {
+        const modalWidth = modal.offsetWidth; // Get the width of the modal
+        const mainContentWidth = window.innerWidth - modalWidth; // Calculate the width of mainContent
+        mainContent.style.width = mainContentWidth + 'px'; // Set the width of mainContent
+        const canvas = document.querySelector('canvas');
+        console.log(canvas);
+        document.body.classList.add('modal-active'); // Indicate that the modal is active
+    } else {
+        mainContent.style.width = '100vw'; // Reset the width of mainContent
+        document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
+    }
+
+    // Update renderer size after container resize
+    updateRenderer();
+}
+
+function updateRenderer() {
+    const modal = document.getElementById('share-modal');
+    const mainContent = document.getElementById('main-content');
+    const canvas = document.querySelector('canvas');
+    const containerWidth = modal.classList.contains('show') ? mainContent.offsetWidth : window.innerWidth;
+
+    if (renderer && camera) {
+        renderer.setSize(containerWidth, window.innerHeight);
+        camera.aspect = containerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        // Update canvas width and height attributes
+        canvas.width = containerWidth;
+        canvas.height = window.innerHeight;
+    } else {
+        console.error('Renderer or camera not defined');
+    }
+}
+
+window.addEventListener('load', function() {
+    updateRenderer();  // This will set everything up correctly on initial load
+});
+
+/*Testing was performed. It appears that the modal resizes efficiently when shrinking, but when expanding the window, it ends up exposing part of the background as the modal moves faster than the THREE.js application can render. This may be a timing or a render issue. Code needs optimization for this reason.*/
+
+window.addEventListener('resize', function () {
+    const modal = document.getElementById('share-modal');
+    const mainContent = document.getElementById('main-content');
+    const modalWidth = modal.offsetWidth;
+    const modalIsActive = modal.classList.contains('show');
+
+    // Calculate the width of the main content based on modal visibility
+    let mainContentWidth;
+    if (modalIsActive) {
+        // If modal is active, subtract modal width from window width
+        mainContentWidth = window.innerWidth - modalWidth;
+    } else {
+        // If modal is not active, use full window width for main content
+        mainContentWidth = window.innerWidth;
+    }
+
+    // Set the width of the main content
+    mainContent.style.width = mainContentWidth + 'px';
+
+    // Update renderer size after container resize
+    updateRenderer();
+});
+
 // Set up scene
 var scene = new THREE.Scene();
 
@@ -341,12 +374,6 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeigh
 //camera.target = new THREE.Vector3(0, 0, 0);
 camera.position.set(0, 0, 0);
 scene.add(camera);
-
-// Set up renderer
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.body.appendChild(renderer.domElement);
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;
@@ -453,15 +480,41 @@ function onPointerMove(event) {
 // Add event listener for device orientation
 window.addEventListener('deviceorientation', handleOrientation, true);
 
-// Add event listeners for mouse interaction
-document.addEventListener('mousedown', onMouseDown);
-document.addEventListener('mouseup', onPointerUp);
-document.addEventListener('mousemove', onPointerMove);
+document.addEventListener('mousedown', function(event) {
+    if (event.target.closest('#scene-container')) {
+        onMouseDown(event);
+    }
+});
 
-// Add event listeners for touch interaction
-document.addEventListener('touchstart', onTouchStart);
-document.addEventListener('touchend', onPointerUp);
-document.addEventListener('touchmove', onPointerMove);
+document.addEventListener('mouseup', function(event) {
+    if (event.target.closest('#scene-container')) {
+        onPointerUp(event);
+    }
+});
+
+document.addEventListener('mousemove', function(event) {
+    if (event.target.closest('#scene-container')) {
+        onPointerMove(event);
+    }
+});
+
+document.addEventListener('touchstart', function(event) {
+    if (event.target.closest('#scene-container')) {
+        onTouchStart(event);
+    }
+});
+
+document.addEventListener('touchend', function(event) {
+    if (event.target.closest('#scene-container')) {
+        onPointerUp(event);
+    }
+});
+
+document.addEventListener('touchmove', function(event) {
+    if (event.target.closest('#scene-container')) {
+        onPointerMove(event);
+    }
+});
 
 function animate() {
   requestAnimationFrame(animate);

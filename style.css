@@ -358,7 +358,7 @@ button {
   }
 }
 
-#design-options-container {
+#design-options-container, #floorplan-options-container {
   display: flex; /* Use flexbox to align children inline */
   align-items: center; /* Align items vertically in the center */
   justify-content: flex-start; /* Align items to the start of the container */
@@ -368,7 +368,7 @@ button {
   margin-top: 1em; /* Adjust top margin to lower the element if it's too high */
 }
 
-#design-options-trigger {
+#design-options-trigger, #floorplan-options-trigger {
   background-color: white;
   border: none;
   border-radius: 100%;
@@ -383,7 +383,7 @@ button {
   transition: transform 0.3s ease;
 }
 
-#design-options-trigger.rotate-icon {
+#design-options-trigger.rotate-icon, #floorplan-options-trigger.rotate-icon {
   transform: rotate(90deg); /* Rotates the icon 90 degrees */
 }
 

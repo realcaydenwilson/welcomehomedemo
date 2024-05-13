@@ -45,8 +45,7 @@
       <div class="modal-content">
         <h1>ABOUT THIS PROPERTY</h1>
         <p class="about">Struggling to close deals because clients can't visualize their dream home? Imagine turning simple blueprints into interactive, life-like spaces. Welcome Home does just that. Our immersive tours, created from your floor plans, offer “to-scale”, photorealistic renderings accessible on any device. Say goodbye to design uncertainties and hello to faster sales and satisfied clients.</p>
-        <hr>
-        <h2>SHARE</h2>
+        <h3>SHARE THIS TOUR</h3>
         <div class="share-icons-container"> <!-- Container for icons -->
           <a href="#" onclick="shareToPlatform('facebook')" title="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
           <a href="#" onclick="shareToPlatform('whatsapp')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
@@ -55,7 +54,7 @@
           <a href="#" onclick="copyLink()" title="Copy Link"><i class="fas fa-copy"></i></a>
         </div>
         <hr>
-        <h2>CONTACT</h2>
+        <h2>GET IN TOUCH</h2>
         <div class="contact-rep">
           <img src="./images/profile-image.jpg" alt="Rep Name" class="rep-image">
           <div class="rep-info">
@@ -66,6 +65,29 @@
             <p><span class="label"><i class="fas fa-globe icon"></i></span><a href="https://saywelcomehome.com" target="_blank">saywelcomehome.com</a></p>
           </div>
         </div>
+        <div id="design-options-container">
+          <button id="design-options-trigger">
+            <i class="fas fa-plus"></i>
+        </button>
+        <h3 for="design-options-trigger">DESIGN CENTER</h3>
+          <div id="design-options-dropdown" class="dropdown-content">
+              <a href="https://saywelcomehome.com" target="_blank">
+                  <img src="./images/style1.jpg" alt="Style 1">
+                  <div>
+                      <h2>Coastal Design</h2>
+                      <p>Beachy inspriation and soft, tranquil hues create a welcoming, relaxing space.</p>
+                  </div>
+              </a>
+              <a href="https://saywelcomehome.com" target="_blank">
+                  <img src="./images/style2.jpg" alt="Style 2">
+                  <div>
+                      <h2>Modern Design</h2>
+                      <p>Sleek surfaces and clean lines make a powerful first impression.</p>
+                  </div>
+              </a>
+              <!-- More links can be added similarly -->
+          </div>
+      </div>
       </div>
     </div>  
   </body>

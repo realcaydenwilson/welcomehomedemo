@@ -45,6 +45,7 @@ body, html {
   flex-direction: column;
   align-items: flex-start;
   z-index: 2;
+  user-select: none;
 }
 
 #client-logo {
@@ -177,13 +178,14 @@ button {
   flex-direction: column; /* Aligns children vertically */
   align-items: flex-end; /* Align modal to the right */
   transition-delay: 0s; /* Remove delay when showing the modal */
+  overflow-y: visible;
 }
 
 .modal-content {
   margin: 5%;
   padding-top: 10%;
   width: 90%; /* Adjust width to prevent overflow, considering padding and margin */
-  height: auto;
+  height: 100%;
   max-width: 100%; /* Ensure it does not exceed the modal width */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
   word-wrap: break-word; /* Ensures that words do not overflow the container */
@@ -201,8 +203,8 @@ button {
 }
 
 .about {
-  padding-top: 5%;
-  padding-bottom: 2.5%;
+  padding-top: 2em;
+  padding-bottom: 3em;
 }
 
 .about p {
@@ -235,7 +237,7 @@ button {
   display: flex;
   justify-content: left;
   flex-wrap: wrap;
-  margin-top: 5%;
+  margin-top: 2.55%;
   margin-bottom: 2.5%;
 }
 
@@ -350,4 +352,90 @@ button {
   .rep-info {
     padding-top: 10px; /* Provide some space above the text */
   }
+
+  .dropdown-content a {
+    font-size: 10px;
+  }
+}
+
+#design-options-container {
+  display: flex; /* Use flexbox to align children inline */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: flex-start; /* Align items to the start of the container */
+  width: 100%; /* Ensure it takes the full width */
+  position: relative;
+  padding: 0.5em 0; /* Add some vertical padding for spacing */
+  margin-top: 1em; /* Adjust top margin to lower the element if it's too high */
+}
+
+#design-options-trigger {
+  background-color: white;
+  border: none;
+  border-radius: 100%;
+  padding: 1.25em;
+  margin-right: 1.5em; /* Adds space between the button and the text */
+  font-size: 0.75em;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Prevents the button from shrinking */
+  transition: transform 0.3s ease;
+}
+
+#design-options-trigger.rotate-icon {
+  transform: rotate(90deg); /* Rotates the icon 90 degrees */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: 0; /* Align the dropdown to start with the container */
+  top: 100%; /* Start the dropdown right below the container */
+  width: 100%; /* Full width of the container */
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(-20px); /* Starts slightly above to create the fade-in effect */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dropdown-content.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0px); /* Moves to original position */
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 0px 0px;
+  text-decoration: none;
+  display: inline;
+  width: 100%;
+  font-size: 12px;
+}
+
+.dropdown-content a img {
+  display: block; /* Ensure images are not inline */
+  width: 100%; /* Full width to utilize the available space */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 2.5%; /* Space between the image and the text */
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.35em;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: calc(0.35em/2);
+  border: 3px solid transparent; /* creates padding effect */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #00d4e8;
 }

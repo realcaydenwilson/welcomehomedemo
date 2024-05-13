@@ -235,26 +235,49 @@ function shareToPlatform(platform) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const designOptionsTrigger = document.getElementById('design-options-trigger');
-    const designOptionsDropdown = document.querySelector('.dropdown-content');
-
-    designOptionsTrigger.addEventListener('click', function() {
-        if (designOptionsDropdown.style.display === 'none' || designOptionsDropdown.style.display === '') {
-            designOptionsDropdown.style.display = 'block';
-            setTimeout(() => {
-                designOptionsDropdown.style.opacity = '1';
-                designOptionsDropdown.style.transform = 'translateY(0px)';
-            }, 10);
-        } else {
-            designOptionsDropdown.style.opacity = '0';
-            designOptionsDropdown.style.transform = 'translateY(-20px)';
-            setTimeout(() => {
-                designOptionsDropdown.style.display = 'none';
-            }, 500); // Ensure this matches the CSS transition time
-        }
-
-        // Toggle rotation class for the icon
-        this.classList.toggle('rotate-icon');
+    const designOptionsDropdown = document.getElementById('design-options-dropdown');
+    const floorplanOptionsTrigger = document.getElementById('floorplan-options-trigger');
+    const floorplanOptionsDropdown = document.getElementById('floorplan-options-dropdown');
+  
+    const allDropdowns = [designOptionsDropdown, floorplanOptionsDropdown];
+    const allTriggers = [designOptionsTrigger, floorplanOptionsTrigger];
+  
+    allTriggers.forEach(trigger => {
+      trigger.addEventListener('click', function() {
+        const currentDropdown = this === designOptionsTrigger ? designOptionsDropdown : floorplanOptionsDropdown;
+        closeOtherDropdowns(currentDropdown);
+        toggleDropdown(currentDropdown, this);
+      });
     });
+  
+    function closeOtherDropdowns(currentDropdown) {
+      allDropdowns.forEach(dropdown => {
+        if (dropdown !== currentDropdown && dropdown.style.display === 'block') {
+          dropdown.style.opacity = '0';
+          dropdown.style.transform = 'translateY(-20px)';
+          setTimeout(() => {
+            dropdown.style.display = 'none';
+          }, 500);
+        }
+      });
+    }
+  
+    function toggleDropdown(dropdown, trigger) {
+      if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+        dropdown.style.display = 'block';
+        setTimeout(() => {
+          dropdown.style.opacity = '1';
+          dropdown.style.transform = 'translateY(0px)';
+        }, 10);
+      } else {
+        dropdown.style.opacity = '0';
+        dropdown.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          dropdown.style.display = 'none';
+        }, 500);
+      }
+      trigger.classList.toggle('rotate-icon');
+    }
 });
 
 // Get fullscreen button

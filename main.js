@@ -233,6 +233,30 @@ function shareToPlatform(platform) {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const designOptionsTrigger = document.getElementById('design-options-trigger');
+    const designOptionsDropdown = document.querySelector('.dropdown-content');
+
+    designOptionsTrigger.addEventListener('click', function() {
+        if (designOptionsDropdown.style.display === 'none' || designOptionsDropdown.style.display === '') {
+            designOptionsDropdown.style.display = 'block';
+            setTimeout(() => {
+                designOptionsDropdown.style.opacity = '1';
+                designOptionsDropdown.style.transform = 'translateY(0px)';
+            }, 10);
+        } else {
+            designOptionsDropdown.style.opacity = '0';
+            designOptionsDropdown.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                designOptionsDropdown.style.display = 'none';
+            }, 500); // Ensure this matches the CSS transition time
+        }
+
+        // Toggle rotation class for the icon
+        this.classList.toggle('rotate-icon');
+    });
+});
+
 // Get fullscreen button
 const fullscreenButton = document.getElementById("fullscreen-button");
 

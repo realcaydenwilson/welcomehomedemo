@@ -407,7 +407,7 @@ var scene = new THREE.Scene();
 const sphereGeometry = new THREE.SphereGeometry(100, 256, 128);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
 const textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load('./panoramas/ThomasPano.webp');
+var texture = textureLoader.load('./panoramas/Panorama.jpg');
 
 var material = new THREE.MeshBasicMaterial({
   map: texture,
@@ -421,6 +421,107 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeigh
 //camera.target = new THREE.Vector3(0, 0, 0);
 camera.position.set(0, 0, 0);
 scene.add(camera);
+
+// User position and matrix setup
+class UserPosition {
+    constructor(matrix) {
+      this.matrix = matrix;
+      this.row = 0;
+      this.col = 0;
+      this.textureCache = {};
+      this.preloadTextures();
+      console.log('UserPosition initialized at row 0, col 0');
+    }
+  
+    moveBasedOnRotation(rotationY) {
+      const angleDeg = (rotationY * 180 / Math.PI + 360) % 360; // Normalize rotation angle
+      console.log(`Rotation Y: ${rotationY} radians, ${angleDeg} degrees`);
+      let direction = null;
+      if (angleDeg >= 45 && angleDeg < 135) {
+        direction = 'east';
+      } else if (angleDeg >= 135 && angleDeg < 225) {
+        direction = 'south';
+      } else if (angleDeg >= 225 && angleDeg < 315) {
+        direction = 'west';
+      } else {
+        direction = 'north';
+      }
+      
+      console.log(`Determined direction: ${direction}`);
+      this.move(direction);
+    }
+
+    preloadTextures() {
+        for (let row of this.matrix) {
+            for (let url of row) {
+                if (!this.textureCache[url]) {
+                    const loader = new THREE.TextureLoader();
+                    loader.load(url, texture => {
+                        this.textureCache[url] = texture;
+                        console.log(`Preloaded texture from ${url}`);
+                    }, undefined, error => {
+                        console.error(`Failed to load texture from ${url}:`, error);
+                    });
+                }
+            }
+        }
+    }
+  
+    move(direction) {
+      const dirMap = { 'north': [-1, 0], 'south': [1, 0], 'west': [0, -1], 'east': [0, 1] };
+      const [dRow, dCol] = dirMap[direction];
+      const newRow = this.row + dRow;
+      const newCol = this.col + dCol;
+      if (newRow >= 0 && newRow < this.matrix.length && newCol >= 0 && newCol < this.matrix[0].length) {
+        this.row = newRow;
+        this.col = newCol;
+        console.log(`Moved to new position: [${this.row}, ${this.col}]`);
+        this.updateSphereTexture();
+      }
+      else
+      {
+        console.log(`Move blocked: target position out of bounds.`);
+      }
+    }
+  
+    updateSphereTexture() {
+        const imageUrl = this.matrix[this.row][this.col];
+        console.log(`Attempting to load texture from ${imageUrl}`);
+        const image = new Image();
+        image.onload = () => {
+            const texture = new THREE.Texture(image);
+            texture.needsUpdate = true; // Important for Three.js to process the texture update
+            sphere.material.map = texture;
+            sphere.material.needsUpdate = true;
+            console.log(`Texture successfully updated to ${imageUrl}`);
+        };
+        image.onerror = err => {
+            console.error(`Error loading texture from ${imageUrl}:`, err);
+        };
+        image.src = imageUrl;
+    }
+  }
+  
+  // Example matrix with URLs
+  const panoramaMatrix = [
+['panoramas/ThomasPano.webp', '.panoramas/Panorama.jpg', '.panoramas/Office1.jpg'],
+['.panoramas/Panorama.jpg', '.panoramas/Office3.jpg', '.panoramas/Office2.jpg'],
+['.panoramas/Office_2.jpg', '.panoramas/Office1.jpg', '.panoramas/Panorama.jpg']
+];
+
+const userPosition = new UserPosition(panoramaMatrix);
+userPosition.updateSphereTexture(); // Initial texture update
+// Handle double click to move based on sphere rotation
+let lastClickTime = 0;
+window.addEventListener('mousedown', event => {
+    const currentTime = Date.now();
+    if (currentTime - lastClickTime < 300) { // Double click detected
+        event.preventDefault();
+        console.log('Double click detected.');
+        userPosition.moveBasedOnRotation(sphere.rotation.y);
+    }
+    lastClickTime = currentTime;
+});
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

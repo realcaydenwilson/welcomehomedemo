@@ -407,7 +407,7 @@ var scene = new THREE.Scene();
 const sphereGeometry = new THREE.SphereGeometry(100, 256, 128);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
 const textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load('./panoramas/Panorama.jpg');
+var texture = textureLoader.load('.panoramas/ThomasPano.webp');
 
 var material = new THREE.MeshBasicMaterial({
   map: texture,
@@ -425,88 +425,71 @@ scene.add(camera);
 // User position and matrix setup
 class UserPosition {
     constructor(matrix) {
-      this.matrix = matrix;
-      this.row = 0;
-      this.col = 0;
-      this.textureCache = {};
-      this.preloadTextures();
-      console.log('UserPosition initialized at row 0, col 0');
-    }
-  
-    moveBasedOnRotation(rotationY) {
-      const angleDeg = (rotationY * 180 / Math.PI + 360) % 360; // Normalize rotation angle
-      console.log(`Rotation Y: ${rotationY} radians, ${angleDeg} degrees`);
-      let direction = null;
-      if (angleDeg >= 45 && angleDeg < 135) {
-        direction = 'east';
-      } else if (angleDeg >= 135 && angleDeg < 225) {
-        direction = 'south';
-      } else if (angleDeg >= 225 && angleDeg < 315) {
-        direction = 'west';
-      } else {
-        direction = 'north';
-      }
-      
-      console.log(`Determined direction: ${direction}`);
-      this.move(direction);
+        this.matrix = matrix;
+        this.row = 0;
+        this.col = 0;
+        console.log('UserPosition initialized at row 0, col 0');
     }
 
-    preloadTextures() {
-        for (let row of this.matrix) {
-            for (let url of row) {
-                if (!this.textureCache[url]) {
-                    const loader = new THREE.TextureLoader();
-                    loader.load(url, texture => {
-                        this.textureCache[url] = texture;
-                        console.log(`Preloaded texture from ${url}`);
-                    }, undefined, error => {
-                        console.error(`Failed to load texture from ${url}:`, error);
-                    });
-                }
-            }
+    normalizeRotation(rotationY) {
+        return (rotationY % (2 * Math.PI) + 2 * Math.PI) % 2 * Math.PI; // Normalize to range [0, 2π]
+    }
+
+    moveBasedOnRotation(rotationY) {
+        const normalizedY = this.normalizeRotation(rotationY);
+        const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
+        console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
+        let direction = null;
+        if (angleDeg >= 45 && angleDeg < 135) {
+            direction = 'east';
+        } else if (angleDeg >= 135 && angleDeg < 225) {
+            direction = 'south';
+        } else if (angleDeg >= 225 && angleDeg < 315) {
+            direction = 'west';
+        } else {
+            direction = 'north';
+        }
+        
+        console.log(`Determined direction: ${direction}`);
+        this.move(direction);
+    }
+
+    move(direction) {
+        const dirMap = { 'north': [-1, 0], 'south': [1, 0], 'west': [0, -1], 'east': [0, 1] };
+        const [dRow, dCol] = dirMap[direction];
+        const newRow = this.row + dRow;
+        const newCol = this.col + dCol;
+        console.log(`Attempting to move from [${this.row}, ${this.col}] to [${newRow}, ${newCol}]`);
+        if (newRow >= 0 && newRow < this.matrix.length && newCol >= 0 && newCol < this.matrix[0].length) {
+            this.row = newRow;
+            this.col = newCol;
+            console.log(`Moved to new position: [${this.row}, ${this.col}]`);
+            this.updateSphereTexture();
+        } else {
+            console.log(`Move blocked: target position out of bounds.`);
         }
     }
-  
-    move(direction) {
-      const dirMap = { 'north': [-1, 0], 'south': [1, 0], 'west': [0, -1], 'east': [0, 1] };
-      const [dRow, dCol] = dirMap[direction];
-      const newRow = this.row + dRow;
-      const newCol = this.col + dCol;
-      if (newRow >= 0 && newRow < this.matrix.length && newCol >= 0 && newCol < this.matrix[0].length) {
-        this.row = newRow;
-        this.col = newCol;
-        console.log(`Moved to new position: [${this.row}, ${this.col}]`);
-        this.updateSphereTexture();
-      }
-      else
-      {
-        console.log(`Move blocked: target position out of bounds.`);
-      }
-    }
-  
+
     updateSphereTexture() {
         const imageUrl = this.matrix[this.row][this.col];
         console.log(`Attempting to load texture from ${imageUrl}`);
-        const image = new Image();
-        image.onload = () => {
-            const texture = new THREE.Texture(image);
-            texture.needsUpdate = true; // Important for Three.js to process the texture update
+        textureLoader.load(imageUrl, texture => {
+            if (sphere.material.map) {
+                sphere.material.map.dispose(); // Dispose of the old texture
+            }
             sphere.material.map = texture;
             sphere.material.needsUpdate = true;
             console.log(`Texture successfully updated to ${imageUrl}`);
-        };
-        image.onerror = err => {
+        }, undefined, err => {
             console.error(`Error loading texture from ${imageUrl}:`, err);
-        };
-        image.src = imageUrl;
+        });
     }
-  }
+}
   
-  // Example matrix with URLs
-  const panoramaMatrix = [
-['panoramas/ThomasPano.webp', '.panoramas/Panorama.jpg', '.panoramas/Office1.jpg'],
-['.panoramas/Panorama.jpg', '.panoramas/Office3.jpg', '.panoramas/Office2.jpg'],
-['.panoramas/Office_2.jpg', '.panoramas/Office1.jpg', '.panoramas/Panorama.jpg']
+// Example matrix with URLs
+const panoramaMatrix = [
+['panoramas/ThomasPano.webp', 'panoramas/Panorama.jpg'],
+['panoramas/Office1.jpg', 'panoramas/Office3.jpg'],
 ];
 
 const userPosition = new UserPosition(panoramaMatrix);
@@ -522,6 +505,13 @@ window.addEventListener('mousedown', event => {
     }
     lastClickTime = currentTime;
 });
+
+// Print the normalized rotation of the sphere every 2 seconds
+/*
+setInterval(() => {
+    const normalizedY = userPosition.normalizeRotation(sphere.rotation.y);
+    console.log(`Normalized Sphere rotation Y: ${normalizedY}`);
+}, 2000);*/
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

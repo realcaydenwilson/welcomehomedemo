@@ -319,7 +319,7 @@ function toggleFullScreen() {
 fullscreenButton.addEventListener('click', toggleFullScreen);
 
 // Set up renderer
-var renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
@@ -400,25 +400,29 @@ window.addEventListener('resize', function () {
     updateRenderer();
 });
 
-// Set up scene
-var scene = new THREE.Scene();
+// Create a sphere
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
 // Create a sphere
 const sphereGeometry = new THREE.SphereGeometry(100, 256, 128);
 sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
+
 const textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load('.panoramas/ThomasPano.webp');
 
-var material = new THREE.MeshBasicMaterial({
-  map: texture,
-})
-var sphere = new THREE.Mesh(sphereGeometry, material);
+// Placeholder texture
+const placeholderTexture = new THREE.TextureLoader().load('./panoramas/1.jpg');
 
+const material = new THREE.MeshBasicMaterial({
+    map: placeholderTexture,
+});
+
+const sphere = new THREE.Mesh(sphereGeometry, material);
 scene.add(sphere);
 
-// Set up camera
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
-//camera.target = new THREE.Vector3(0, 0, 0);
 camera.position.set(0, 0, 0);
 scene.add(camera);
 
@@ -428,58 +432,100 @@ class UserPosition {
         this.matrix = matrix;
         this.row = 0;
         this.col = 0;
+        this.newRow = this.row;
+        this.newCol = this.col;
+        this.currentTexture = null;
+        this.textureLoadSuccess = false;
         console.log('UserPosition initialized at row 0, col 0');
     }
 
     normalizeRotation(rotationY) {
-        return (rotationY % (2 * Math.PI) + 2 * Math.PI) % 2 * Math.PI; // Normalize to range [0, 2π]
+        return ((rotationY % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI); // Normalize to range [0, 2π]
     }
 
-    moveBasedOnRotation(rotationY) {
+    determineDirection(rotationY) {
         const normalizedY = this.normalizeRotation(rotationY);
         const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
         console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
         let direction = null;
-        if (angleDeg >= 45 && angleDeg < 135) {
+        if (angleDeg >= 0 && angleDeg < 90) {
             direction = 'east';
-        } else if (angleDeg >= 135 && angleDeg < 225) {
-            direction = 'south';
-        } else if (angleDeg >= 225 && angleDeg < 315) {
+        } else if (angleDeg >= 90 && angleDeg < 180) {
+            direction = 'north';
+        } else if (angleDeg >= 180 && angleDeg < 270) {
             direction = 'west';
         } else {
-            direction = 'north';
+            direction = 'south';
         }
         
         console.log(`Determined direction: ${direction}`);
-        this.move(direction);
+        this.move(direction, clickCount);
     }
 
-    move(direction) {
-        const dirMap = { 'north': [-1, 0], 'south': [1, 0], 'west': [0, -1], 'east': [0, 1] };
+    move(direction, clickCount) {
+        const dirMap = { 'east': [0, 1], 'west': [0, -1], 'north': [-1, 0], 'south': [1, 0] };
         const [dRow, dCol] = dirMap[direction];
-        const newRow = this.row + dRow;
-        const newCol = this.col + dCol;
-        console.log(`Attempting to move from [${this.row}, ${this.col}] to [${newRow}, ${newCol}]`);
-        if (newRow >= 0 && newRow < this.matrix.length && newCol >= 0 && newCol < this.matrix[0].length) {
-            this.row = newRow;
-            this.col = newCol;
-            console.log(`Moved to new position: [${this.row}, ${this.col}]`);
-            this.updateSphereTexture();
-        } else {
-            console.log(`Move blocked: target position out of bounds.`);
+        console.log(`MOVE ${dirMap[direction]}`);
+        console.log(clickCount);
+        let moveCount = clickCount - 1;
+        console.log(moveCount);
+
+        let newRow = this.row;
+        let newCol = this.col;
+
+        for (let i = 0; i < moveCount; i++) {
+            const tempRow = newRow + dRow;
+            const tempCol = newCol + dCol;
+            if (tempRow >= 0 && tempRow < this.matrix.length && tempCol >= 0 && tempCol < this.matrix[0].length) {
+                newRow = tempRow;
+                newCol = tempCol;
+            } else {
+                console.log(`Move blocked at step ${i + 1}: target position out of bounds.`);
+                break;
+            }
         }
+
+        console.log(`Attempting to move from [${this.row}, ${this.col}] to [${newRow}, ${newCol}]`);
+        if (this.row !== newRow || this.col !== newCol) {
+            this.updateSphereTexture(newRow, newCol);
+            // Wait for the texture to load
+            setTimeout(() => {
+                if (this.textureLoadSuccess) {
+                    this.row = newRow;
+                    this.col = newCol;
+                    console.log(`Move successful to [${newRow}, ${newCol}]`);
+                    console.log(this.row);
+                    console.log(this.col);
+                } else {
+                    console.log(`Move failed: texture update unsuccessful.`);
+                }
+            }, 500); // Adjust timeout as needed to ensure texture load status is updated
+        } else {
+            console.log(`Move failed: texture update unnecessary.`);
+        }        
     }
 
-    updateSphereTexture() {
-        const imageUrl = this.matrix[this.row][this.col];
+    updateSphereTexture(newRow, newCol) {
+        const imageUrl = this.matrix[newRow][newCol];
         console.log(`Attempting to load texture from ${imageUrl}`);
+        this.textureLoadSuccess = false;
+
         textureLoader.load(imageUrl, texture => {
+            // Dispose of the old texture
             if (sphere.material.map) {
-                sphere.material.map.dispose(); // Dispose of the old texture
+                sphere.material.map.dispose();
             }
+            // Dispose of the current texture if it's different from the new one
+            if (this.currentTexture && this.currentTexture !== sphere.material.map) {
+                this.currentTexture.dispose();
+            }
+
             sphere.material.map = texture;
             sphere.material.needsUpdate = true;
+            this.currentTexture = texture; // Store reference to the current texture
+
             console.log(`Texture successfully updated to ${imageUrl}`);
+            this.textureLoadSuccess = true;
         }, undefined, err => {
             console.error(`Error loading texture from ${imageUrl}:`, err);
         });
@@ -488,30 +534,36 @@ class UserPosition {
   
 // Example matrix with URLs
 const panoramaMatrix = [
-['panoramas/ThomasPano.webp', 'panoramas/Panorama.jpg'],
-['panoramas/Office1.jpg', 'panoramas/Office3.jpg'],
+['panoramas/1.jpg', 'panoramas/2.jpg', 'panoramas/3.jpg'],
+['panoramas/4.jpg', 'panoramas/5.jpg', 'panoramas/6.jpg'],
 ];
 
-const userPosition = new UserPosition(panoramaMatrix);
-userPosition.updateSphereTexture(); // Initial texture update
-// Handle double click to move based on sphere rotation
-let lastClickTime = 0;
-window.addEventListener('mousedown', event => {
-    const currentTime = Date.now();
-    if (currentTime - lastClickTime < 300) { // Double click detected
-        event.preventDefault();
-        console.log('Double click detected.');
-        userPosition.moveBasedOnRotation(sphere.rotation.y);
-    }
-    lastClickTime = currentTime;
-});
-
-// Print the normalized rotation of the sphere every 2 seconds
 /*
-setInterval(() => {
-    const normalizedY = userPosition.normalizeRotation(sphere.rotation.y);
-    console.log(`Normalized Sphere rotation Y: ${normalizedY}`);
-}, 2000);*/
+[0, 0]: 'panoramas/1.jpg'
+[0, 1]: 'panoramas/2.jpg'
+[0, 2]: 'panoramas/3.jpg'
+[1, 0]: 'panoramas/4.jpg'
+[1, 1]: 'panoramas/5.jpg'
+[1, 2]: 'panoramas/6.jpg'
+*/
+
+const userPosition = new UserPosition(panoramaMatrix);
+userPosition.updateSphereTexture(0,0); // Initial texture update
+
+// Handle multiple clicks to move based on sphere rotation
+let clickCount = 0;
+let clickTimeout;
+
+window.addEventListener('mousedown', event => {
+    clickCount++;
+    clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => {
+        if (clickCount > 1) {
+            userPosition.determineDirection(sphere.rotation.y, clickCount);
+        }
+        clickCount = 0;
+    }, 300); // Adjust timeout as needed
+});
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

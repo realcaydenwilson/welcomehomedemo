@@ -448,11 +448,11 @@ class UserPosition {
         const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
         console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
         let direction = null;
-        if (angleDeg >= 0 && angleDeg < 90) {
+        if (angleDeg >= 45 && angleDeg < 135) {
             direction = 'east';
-        } else if (angleDeg >= 90 && angleDeg < 180) {
+        } else if (angleDeg >= 135 && angleDeg < 225) {
             direction = 'north';
-        } else if (angleDeg >= 180 && angleDeg < 270) {
+        } else if (angleDeg >= 225 && angleDeg < 315) {
             direction = 'west';
         } else {
             direction = 'south';
@@ -534,17 +534,17 @@ class UserPosition {
   
 // Example matrix with URLs
 const panoramaMatrix = [
-['panoramas/1.jpg', 'panoramas/2.jpg', 'panoramas/3.jpg'],
-['panoramas/4.jpg', 'panoramas/5.jpg', 'panoramas/6.jpg'],
+['panoramas/1_6.jpg', 'panoramas/1_5.jpg', 0],
+['panoramas/1_3.jpg', 'panoramas/1_2.jpg', 'panoramas/1_1.jpg'],
 ];
 
 /*
-[0, 0]: 'panoramas/1.jpg'
-[0, 1]: 'panoramas/2.jpg'
-[0, 2]: 'panoramas/3.jpg'
-[1, 0]: 'panoramas/4.jpg'
-[1, 1]: 'panoramas/5.jpg'
-[1, 2]: 'panoramas/6.jpg'
+[0, 0]: 'panoramas/6.jpg'
+[0, 1]: 'panoramas/5.jpg'
+[0, 2]: 'panoramas/4.jpg'
+[1, 0]: 'panoramas/3.jpg'
+[1, 1]: 'panoramas/2.jpg'
+[1, 2]: 'panoramas/1.jpg'
 */
 
 const userPosition = new UserPosition(panoramaMatrix);
@@ -564,6 +564,8 @@ window.addEventListener('mousedown', event => {
         clickCount = 0;
     }, 300); // Adjust timeout as needed
 });
+
+
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

@@ -405,23 +405,30 @@ button {
   transform: translateY(0px); /* Moves to original position */
 }
 
-.dropdown-content a {
-  color: black;
+.dropdown-content button {
+  color: rgb(0,0,0,0) !important;
   padding: 0px 0px;
   text-decoration: none;
   display: inline;
   width: 100%;
   font-size: 12px;
+  margin-bottom: 1em;
+  text-align: left;
+  background-color: rgb(0,0,0,0) !important;
 }
 
-.dropdown-content a img {
+.dropdown-content button img {
   display: block; /* Ensure images are not inline */
   width: 100%; /* Full width to utilize the available space */
   height: auto; /* Maintain aspect ratio */
-  margin-bottom: 2.5%; /* Space between the image and the text */
+  padding-top: 2em !important;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content button div {
+    padding-top: 1em;
+}
+
+.dropdown-content button:hover {background-color: #f1f1f1}
 
 /* width */
 ::-webkit-scrollbar {

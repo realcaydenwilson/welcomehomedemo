@@ -451,14 +451,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
             console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
             let direction = null;
-            if (angleDeg >= 45 && angleDeg < 135) {
+
+            if (angleDeg >= 22.5 && angleDeg < 67.5) {
+                direction = 'northeast';
+            } else if (angleDeg >= 67.5 && angleDeg < 112.5) {
                 direction = 'east';
-            } else if (angleDeg >= 135 && angleDeg < 225) {
-                direction = 'north';
-            } else if (angleDeg >= 225 && angleDeg < 315) {
-                direction = 'west';
-            } else {
+            } else if (angleDeg >= 112.5 && angleDeg < 157.5) {
+                direction = 'southeast';
+            } else if (angleDeg >= 157.5 && angleDeg < 202.5) {
                 direction = 'south';
+            } else if (angleDeg >= 202.5 && angleDeg < 247.5) {
+                direction = 'southwest';
+            } else if (angleDeg >= 247.5 && angleDeg < 292.5) {
+                direction = 'west';
+            } else if (angleDeg >= 292.5 && angleDeg < 337.5) {
+                direction = 'northwest';
+            } else {
+                direction = 'north';
             }
 
             console.log(`Determined direction: ${direction}`);
@@ -466,7 +475,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         move(direction, clickCount) {
-            const dirMap = { 'east': [0, 1], 'west': [0, -1], 'north': [-1, 0], 'south': [1, 0] };
+            const dirMap = {
+                'east': [0, 1],
+                'west': [0, -1],
+                'north': [-1, 0],
+                'south': [1, 0],
+                'northeast': [-1, 1],
+                'northwest': [-1, -1],
+                'southeast': [1, 1],
+                'southwest': [1, -1]
+            };
             const [dRow, dCol] = dirMap[direction];
             console.log(`MOVE ${dirMap[direction]}`);
             console.log(clickCount);
@@ -541,8 +559,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Example matrix with URLs
     const panoramaMatrix = [
-        [['panoramas/1_6.webp','panoramas/2_6.webp'], ['panoramas/1_5.webp','panoramas/2_5.webp'], 0],
         [['panoramas/1_3.webp','panoramas/2_3.webp'], ['panoramas/1_2.webp','panoramas/2_2.webp'], ['panoramas/1_1.webp','panoramas/2_1.webp']],
+        [['panoramas/1_6.webp','panoramas/2_6.webp'], ['panoramas/1_5.webp','panoramas/2_5.webp'], 0],
     ];
 
     /*

@@ -26,7 +26,7 @@ body, html {
   top: 0;
   left: 0;
   transition: width 0.3s ease;
-  z-index: 2;
+  z-index: 1;
 }
 
 #scene-container {
@@ -157,7 +157,7 @@ button {
   visibility: hidden; /* Initially hidden */
   opacity: 0; /* Fully transparent */
   position: fixed;
-  z-index: 1; /* Above the main container, below the buttons */
+  z-index: 2; /* Above the main container, below the buttons */
   right: 0;
   top: 0;
   width: 20%; /* Modal width */

@@ -356,6 +356,10 @@ button {
   .dropdown-content a {
     font-size: 10px;
   }
+
+  .close-modal-button {
+    display: block !important; /* Show button on mobile */
+  }
 }
 
 #design-options-container, #floorplan-options-container {
@@ -445,4 +449,13 @@ button {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #00d4e8;
+}
+
+.close-modal-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1em;
+  color: white;
+  cursor: pointer;
 }

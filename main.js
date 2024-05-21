@@ -414,7 +414,7 @@ sphereGeometry.scale(-1, 1, 1); // invert the geometry inside out
 const textureLoader = new THREE.TextureLoader();
 
 // Placeholder texture
-const placeholderTexture = new THREE.TextureLoader().load('./panoramas/1.jpg');
+const placeholderTexture = new THREE.TextureLoader().load('./panoramas/1_5.webp');
 
 const material = new THREE.MeshBasicMaterial({
     map: placeholderTexture,
@@ -426,146 +426,163 @@ scene.add(sphere);
 camera.position.set(0, 0, 0);
 scene.add(camera);
 
-// User position and matrix setup
-class UserPosition {
-    constructor(matrix) {
-        this.matrix = matrix;
-        this.row = 0;
-        this.col = 0;
-        this.newRow = this.row;
-        this.newCol = this.col;
-        this.currentTexture = null;
-        this.textureLoadSuccess = false;
-        console.log('UserPosition initialized at row 0, col 0');
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    let currentDesignStyle = 1;
 
-    normalizeRotation(rotationY) {
-        return ((rotationY % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI); // Normalize to range [0, 2π]
-    }
-
-    determineDirection(rotationY) {
-        const normalizedY = this.normalizeRotation(rotationY);
-        const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
-        console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
-        let direction = null;
-        if (angleDeg >= 45 && angleDeg < 135) {
-            direction = 'east';
-        } else if (angleDeg >= 135 && angleDeg < 225) {
-            direction = 'north';
-        } else if (angleDeg >= 225 && angleDeg < 315) {
-            direction = 'west';
-        } else {
-            direction = 'south';
+    // User position and matrix setup
+    class UserPosition {
+        constructor(matrix) {
+            this.matrix = matrix;
+            this.row = 0;
+            this.col = 0;
+            this.newRow = this.row;
+            this.newCol = this.col;
+            this.currentTexture = null;
+            this.textureLoadSuccess = false;
+            console.log('UserPosition initialized at row 0, col 0');
         }
-        
-        console.log(`Determined direction: ${direction}`);
-        this.move(direction, clickCount);
-    }
 
-    move(direction, clickCount) {
-        const dirMap = { 'east': [0, 1], 'west': [0, -1], 'north': [-1, 0], 'south': [1, 0] };
-        const [dRow, dCol] = dirMap[direction];
-        console.log(`MOVE ${dirMap[direction]}`);
-        console.log(clickCount);
-        let moveCount = clickCount - 1;
-        console.log(moveCount);
+        normalizeRotation(rotationY) {
+            return ((rotationY % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI); // Normalize to range [0, 2π]
+        }
 
-        let newRow = this.row;
-        let newCol = this.col;
-
-        for (let i = 0; i < moveCount; i++) {
-            const tempRow = newRow + dRow;
-            const tempCol = newCol + dCol;
-            if (tempRow >= 0 && tempRow < this.matrix.length && tempCol >= 0 && tempCol < this.matrix[0].length) {
-                newRow = tempRow;
-                newCol = tempCol;
+        determineDirection(rotationY, clickCount) {
+            const normalizedY = this.normalizeRotation(rotationY);
+            const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
+            console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
+            let direction = null;
+            if (angleDeg >= 45 && angleDeg < 135) {
+                direction = 'east';
+            } else if (angleDeg >= 135 && angleDeg < 225) {
+                direction = 'north';
+            } else if (angleDeg >= 225 && angleDeg < 315) {
+                direction = 'west';
             } else {
-                console.log(`Move blocked at step ${i + 1}: target position out of bounds.`);
-                break;
+                direction = 'south';
             }
+
+            console.log(`Determined direction: ${direction}`);
+            this.move(direction, clickCount);
         }
 
-        console.log(`Attempting to move from [${this.row}, ${this.col}] to [${newRow}, ${newCol}]`);
-        if (this.row !== newRow || this.col !== newCol) {
-            this.updateSphereTexture(newRow, newCol);
-            // Wait for the texture to load
-            setTimeout(() => {
-                if (this.textureLoadSuccess) {
-                    this.row = newRow;
-                    this.col = newCol;
-                    console.log(`Move successful to [${newRow}, ${newCol}]`);
-                    console.log(this.row);
-                    console.log(this.col);
+        move(direction, clickCount) {
+            const dirMap = { 'east': [0, 1], 'west': [0, -1], 'north': [-1, 0], 'south': [1, 0] };
+            const [dRow, dCol] = dirMap[direction];
+            console.log(`MOVE ${dirMap[direction]}`);
+            console.log(clickCount);
+            let moveCount = clickCount - 1;
+            console.log(moveCount);
+
+            let newRow = this.row;
+            let newCol = this.col;
+
+            for (let i = 0; i < moveCount; i++) {
+                const tempRow = newRow + dRow;
+                const tempCol = newCol + dCol;
+                if (tempRow >= 0 && tempRow < this.matrix.length && tempCol >= 0 && tempCol < this.matrix[0].length) {
+                    newRow = tempRow;
+                    newCol = tempCol;
                 } else {
-                    console.log(`Move failed: texture update unsuccessful.`);
+                    console.log(`Move blocked at step ${i + 1}: target position out of bounds.`);
+                    break;
                 }
-            }, 500); // Adjust timeout as needed to ensure texture load status is updated
-        } else {
-            console.log(`Move failed: texture update unnecessary.`);
-        }        
-    }
-
-    updateSphereTexture(newRow, newCol) {
-        const imageUrl = this.matrix[newRow][newCol];
-        console.log(`Attempting to load texture from ${imageUrl}`);
-        this.textureLoadSuccess = false;
-
-        textureLoader.load(imageUrl, texture => {
-            // Dispose of the old texture
-            if (sphere.material.map) {
-                sphere.material.map.dispose();
-            }
-            // Dispose of the current texture if it's different from the new one
-            if (this.currentTexture && this.currentTexture !== sphere.material.map) {
-                this.currentTexture.dispose();
             }
 
-            sphere.material.map = texture;
-            sphere.material.needsUpdate = true;
-            this.currentTexture = texture; // Store reference to the current texture
-
-            console.log(`Texture successfully updated to ${imageUrl}`);
-            this.textureLoadSuccess = true;
-        }, undefined, err => {
-            console.error(`Error loading texture from ${imageUrl}:`, err);
-        });
-    }
-}
-  
-// Example matrix with URLs
-const panoramaMatrix = [
-['panoramas/1_6.jpg', 'panoramas/1_5.jpg', 0],
-['panoramas/1_3.jpg', 'panoramas/1_2.jpg', 'panoramas/1_1.jpg'],
-];
-
-/*
-[0, 0]: 'panoramas/6.jpg'
-[0, 1]: 'panoramas/5.jpg'
-[0, 2]: 'panoramas/4.jpg'
-[1, 0]: 'panoramas/3.jpg'
-[1, 1]: 'panoramas/2.jpg'
-[1, 2]: 'panoramas/1.jpg'
-*/
-
-const userPosition = new UserPosition(panoramaMatrix);
-userPosition.updateSphereTexture(0,0); // Initial texture update
-
-// Handle multiple clicks to move based on sphere rotation
-let clickCount = 0;
-let clickTimeout;
-
-window.addEventListener('mousedown', event => {
-    clickCount++;
-    clearTimeout(clickTimeout);
-    clickTimeout = setTimeout(() => {
-        if (clickCount > 1) {
-            userPosition.determineDirection(sphere.rotation.y, clickCount);
+            console.log(`Attempting to move from [${this.row}, ${this.col}] to [${newRow}, ${newCol}]`);
+            if (this.row !== newRow || this.col !== newCol) {
+                this.updateSphereTexture(newRow, newCol);
+                // Wait for the texture to load
+                setTimeout(() => {
+                    if (this.textureLoadSuccess) {
+                        this.row = newRow;
+                        this.col = newCol;
+                        console.log(`Move successful to [${newRow}, ${newCol}]`);
+                        console.log(this.row);
+                        console.log(this.col);
+                    } else {
+                        console.log(`Move failed: texture update unsuccessful.`);
+                    }
+                }, 500); // Adjust timeout as needed to ensure texture load status is updated
+            } else {
+                console.log(`Move failed: texture update unnecessary.`);
+            }
         }
-        clickCount = 0;
-    }, 300); // Adjust timeout as needed
+
+        updateSphereTexture(newRow, newCol) {
+            let imageUrl = this.matrix[newRow][newCol];
+            if (Array.isArray(imageUrl)) {
+                // Select the appropriate style
+                imageUrl = imageUrl[currentDesignStyle - 1];
+            }
+            console.log(`Attempting to load texture from ${imageUrl}`);
+            this.textureLoadSuccess = false;
+
+            textureLoader.load(imageUrl, texture => {
+                // Dispose of the old texture
+                if (sphere.material.map) {
+                    sphere.material.map.dispose();
+                }
+                // Dispose of the current texture if it's different from the new one
+                if (this.currentTexture && this.currentTexture !== sphere.material.map) {
+                    this.currentTexture.dispose();
+                }
+
+                sphere.material.map = texture;
+                sphere.material.needsUpdate = true;
+                this.currentTexture = texture; // Store reference to the current texture
+
+                console.log(`Texture successfully updated to ${imageUrl}`);
+                this.textureLoadSuccess = true;
+            }, undefined, err => {
+                console.error(`Error loading texture from ${imageUrl}:`, err);
+            });
+        }
+    }
+
+    // Example matrix with URLs
+    const panoramaMatrix = [
+        [['panoramas/1_6.webp','panoramas/2_6.webp'], ['panoramas/1_5.webp','panoramas/2_5.webp'], 0],
+        [['panoramas/1_3.webp','panoramas/2_3.webp'], ['panoramas/1_2.webp','panoramas/2_2.webp'], ['panoramas/1_1.webp','panoramas/2_1.webp']],
+    ];
+
+    /*
+    [0, 0]: ['panoramas/1_6.jpg', 'panoramas/2_6.jpg']
+    [0, 1]: 'panoramas/1_5.jpg'
+    [0, 2]: 0
+    [1, 0]: 'panoramas/1_3.jpg'
+    [1, 1]: 'panoramas/1_2.jpg'
+    [1, 2]: 'panoramas/1_1.jpg'
+    */
+
+    const userPosition = new UserPosition(panoramaMatrix);
+    userPosition.updateSphereTexture(0, 0); // Initial texture update
+
+    // Handle multiple clicks to move based on sphere rotation
+    let clickCount = 0;
+    let clickTimeout;
+
+    window.addEventListener('mousedown', event => {
+        clickCount++;
+        clearTimeout(clickTimeout);
+        clickTimeout = setTimeout(() => {
+            if (clickCount > 1) {
+                userPosition.determineDirection(sphere.rotation.y, clickCount);
+            }
+            clickCount = 0;
+        }, 300); // Adjust timeout as needed
+    });
+
+    // Buttons to change design styles
+    document.getElementById('style1-button').addEventListener('click', () => {
+        currentDesignStyle = 1;
+        userPosition.updateSphereTexture(userPosition.row, userPosition.col);
+    });
+
+    document.getElementById('style2-button').addEventListener('click', () => {
+        currentDesignStyle = 2;
+        userPosition.updateSphereTexture(userPosition.row, userPosition.col);
+    });
 });
-
-
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

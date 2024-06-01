@@ -38,23 +38,38 @@ body, html {
 #info-box {
   position: absolute;
   margin: 0.5em;
-  padding: 0.5em;
-  background-color: rgba(0, 0, 0, 0.75);
-  border-radius: 0.25em;
+  padding: 0.75em;
+  background-color: rgb(255, 255, 255);
+  border-radius: 0.4em;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
   z-index: 2;
+  -webkit-user-select: none;
   user-select: none;
 }
 
 #client-logo {
-  width: 12.5em;
-  max-width: 200px;
+  width: 4.5em;
+  max-width: 175px;
   height: auto;
   margin: auto;
   margin-left: 0; /* Aligns the logo to the left by removing auto margin */
+  margin-right: 15px;
   align-self: flex-start;
+}
+
+#client-name  {
+  text-transform: uppercase;
+  opacity: 0.75;
+  color: #000;
+  font-size: 13px;
+}
+
+#project-name  {
+  text-transform: capitalize;
+  color: #000;
+  font-size: 20px;
 }
 
 hr {
@@ -63,18 +78,19 @@ hr {
 
 h1 {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(255,255,255);
-  font-size: 2em;
+  color: rgb(0,0,0);
+  font-size: 1.75em;
   font-weight: normal;
   line-height: 1.25;
   text-align: left;
   margin: 0;
   padding: 0;
+  font-weight: 700;
 }
 
 h2 {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(255,255,255);
+  color: rgb(0,0,0);
   font-size: 1.5em;
   font-weight: normal;
   line-height: 1.25;
@@ -85,7 +101,7 @@ h2 {
 
 h3 {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(255,255,255);
+  color: rgb(0,0,0);
   font-size: 1.25em;
   font-weight: normal;
   line-height: 1.25;
@@ -96,7 +112,7 @@ h3 {
 
 h4 {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(255,255,255);
+  color: rgb(0,0,0);
   font-size: 0.5em;
   font-weight: normal;
   line-height: 1.25;
@@ -106,7 +122,7 @@ h4 {
 }
 
 p {
-  color: rgb(255,255,255);
+  color: rgb(0,0,0);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.75em;
   line-height: 1.5;
@@ -135,12 +151,17 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #00d4e8;
-  color: #fff;
+  color: #00d4e8;
+  background-color: transparent;
   cursor: pointer;
   border: none;
-  border-radius: 1em;
   margin-top: 0.5em;
+  transition: opacity 0.1s ease, height 0.1s ease, transform 0.1s ease, font-size 0.1s ease, visibility 0.1s;
+}
+
+button:hover  {
+  opacity: 0.5;
+  transform: translateY(2px);
 }
 
 #button-container {
@@ -151,6 +172,17 @@ button {
   flex-direction: column;
   align-items: flex-end;
   z-index: 10 !important;
+  background-color: rgba(255,255,255,0.9);
+  padding: 0.25em;
+  border-radius: 0.4em;
+  align-items: center;
+  transition: opacity 0.1s ease, height 0.1s ease, visibility 0.1s;
+}
+
+#collapse-button  {
+  color: rgba(0,0,0,0.5);
+  font-size: 18px;
+  transform: rotate(0deg);
 }
 
 .modal {
@@ -163,7 +195,7 @@ button {
   width: 20%; /* Modal width */
   min-width: 450px;
   height: 100%; /* Full height */
-  background-color: rgb(0,0,0);
+  background-color: rgb(255, 255, 255);
   overflow-y: auto; /* Scrollable content */
   overflow-x: hidden; /* Prevent horizontal scrolling */
   transform: translateX(100%); /* Initially off-screen to the right */
@@ -194,43 +226,68 @@ button {
 
 .modal-content h3 {
   font-weight: 300;
-  color:#fff;
+  color:#FFF;
+  font-size: 16px;
 }
 
 .modal-content p {
   line-height: 1.5;
-  color:#fff;
+  color:#000;
+}
+
+.close-modal  {
+  color: #00d4e8 !important;
 }
 
 .about {
-  padding-top: 2em;
-  padding-bottom: 3em;
+  padding: 10px 0px;
+  font-size: 14px !important;
+  opacity: 0.75;
 }
 
 .about p {
   line-height: 2;
 }
 
+.title-container  {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 2em;
+}
+
+.header-icon  {
+  margin-right: 15px;
+  font-size: 1.4em !important;
+}
+
 .modal-content a {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  border-radius: 50%;
+  background-color: black;
+  padding: 0.5em;
   width: 3em;
   height: 3em;
-  border-radius: 50%;
-  background-color: white;
   margin-right: 1em;
-  color: black;
+  color: white;
   text-decoration: none;
+  transition: 0.1s all ease-in-out;
 }
 
 .modal-content a:hover {
-  background-color: #00d4e8;
+  background-image: linear-gradient(#00debb, #00d4e8);
+  transform: translateY(2px);
 }
 
 .modal-content i {
   font-size: 1.5em; /* Size of Icons*/
   color: black;
+}
+
+.modal-icon  {
+  color: white !important;
 }
 
 .share-icons-container {
@@ -250,7 +307,7 @@ button {
 .rep-image {
   width: 8em;
   height: 8em; /* Set a specific height to match the width */
-  border-radius: 50%;
+  border-radius: 0.5em;
   object-fit: cover;
 }
 
@@ -263,18 +320,14 @@ button {
 }
 
 .rep-info h2, .rep-info h4 {
-  color: #fff;  /* Assuming you want white text */
+  color: #000; 
   margin: 0;
   padding: 0;
 }
 
-.rep-info p {
-  color: white;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 5px 0;
-  line-height: 1.5;
+.rep-info h4  {
+  font-size: 15px;
+  margin: 0.3em 0;
 }
 
 .rep-info a {
@@ -292,16 +345,38 @@ button {
   transition: color 0.3s;
 }
 
-.rep-info a:hover {
-  text-decoration: underline;
-  color: #00d4e8;
-  background-color: transparent;
+.rep-contact-icon-contain  {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.rep-info .icon {
-  margin-right: 10px; /* Space between icon and text */
-  vertical-align: middle; /* Aligns the icon with the text vertically */
-  color: white !important; /* Force the icon color to white and ensure it takes precedence */
+.rep-icon  {
+  font-size: 1.1em !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transition: 0.1s all ease-in-out;
+}
+
+.rep-icon-contain  {
+  margin: 0 !important;
+  padding: 7px !important;
+  width: 1.25em !important;
+  height: 1.25em !important;
+  justify-content: center !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: 0.1s all ease-in-out !important;
+  border-radius: 1.25em !important;
+}
+
+.rep-icon-contain:hover  {
+  background-image: linear-gradient(#00debb, #00d4e8) !important;
+  transform: translateY(2px);
+}
+
+.rep-icon-contain:hover .rep-icon  {
+  color: white;
 }
 
 .label {
@@ -365,11 +440,12 @@ button {
 #design-options-container, #floorplan-options-container {
   display: flex; /* Use flexbox to align children inline */
   align-items: center; /* Align items vertically in the center */
-  justify-content: flex-start; /* Align items to the start of the container */
-  width: 100%; /* Ensure it takes the full width */
+  justify-content: space-between;
   position: relative;
-  padding: 0.5em 0; /* Add some vertical padding for spacing */
+  padding: 1em; /* Add some vertical padding for spacing */
   margin-top: 1em; /* Adjust top margin to lower the element if it's too high */
+  background-color: #000;
+  border-radius: 0.75em;
 }
 
 #design-options-trigger, #floorplan-options-trigger {
@@ -377,8 +453,8 @@ button {
   border: none;
   border-radius: 100%;
   padding: 1.25em;
-  margin-right: 1.5em; /* Adds space between the button and the text */
-  font-size: 0.75em;
+  margin: 0;
+  font-size: 0.45em;
   cursor: pointer;
   outline: none;
   display: flex;
@@ -387,8 +463,24 @@ button {
   transition: transform 0.3s ease;
 }
 
+.option-header-contain  {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.option-button:hover  {
+  opacity: 1 !important;
+}
+
+.option-icon  {
+  color: #FFF !important;
+  font-size: 1em !important;
+  margin-right: 10px;
+}
+
 #design-options-trigger.rotate-icon, #floorplan-options-trigger.rotate-icon {
-  transform: rotate(90deg); /* Rotates the icon 90 degrees */
+  transform: rotate(45deg); /* Rotates the icon 90 degrees */
 }
 
 .dropdown-content {
@@ -399,8 +491,8 @@ button {
   width: 100%; /* Full width of the container */
   z-index: 1;
   opacity: 0;
-  transform: translateY(-20px); /* Starts slightly above to create the fade-in effect */
   transition: opacity 0.5s ease, transform 0.5s ease;
+  justify-content: center;
 }
 
 .dropdown-content.show {
@@ -411,28 +503,65 @@ button {
 
 .dropdown-content button {
   color: rgb(0,0,0,0) !important;
-  padding: 0px 0px;
   text-decoration: none;
-  display: inline;
+  display: flex;
+  height: 100%;
   width: 100%;
   font-size: 12px;
-  margin-bottom: 1em;
+  padding: 1em;
   text-align: left;
-  background-color: rgb(0,0,0,0) !important;
+  background-color: rgb(0,0,0,1) !important;
+  margin: 0;
+  transform: translateY(-0.75em);
 }
 
 .dropdown-content button img {
   display: block; /* Ensure images are not inline */
-  width: 100%; /* Full width to utilize the available space */
+  width: 95%; /* Full width to utilize the available space */
   height: auto; /* Maintain aspect ratio */
-  padding-top: 2em !important;
+  margin: 0.5em 0em 1.75em 0em !important;
+  background-color: #000;
+  border-radius: 1em;
+
 }
 
-.dropdown-content button div {
-    padding-top: 1em;
+.dropdown-content button:last-child  {
+  border-radius: 0px 0px 0.75em 0.75em !important;
 }
 
-.dropdown-content button:hover {background-color: #f1f1f1}
+.floorplan-item, .design-item  {
+  position: relative;
+  justify-content: center;
+  display: flex;
+}
+
+.floorplan-name, .floorplan-size, .design-name  {
+  background-image: linear-gradient(#00debb, #00d4e8);
+  color: #FFF;
+  padding: 4px 7px;
+  font-size: 14px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  border-radius: 5px;
+}
+
+.floorplan-size  {
+  top: 50px;
+}
+
+.map-contain  {
+  padding: 0.75em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(#00debb, #00d4e8);
+  border-radius: 0.7em;
+}
+
+.map  {
+  border-radius: 0.45em;
+}
 
 /* width */
 ::-webkit-scrollbar {
@@ -454,8 +583,9 @@ button {
 .close-modal-button {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 30px;
   font-size: 1em;
   color: white;
   cursor: pointer;
+  background-color: white;
 }

@@ -23,14 +23,17 @@
       <!-- All your main content goes here -->
       <div id="info-box">
         <img id="client-logo" src="./images/welcome_home_logo.png" alt="Client Logo" />
-        <hr>
-        <h3 id="project-name"><b>Custom Home Demo</b></h3>
-        <p id="client-name">by Welcome Home</p>
+        <div>
+          <p id="client-name">Welcome Home Presents</p>
+          <h3 id="project-name"><b>Custom Home Demo</b></h3>
+        </div>
       </div>
 
       <div id="button-container">
+        <button type="button" id="collapse-button" title="Collapse Menu"><i class="fa fa-angle-down"></i></button>
         <button type="button" id="moa-button" title="Motion and Orientation"><i class="fas fa-compass"></i></button>
         <button type="button" id="vr-button" title="Virtual Reality"><i class="fas fa-vr-cardboard"></i></button>
+        <button type="button" id="menu-button" title="Menu"><i class="fas fa-bars"></i></button>
         <button type="button" id="share-button" title="Share"><i class="fas fa-share-alt"></i></button>
         <button type="button" id="fullscreen-button" title="Fullscreen"><i class="fas fa-expand"></i></button>
       </div>
@@ -43,70 +46,105 @@
 
     <div id="share-modal" class="modal">
       <div class="modal-content">
-        <button id="close-modal-button" class="close-modal-button">X</button>
-        <h1>ABOUT THIS PROPERTY</h1>
-        <p class="about">Struggling to close deals because clients can't visualize their dream home? Imagine turning simple blueprints into interactive, life-like spaces. Welcome Home does just that. Our immersive tours, created from your floor plans, offer “to-scale”, photorealistic renderings accessible on any device. Say goodbye to design uncertainties and hello to faster sales and satisfied clients.</p>
-        <h3>SHARE THIS TOUR</h3>
-        <div class="share-icons-container"> <!-- Container for icons -->
-          <a href="#" onclick="shareToPlatform('facebook')" title="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" onclick="shareToPlatform('whatsapp')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
-          <a href="#" onclick="shareToPlatform('twitter')" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
-          <a href="#" onclick="shareToPlatform('linkedin')" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-          <a href="#" onclick="copyLink()" title="Copy Link"><i class="fas fa-copy"></i></a>
+        <button id="close-modal-button" class="close-modal-button"><i class="fa fa-times-circle close-modal"></i></button>
+
+        <div class="title-container">
+          <i class="fa fa-info-circle header-icon"></i>
+          <h1>ABOUT THIS PROPERTY</h1>
         </div>
-        <hr>
-        <h2>GET IN TOUCH</h2>
+        <p class="about">Struggling to close deals because clients can't visualize their dream home? Imagine turning simple blueprints into interactive, life-like spaces. Welcome Home does just that. Our immersive tours, created from your floor plans, offer “to-scale”, photorealistic renderings accessible on any device. Say goodbye to design uncertainties and hello to faster sales and satisfied clients.</p>
+        
+        <div class="map-contain">
+          <iframe class="map" width="100%" height="150" src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;coord=52.70967533219885, -8.020019531250002&amp;q=1%20Grafton%20Street%2C%20Dublin%2C%20Ireland&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+        </div>
+
+        <div class="title-container">
+          <i class="fa fa-share-alt header-icon"></i>
+          <h1>SHARE</h1>
+        </div>
+        <div class="share-icons-container"> <!-- Container for icons -->
+          <a href="#" onclick="shareToPlatform('facebook')" title="Share on Facebook"><i class="fab fa-facebook-f modal-icon"></i></a>
+          <a href="#" onclick="shareToPlatform('whatsapp')" title="Share on WhatsApp"><i class="fab fa-whatsapp modal-icon"></i></a>
+          <a href="#" onclick="shareToPlatform('twitter')" title="Share on Twitter"><i class="fab fa-twitter modal-icon"></i></a>
+          <a href="#" onclick="shareToPlatform('linkedin')" title="Share on LinkedIn"><i class="fab fa-linkedin-in modal-icon"></i></a>
+          <a href="#" onclick="copyLink()" title="Copy Link"><i class="fas fa-copy modal-icon"></i></a>
+        </div>
+
+        <div class="title-container">
+          <i class="fa fa-user-circle header-icon"></i>
+          <h1>GET IN TOUCH</h1>
+        </div>
+
         <div class="contact-rep">
-          <img src="./images/profile-image.jpg" alt="Rep Name" class="rep-image" loading="lazy">
+          <img src="./images/profile-image.jpg" alt="Rep Name" class="rep-image">
           <div class="rep-info">
-            <h2>cayden wilson</h2>
+            <!-- Can add builder image logo here -->
+            <h2>Cayden Wilson</h2>
             <h4>WELCOME HOME</h4>
-            <p><span class="label"><i class="fas fa-envelope icon"></i></span><a href="mailto:cayden@saywelcomehome.com">cayden@saywelcomehome.com</a></p>
-            <p><span class="label"><i class="fas fa-phone icon"></i></span>+1(614) 205-0799</p>
-            <p><span class="label"><i class="fas fa-globe icon"></i></span><a href="https://saywelcomehome.com" target="_blank">saywelcomehome.com</a></p>
+            <div class="rep-contact-icon-contain">
+              <a class="rep-icon-contain" href="mailto:cayden@saywelcomehome.com"><i class="fas fa-envelope rep-icon" title="Email"></i></a>
+              <a class="rep-icon-contain" href="#"><i class="fas fa-phone rep-icon" title="+1(614) 205-0799"></i></a>
+              <a class="rep-icon-contain" href="https://saywelcomehome.com" target="_blank"><i class="fas fa-globe rep-icon" title="Website"></i></a>
+              <a class="rep-icon-contain" href="https://www.linkedin.com/in/realcaydenwilson" target="_blank"><i class="fab fa-linkedin-in rep-icon" title="LinkedIn"></i></a>
+              <a class="rep-icon-contain" href="https://www.facebook.com/realcaydenwilson" target="_blank"><i class="fab fa-facebook-f rep-icon" title="Facebook"></i></a>
+              <a class="rep-icon-contain" href="https://www.instagram.com/realcaydenwilson/" target="_blank"><i class="fab fa-instagram rep-icon" title="instagram"></i></a>
+            </div>
           </div>
         </div>
-        <div id="design-options-container">
+
+        <div class="title-container">
+          <i class="fa fa-cog header-icon"></i>
+          <h1>OPTIONS</h1>
+        </div>
+
+        <div id="design-options-container" class="design-options-container">
+          <div class="option-header-contain">
+            <i class="fas fa-paint-brush option-icon"></i>
+            <h3>DESIGN CENTER</h3>
+          </div>
           <button id="design-options-trigger">
             <i class="fas fa-plus"></i>
-        </button>
-        <h3 for="design-options-trigger">DESIGN CENTER</h3>
+          </button>
           <div id="design-options-dropdown" class="dropdown-content">
-            <button id="style1-button">
-              <img src="./images/style1.jpg" alt="Style 1" loading="lazy">
-              <div>
-                  <h2>Coastal Design</h2>
-                  <p>Beachy inspiration and soft, tranquil hues create a welcoming, relaxing space.</p>
+            <button id="style1-button" class="option-button">
+              <div class="design-item">
+                <span class="design-name">Coastal Design</span>
+                <img src="./images/style1.jpg" alt="Style 1">
               </div>
           </button>
-          <button id="style2-button">
+          <button id="style2-button" class="option-button">
+            <div class="design-item">
+              <span class="design-name">Traditional Design</span>
               <img src="./images/style2.jpg" alt="Style 2">
-              <div>
-                  <h2>Traditional Design</h2>
-                  <p>Historically inspired colors create a warm and homey escape.</p>
-              </div>
+            </div>
           </button>
               <!-- More links can be added similarly -->
           </div>
       </div>
-      <div id="design-options-container">
-          <button id="floorplan-options-trigger">
+
+      <div id="design-options-container" class="design-options-container">
+        <div class="option-header-contain">
+          <i class="fas fa-home option-icon"></i>
+          <h3>FLOOR PLANS</h3>
+        </div>
+        <button id="floorplan-options-trigger">
             <i class="fas fa-plus"></i>
         </button>
-      <h3 for="floorplan-options-trigger">FLOORPLANS</h3>
           <div id="floorplan-options-dropdown" class="dropdown-content">
-              <button href="https://saywelcomehome.com" target="_blank">
-                  <img src="./images/style1.jpg" alt="Style 1" loading="lazy">
-                  <div>
-                      <h2>STUDIO</h2>
-                      <p>264 SF<br>Private Balcony<br>Modern Finishes</p>
-                  </div>
+              <!-- <button href="https://saywelcomehome.com" target="_blank"> -->
+              <button id="plan1-button" class="option-button">
+                <div class="floorplan-item">
+                  <span class="floorplan-name">Studio</span>
+                  <span class="floorplan-size">264 SF</span>
+                  <img src="./images/style1.jpg" alt="Style 1">
+                </div>
               </button>
-              <button href="https://saywelcomehome.com" target="_blank">
-                  <img src="./images/style2.jpg" alt="Style 2">
-                  <div>
-                      <h2>SINGLE BEDROOM</h2>
-                      <p>413 SF<br>Private Balcony<br>Spacious Design</p>
+              <!-- <button href="https://saywelcomehome.com" target="_blank"> -->
+              <button id="plan2-button" class="option-button">
+                  <div class="floorplan-item">
+                    <span class="floorplan-name">Single Bedroom</span>
+                    <span class="floorplan-size">413 SF</span>
+                    <img src="./images/style2.jpg" alt="Style 2">
                   </div>
               </button>
               <!-- More links can be added similarly -->

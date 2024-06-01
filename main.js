@@ -1,5 +1,10 @@
 const moaButton = document.getElementById("moa-button");
 const vrButton = document.getElementById("vr-button");
+const shareButton = document.getElementById("share-button");
+const collapseButton = document.getElementById("collapse-button");
+const fullscreenButton = document.getElementById("fullscreen-button");
+const menuButton = document.getElementById("menu-button");
+var isExpanded = true;
 
 // Function to check if the device is a PC or laptop
 function isPCorLaptop() {
@@ -11,6 +16,7 @@ function isPCorLaptop() {
 if (isPCorLaptop()) {
     moaButton.style.display = 'none';
     vrButton.style.display = 'none';
+    shareButton.style.display = 'none';
 }
 
 // Function to request motion and orientation permissions
@@ -68,6 +74,58 @@ function requestMotionAndOrientationPermissions() {
         moaButton.style.display = 'none';
     }
 }
+
+function hideAllButtons() {
+    moaButton.style.fontSize = '0px';
+    moaButton.style.opacity = '0';
+    moaButton.style.visibility = 'hidden';
+    vrButton.style.fontSize = '0px';
+    vrButton.style.opacity = '0';
+    vrButton.style.visibility = 'hidden';
+    shareButton.style.fontSize = '0px';
+    shareButton.style.opacity = '0';
+    shareButton.style.visibility = 'hidden';
+    fullscreenButton.style.fontSize = '0px';
+    fullscreenButton.style.opacity = '0';
+    fullscreenButton.style.visibility = 'hidden';
+    menuButton.style.fontSize = '0px';
+    menuButton.style.opacity = '0';
+    menuButton.style.visibility = 'hidden';
+}
+
+function showButtons() {
+    if (!isPCorLaptop()) {
+        moaButton.style.fontSize = '1.25em';
+        moaButton.style.opacity = '1';
+        moaButton.style.visibility = 'visible';
+        vrButton.style.fontSize = '1.25em';
+        vrButton.style.opacity = '1';
+        vrButton.style.visibility = 'visible';
+        shareButton.style.fontSize = '1.25em';
+        shareButton.style.opacity = '1';
+        shareButton.style.visibility = 'visible';
+    }
+    fullscreenButton.style.fontSize = '1.25em';
+    fullscreenButton.style.opacity = '1';
+    fullscreenButton.style.visibility = 'visible';
+    menuButton.style.fontSize = '1.25em';
+    menuButton.style.opacity = '1';
+    menuButton.style.visibility = 'visible';
+}
+
+collapseButton.addEventListener('click', function() {
+    if (isExpanded) {
+        hideAllButtons();
+        collapseButton.style.marginTop = '0px';
+        collapseButton.style.transform = 'rotate(180deg)';
+    }
+    else {
+        showButtons();
+        collapseButton.style.marginTop = '9px';
+        collapseButton.style.transform = 'rotate(0deg)';
+    }
+    isExpanded = !isExpanded;
+});
 
 // Add event listener to the motion and orientation button
 moaButton.addEventListener('click', function() {
@@ -233,12 +291,17 @@ function shareToPlatform(platform) {
     }
 }
 
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const designOptionsTrigger = document.getElementById('design-options-trigger');
     const designOptionsDropdown = document.getElementById('design-options-dropdown');
     const floorplanOptionsTrigger = document.getElementById('floorplan-options-trigger');
     const floorplanOptionsDropdown = document.getElementById('floorplan-options-dropdown');
-  
+    const dropdownContainers = document.getElementsByClassName('design-options-container');
+    
     const allDropdowns = [designOptionsDropdown, floorplanOptionsDropdown];
     const allTriggers = [designOptionsTrigger, floorplanOptionsTrigger];
   
@@ -251,13 +314,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   
     function closeOtherDropdowns(currentDropdown) {
-      allDropdowns.forEach(dropdown => {
+      allDropdowns.forEach(function (dropdown, i) {
         if (dropdown !== currentDropdown && dropdown.style.display === 'block') {
           dropdown.style.opacity = '0';
-          dropdown.style.transform = 'translateY(-20px)';
           setTimeout(() => {
             dropdown.style.display = 'none';
           }, 500);
+          allTriggers[i].classList.toggle('rotate-icon');
         }
       });
     }
@@ -267,21 +330,24 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown.style.display = 'block';
         setTimeout(() => {
           dropdown.style.opacity = '1';
-          dropdown.style.transform = 'translateY(0px)';
+          allDropdowns.forEach(function (drop, i) {
+            if (drop != dropdown && drop != allDropdowns.at(0)) {
+                dropdownContainers[i].style.transform = `translateY(${dropdown.offsetHeight}px)`;
+            } 
+          });
         }, 10);
       } else {
         dropdown.style.opacity = '0';
-        dropdown.style.transform = 'translateY(-20px)';
         setTimeout(() => {
           dropdown.style.display = 'none';
         }, 500);
       }
+      allDropdowns.forEach(function (drop, i) {
+        dropdownContainers[i].style.transform = `translateY(0px)`;
+      });
       trigger.classList.toggle('rotate-icon');
     }
 });
-
-// Get fullscreen button
-const fullscreenButton = document.getElementById("fullscreen-button");
 
 // Check if the browser supports the Permissions API for fullscreen
 if (typeof document.documentElement.requestFullscreen === 'undefined' &&
@@ -325,11 +391,10 @@ renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 document.addEventListener('DOMContentLoaded', function() {
-    const shareButton = document.getElementById('share-button');
     const closeModalButton = document.getElementById('close-modal-button');
 
-    if (shareButton) {
-        shareButton.addEventListener('click', function() {
+    if (menuButton) {
+        menuButton.addEventListener('click', function() {
             toggleShareModal();
         });
     }

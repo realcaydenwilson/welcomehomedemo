@@ -24,7 +24,7 @@ if (isPCorLaptop()) {
     vrButton.style.display = 'none';
     shareButton.style.display = 'none';
 }
-else {
+if (!isPCorLaptop()) {
     shareHeader.style.display = 'none';
     shareIcons.style.display = 'none';
     shareButton.addEventListener('click', function() {

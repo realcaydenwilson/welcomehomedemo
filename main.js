@@ -4,6 +4,12 @@ const shareButton = document.getElementById("share-button");
 const collapseButton = document.getElementById("collapse-button");
 const fullscreenButton = document.getElementById("fullscreen-button");
 const menuButton = document.getElementById("menu-button");
+const shareHeader = document.getElementById("share-header");
+const shareIcons = document.getElementById("share-icons-container");
+
+const allButtons = [moaButton, vrButton, shareButton, fullscreenButton, menuButton];
+const desktopButtons = [fullscreenButton, menuButton];
+
 var isExpanded = true;
 
 // Function to check if the device is a PC or laptop
@@ -17,6 +23,16 @@ if (isPCorLaptop()) {
     moaButton.style.display = 'none';
     vrButton.style.display = 'none';
     shareButton.style.display = 'none';
+}
+else {
+    shareHeader.style.display = 'none';
+    shareIcons.style.display = 'none';
+    shareButton.addEventListener('click', function() {
+        navigator.share({
+            text: 'Check out this virual home tour!',
+            url: window.location.href
+        });
+    });
 }
 
 // Function to request motion and orientation permissions
@@ -76,41 +92,28 @@ function requestMotionAndOrientationPermissions() {
 }
 
 function hideAllButtons() {
-    moaButton.style.fontSize = '0px';
-    moaButton.style.opacity = '0';
-    moaButton.style.visibility = 'hidden';
-    vrButton.style.fontSize = '0px';
-    vrButton.style.opacity = '0';
-    vrButton.style.visibility = 'hidden';
-    shareButton.style.fontSize = '0px';
-    shareButton.style.opacity = '0';
-    shareButton.style.visibility = 'hidden';
-    fullscreenButton.style.fontSize = '0px';
-    fullscreenButton.style.opacity = '0';
-    fullscreenButton.style.visibility = 'hidden';
-    menuButton.style.fontSize = '0px';
-    menuButton.style.opacity = '0';
-    menuButton.style.visibility = 'hidden';
+    allButtons.forEach((button) => {
+        button.style.fontSize = '0px';
+        button.style.opacity = '0';
+        button.style.visibility = 'hidden';
+    });
 }
 
 function showButtons() {
     if (!isPCorLaptop()) {
-        moaButton.style.fontSize = '1.25em';
-        moaButton.style.opacity = '1';
-        moaButton.style.visibility = 'visible';
-        vrButton.style.fontSize = '1.25em';
-        vrButton.style.opacity = '1';
-        vrButton.style.visibility = 'visible';
-        shareButton.style.fontSize = '1.25em';
-        shareButton.style.opacity = '1';
-        shareButton.style.visibility = 'visible';
+        allButtons.forEach((button) => {
+            button.style.fontSize = '1.25em';
+            button.style.opacity = '1';
+            button.style.visibility = 'visible';
+        });
+    } 
+    else {
+        desktopButtons.forEach((button) => {
+            button.style.fontSize = '1.25em';
+            button.style.opacity = '1';
+            button.style.visibility = 'visible';
+        });
     }
-    fullscreenButton.style.fontSize = '1.25em';
-    fullscreenButton.style.opacity = '1';
-    fullscreenButton.style.visibility = 'visible';
-    menuButton.style.fontSize = '1.25em';
-    menuButton.style.opacity = '1';
-    menuButton.style.visibility = 'visible';
 }
 
 collapseButton.addEventListener('click', function() {

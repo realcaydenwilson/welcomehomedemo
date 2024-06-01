@@ -24,16 +24,6 @@ if (isPCorLaptop()) {
     vrButton.style.display = 'none';
     shareButton.style.display = 'none';
 }
-if (!isPCorLaptop()) {
-    shareHeader.style.display = 'none';
-    shareIcons.style.display = 'none';
-    shareButton.addEventListener('click', function() {
-        navigator.share({
-            text: 'Check out this virual home tour!',
-            url: window.location.href
-        });
-    });
-}
 
 // Function to request motion and orientation permissions
 function requestMotionAndOrientationPermissions() {

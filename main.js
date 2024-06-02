@@ -24,10 +24,10 @@ if (isPCorLaptop()) {
     vrButton.style.display = 'none';
     shareButton.style.display = 'none';
 }
-else {
-    shareHeader.style.display = 'none';
-    shareIcons.style.display = 'none';
-}
+// else {
+//     shareHeader.style.display = 'none';
+//     shareIcons.style.display = 'none';
+// }
 
 // Function to request motion and orientation permissions
 function requestMotionAndOrientationPermissions() {
@@ -292,14 +292,14 @@ function copyLink() {
     navigator.clipboard.writeText(window.location.href);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    shareButton.addEventListener('click', function() {
-        navigator.share({
-            text: 'Check out this virual home tour through Welcome Home!',
-            url: window.location.href
-        });
-    });
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//     shareButton.addEventListener('click', function() {
+//         navigator.share({
+//             text: 'Check out this virual home tour through Welcome Home!',
+//             url: window.location.href
+//         });
+//     });
+// });
 
 document.addEventListener('DOMContentLoaded', function() {
     const designOptionsTrigger = document.getElementById('design-options-trigger');

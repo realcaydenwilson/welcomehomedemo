@@ -26,7 +26,7 @@ if (isPCorLaptop()) {
 }
 else {
     shareHeader.style.display = 'none';
-//     shareIcons.style.display = 'none';
+    shareIcons.style.display = 'none';
 }
 
 // Function to request motion and orientation permissions

@@ -3,7 +3,6 @@ const vrButton = document.getElementById("vr-button");
 const collapseButton = document.getElementById("collapse-button");
 const fullscreenButton = document.getElementById("fullscreen-button");
 const menuButton = document.getElementById("menu-button");
-const shareButton = document.getElementById("share-button");
 
 var isExpanded = true;
 
@@ -96,9 +95,6 @@ function hideAllButtons() {
     vrButton.style.fontSize = '0px';
     vrButton.style.opacity = '0';
     vrButton.style.visibility = 'hidden';
-    shareButton.style.fontSize = '0px';
-    shareButton.style.opacity = '0';
-    shareButton.style.visibility = 'hidden';
     fullscreenButton.style.fontSize = '0px';
     fullscreenButton.style.opacity = '0';
     fullscreenButton.style.visibility = 'hidden';
@@ -115,9 +111,6 @@ function showButtons() {
         vrButton.style.fontSize = '1.25em';
         vrButton.style.opacity = '1';
         vrButton.style.visibility = 'visible';
-        shareButton.style.fontSize = '1.25em';
-        shareButton.style.opacity = '1';
-        shareButton.style.visibility = 'visible';
     } 
     fullscreenButton.style.fontSize = '1.25em';
     fullscreenButton.style.opacity = '1';

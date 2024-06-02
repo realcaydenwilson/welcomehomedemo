@@ -24,15 +24,9 @@ if (isPCorLaptop()) {
     vrButton.style.display = 'none';
     shareButton.style.display = 'none';
 }
-if (!isPCorLaptop()) {
+else {
     shareHeader.style.display = 'none';
     shareIcons.style.display = 'none';
-    shareButton.addEventListener('click', function() {
-        navigator.share({
-            text: 'Check out this virual home tour through Welcome Home!',
-            url: window.location.href
-        });
-    });
 }
 
 // Function to request motion and orientation permissions
@@ -297,6 +291,15 @@ function shareToPlatform(platform) {
 function copyLink() {
     navigator.clipboard.writeText(window.location.href);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    shareButton.addEventListener('click', function() {
+        navigator.share({
+            text: 'Check out this virual home tour through Welcome Home!',
+            url: window.location.href
+        });
+    });
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     const designOptionsTrigger = document.getElementById('design-options-trigger');

@@ -24,10 +24,10 @@ if (isPCorLaptop()) {
     vrButton.style.display = 'none';
     shareButton.style.display = 'none';
 }
-// else {
-//     shareHeader.style.display = 'none';
+else {
+    shareHeader.style.display = 'none';
 //     shareIcons.style.display = 'none';
-// }
+}
 
 // Function to request motion and orientation permissions
 function requestMotionAndOrientationPermissions() {

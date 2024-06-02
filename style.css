@@ -39,7 +39,7 @@ body, html {
   position: absolute;
   margin: 0.5em;
   padding: 0.75em;
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255,255,255,0.85);
   border-radius: 0.4em;
   display: flex;
   flex-direction: row;
@@ -172,7 +172,7 @@ button:hover  {
   flex-direction: column;
   align-items: flex-end;
   z-index: 10 !important;
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,255,0.85);
   padding: 0.25em;
   border-radius: 0.4em;
   align-items: center;

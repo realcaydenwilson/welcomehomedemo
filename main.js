@@ -1,11 +1,8 @@
 const moaButton = document.getElementById("moa-button");
 const vrButton = document.getElementById("vr-button");
-const shareButton = document.getElementById("share-button");
 const collapseButton = document.getElementById("collapse-button");
 const fullscreenButton = document.getElementById("fullscreen-button");
 const menuButton = document.getElementById("menu-button");
-const shareHeader = document.getElementById("share-title-header");
-const shareIcons = document.getElementById("share-icons-container");
 
 var isExpanded = true;
 
@@ -22,18 +19,12 @@ if (isPCorLaptop()) {
     shareButton.style.display = 'none';
 }
 
-// document.addEventListener('DOMContentLoaded', function() {
-if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
-    shareHeader.style.display = 'none';
-    shareIcons.style.display = 'none';
-    // shareButton.addEventListener('click', function() {
-    //     navigator.share({
-    //         text: 'Check out this virual home tour through Welcome Home!',
-    //         url: window.location.href
-    //     });
-    // });
+function nativeSharing() {
+    navigator.share({
+        text: 'Check out this virual home tour through Welcome Home!',
+        url: window.location.href
+    });
 }
-// });
 
 // Function to request motion and orientation permissions
 function requestMotionAndOrientationPermissions() {

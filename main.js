@@ -17,14 +17,21 @@ function isPCorLaptop() {
 if (isPCorLaptop()) {
     moaButton.style.display = 'none';
     vrButton.style.display = 'none';
-    shareButton.style.display = 'none';
+    // shareButton.style.display = 'none';
 }
 
 function nativeSharing() {
-    navigator.share({
-        text: 'Check out this virual home tour through Welcome Home!',
-        url: window.location.href
-    });
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            text: 'Check out this virtual home tour provided by Welcome Home:',
+            url: window.location.href
+        })
+        .then(() => console.log('Successfully shared'), alert('Shared'))
+        .catch((error) => console.error('Error sharing:', error), alert(error));
+    } else {
+        console.log('Web Share API is not supported in this browser.');
+    }
 }
 
 // Function to request motion and orientation permissions

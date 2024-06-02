@@ -3,6 +3,7 @@ const vrButton = document.getElementById("vr-button");
 const collapseButton = document.getElementById("collapse-button");
 const fullscreenButton = document.getElementById("fullscreen-button");
 const menuButton = document.getElementById("menu-button");
+const shareButton = document.getElementById("share-button");
 
 var isExpanded = true;
 

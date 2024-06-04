@@ -364,8 +364,8 @@ function toggleShareModal() {
         // const canvas = document.querySelector('canvas');
         // console.log(canvas);
         document.body.classList.add('modal-active'); // Indicate that the modal is active
-        canvas.width = `${window.innerWidth - modalWidth}px !important`;
-        canvas.style.width = `${window.innerWidth - modalWidth}px !important`;
+        // canvas.width = `${window.innerWidth - modalWidth}px !important`;
+        // canvas.style.width = `${window.innerWidth - modalWidth}px !important`;
     } else {
         mainContent.style.width = '100vw'; // Reset the width of mainContent
         document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active

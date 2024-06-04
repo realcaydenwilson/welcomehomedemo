@@ -371,8 +371,8 @@ function toggleShareModal() {
         mainContent.style.width = '100vw'; // Reset the width of mainContent
         document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
         canvas.forEach((c) => {
-            c.width = `${mainContent.style.width} !important`;
-            c.style.width = `${mainContent.style.width} !important`;
+            c.width = `${window.innerWidth} !important`;
+            c.style.width = `${window.innerWidth} !important`;
         });
     }
 

@@ -3,6 +3,7 @@ const vrButton = document.getElementById("vr-button");
 const collapseButton = document.getElementById("collapse-button");
 const fullscreenButton = document.getElementById("fullscreen-button");
 const menuButton = document.getElementById("menu-button");
+const sharingButton = document.getElementById("sharing-button");
 
 var isExpanded = true;
 
@@ -10,6 +11,21 @@ var isExpanded = true;
 function isPCorLaptop() {
     const userAgent = navigator.userAgent.toLowerCase();
     return /windows nt|macintosh/.test(userAgent) && !/iphone|ipad|android/.test(userAgent);
+}
+
+function setLocalStorage(key, val) {
+    window.localStorage.setItem(key, val)
+}
+  
+function hasLocalStorage(key) {
+    let val = window.localStorage.getItem(key);
+    if (val) return true;
+    return false;
+}
+
+if (!hasLocalStorage('hasCompletedTour')) {
+    setLocalStorage('hasCompletedTour', true);
+    // startTour();
 }
 
 // Hide the buttons if the device is a PC or laptop before the DOM is fully loaded
@@ -31,6 +47,8 @@ function nativeSharing() {
         console.log('Web Share API is not supported in this browser.');
     }
 }
+
+sharingButton.addEventListener('click', nativeSharing);
 
 // Function to request motion and orientation permissions
 function requestMotionAndOrientationPermissions() {
@@ -101,6 +119,9 @@ function hideAllButtons() {
     menuButton.style.fontSize = '0px';
     menuButton.style.opacity = '0';
     menuButton.style.visibility = 'hidden';
+    sharingButton.style.fontSize = '0px';
+    sharingButton.style.opacity = '0';
+    sharingButton.style.visibility = 'hidden';
 }
 
 function showButtons() {
@@ -118,6 +139,9 @@ function showButtons() {
     menuButton.style.fontSize = '1.25em';
     menuButton.style.opacity = '1';
     menuButton.style.visibility = 'visible';
+    sharingButton.style.fontSize = '1.25em';
+    sharingButton.style.opacity = '1';
+    sharingButton.style.visibility = 'visible';
 }
 
 collapseButton.addEventListener('click', function() {
@@ -356,6 +380,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function toggleShareModal() {
+    const modal = document.getElementById('share-modal');
+    const mainContent = document.getElementById('main-content');
+    const allCanvasses = document.getElementsByTagName('canvas');
+    const canvas = allCanvasses[1];
+
+    // Toggle the 'show' class to either show or hide the modal
+    modal.classList.toggle('show');
+
+    // Toggle the width of mainContent based on modal visibility
+    if (modal.classList.contains('show')) {
+        const modalWidth = modal.offsetWidth; // Get the width of the modal
+        const mainContentWidth = window.innerWidth - modalWidth; // Calculate the width of mainContent
+        mainContent.style.width = mainContentWidth + 'px'; // Set the width of mainContent
+        // const canvas = document.querySelector('canvas');
+        // console.log(canvas);
+        document.body.classList.add('modal-active'); // Indicate that the modal is active
+        canvas.width = `${window.innerWidth - modalWidth}px !important`;
+        canvas.style.width = `${window.innerWidth - modalWidth}px !important`;
+    } else {
+        mainContent.style.width = '100vw'; // Reset the width of mainContent
+        document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
+        canvas.width = `${window.innerWidth}px !important`;
+        canvas.style.width = `${window.innerWidth}px !important`;
+    }
+
+    // Update renderer size after container resize
+    updateRenderer();
+}
+
 // Check if the browser supports the Permissions API for fullscreen
 if (typeof document.documentElement.requestFullscreen === 'undefined' &&
     typeof document.documentElement.webkitRequestFullscreen === 'undefined' &&
@@ -412,30 +466,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function toggleShareModal() {
-        const modal = document.getElementById('share-modal');
-        const mainContent = document.getElementById('main-content');
-
-        // Toggle the 'show' class to either show or hide the modal
-        modal.classList.toggle('show');
-
-        // Toggle the width of mainContent based on modal visibility
-        if (modal.classList.contains('show')) {
-            const modalWidth = modal.offsetWidth; // Get the width of the modal
-            const mainContentWidth = window.innerWidth - modalWidth; // Calculate the width of mainContent
-            mainContent.style.width = mainContentWidth + 'px'; // Set the width of mainContent
-            const canvas = document.querySelector('canvas');
-            console.log(canvas);
-            document.body.classList.add('modal-active'); // Indicate that the modal is active
-        } else {
-            mainContent.style.width = '100vw'; // Reset the width of mainContent
-            document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
-        }
-
-        // Update renderer size after container resize
-        updateRenderer();
-    }
-
     function updateRenderer() {
         const modal = document.getElementById('share-modal');
         const mainContent = document.getElementById('main-content');
@@ -469,17 +499,16 @@ window.addEventListener('resize', function () {
     const modalIsActive = modal.classList.contains('show');
 
     // Calculate the width of the main content based on modal visibility
-    let mainContentWidth;
     if (modalIsActive) {
         // If modal is active, subtract modal width from window width
-        mainContentWidth = window.innerWidth - modalWidth;
+        mainContent.style.width = `${window.innerWidth - modalWidth}px`;
     } else {
         // If modal is not active, use full window width for main content
-        mainContentWidth = window.innerWidth;
+        mainContent.style.width = `${window.innerWidth}px`;
     }
-
-    // Set the width of the main content
-    mainContent.style.width = mainContentWidth + 'px';
+    console.log('canvas width is: ' + canvas.style.width + ' and should be: ' + this.window.innerWidth);
+    toggleShareModal();
+    toggleShareModal();
 
     // Update renderer size after container resize
     updateRenderer();

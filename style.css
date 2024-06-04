@@ -215,7 +215,7 @@ button:hover  {
 
 .modal-content {
   margin: 5%;
-  padding-top: 10%;
+  padding: 3%;
   width: 90%; /* Adjust width to prevent overflow, considering padding and margin */
   height: 100%;
   max-width: 100%; /* Ensure it does not exceed the modal width */
@@ -570,7 +570,7 @@ button:hover  {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: white;
+  background: rgba(0,0,0,0.2);
   border-radius: calc(0.35em/2);
   border: 3px solid transparent; /* creates padding effect */
 }

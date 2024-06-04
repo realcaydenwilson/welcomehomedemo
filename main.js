@@ -350,8 +350,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function toggleShareModal() {
     const modal = document.getElementById('share-modal');
     const mainContent = document.getElementById('main-content');
-    const allCanvasses = document.getElementsByTagName('canvas');
-    const canvas = allCanvasses[1];
+    // const allCanvasses = document.getElementsByTagName('canvas');
+    // const canvas = allCanvasses[1];
+    const canvas = document.getElementsByTagName('canvas');
 
     // Toggle the 'show' class to either show or hide the modal
     modal.classList.toggle('show');
@@ -369,8 +370,10 @@ function toggleShareModal() {
     } else {
         mainContent.style.width = '100vw'; // Reset the width of mainContent
         document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
-        canvas.width = `${mainContent.style.width} !important`;
-        canvas.style.width = `${mainContent.style.width} !important`;
+        canvas.forEach((c) => {
+            c.width = `${mainContent.style.width} !important`;
+            c.style.width = `${mainContent.style.width} !important`;
+        });
     }
 
     // Update renderer size after container resize

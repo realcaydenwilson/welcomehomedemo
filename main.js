@@ -292,39 +292,6 @@ vrButton.addEventListener('click', function() {
         vrButton.style.display = 'none';
     }
 });
-  
-// Function to share to specific platforms
-function shareToPlatform(platform) {
-    const url = encodeURIComponent(window.location.href);
-    let shareUrl = "";
-
-    switch(platform) {
-        case 'email':
-            shareUrl = `mailto:?subject=Check this out&body=Check out this virtual tour: ${url}`;
-            break;
-            case 'facebook':
-                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-                break;          
-        case 'whatsapp':
-            shareUrl = `https://api.whatsapp.com/send?text=Check out this virtual tour: ${url}`;
-            break;
-        case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=Check out this virtual tour`;
-            break;
-        case 'linkedin':
-            shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`;
-            break;
-        // Add more cases for other platforms
-    }
-
-    if (shareUrl) {
-        window.open(shareUrl, '_blank').focus();
-    }
-}
-
-function copyLink() {
-    navigator.clipboard.writeText(window.location.href);
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     const designOptionsTrigger = document.getElementById('design-options-trigger');
@@ -392,8 +359,8 @@ function toggleShareModal() {
     // Toggle the width of mainContent based on modal visibility
     if (modal.classList.contains('show')) {
         const modalWidth = modal.offsetWidth; // Get the width of the modal
-        const mainContentWidth = window.innerWidth - modalWidth; // Calculate the width of mainContent
-        mainContent.style.width = mainContentWidth + 'px'; // Set the width of mainContent
+        // const mainContentWidth = window.innerWidth - modalWidth;
+        mainContent.style.width = `${window.innerWidth - modalWidth}px`; // Set the width of mainContent
         // const canvas = document.querySelector('canvas');
         // console.log(canvas);
         document.body.classList.add('modal-active'); // Indicate that the modal is active
@@ -402,8 +369,8 @@ function toggleShareModal() {
     } else {
         mainContent.style.width = '100vw'; // Reset the width of mainContent
         document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
-        canvas.width = `${window.innerWidth}px !important`;
-        canvas.style.width = `${window.innerWidth}px !important`;
+        canvas.width = '100vw !important';
+        canvas.style.width = '100vw !important';
     }
 
     // Update renderer size after container resize

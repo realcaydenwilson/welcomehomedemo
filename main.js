@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     allTriggers.forEach(trigger => {
       trigger.addEventListener('click', function() {
-        console.log(this);
         const currentDropdown = this === designOptionsTrigger ? designOptionsDropdown : floorplanOptionsDropdown;
         closeOtherDropdowns(currentDropdown);
         toggleDropdown(currentDropdown, this, null);
@@ -44,7 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
             allTriggers[i].classList.toggle('rotate-icon');
           }
           else if (tourIsActive) {
-            designOptionsTrigger.style.transform = 'rotate(0deg)';
+            if (document.getElementById('design-options-trigger').classList.toggle('rotate-icon'))
+            {
+                document.getElementById('design-options-trigger').classList.toggle('rotate-icon');
+            }
             designOptionsDropdown.style.opacity = '0';
             setTimeout(() => {
                 designOptionsDropdown.style.display = 'none';
@@ -253,88 +255,92 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const steps = [
         {
-            "selector": '#three-canvas',
+            "selector": '#main-content',
             "step": 1,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Welcome!",
+            "content": "Welcome to the Welcome Home platform! This tour will guide<br/>you through some of the basic functions of the platform. Click the arrow to get started!",
         },
         {
-            "selector": '#three-canvas',
+            "selector": '#main-content',
             "step": 2,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Movement",
+            "content": "To move around, double click anywhere. To look around,<br/>click and drag the screen.",
         },
         {
             "selector": '#menu-button',
             "step": 3,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Menu",
+            "content": "The menu is used to control various parts of the platform<br/>as well. Click the menu icon to open the menu.",
         },
         {
             "selector": '#design-options-container',
             "step": 4,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Design Center",
+            "content": "The Design Center allows you to view different designs.",
         },
         {
             "selector": '#design-options-trigger',
             "step": 5,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Design Center",
+            "content": "Click the icon below to open the Design Center.",
         },
         {
             "selector": '#style2-button',
             "step": 6,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Design Center",
+            "content": "Click the option below to change the current design.",
         },
         {
             "selector": '#floorplan-options-container',
             "step": 7,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Floor Plans",
+            "content": "Floor Plans allow you to view different floor plans.",
         },
         {
             "selector": '#floorplan-options-trigger',
             "step": 8,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Floor Plans",
+            "content": "Click the icon below to open Floor Plans.",
         },
         {
             "selector": '#plan2-button',
             "step": 9,
-            "title": "Lets take a moment and look around Docsie library",
-            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+            "title": "Floor Plans",
+            "content": "Click the option below to change the current floor plan and<br/>complete the tour!",
         },
     ];
     
     var tourguide = new Tourguide({
         steps: steps,
         onStep: function(currentstep, type) {
-            console.log(currentstep);
             if (currentstep.index == 3) {
+                currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     toggleShareModal(tourguide);
                 });
             }
             else if (currentstep.index == 5) {
+                currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     toggleDropdown(designOptionsDropdown, designOptionsTrigger, tourguide);
                 });
             }
             else if (currentstep.index == 6) {
+                currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     currentDesignStyle = 2;
                     userPosition.updateSphereTexture(userPosition.row, userPosition.col, tourguide);
                 });
             }
             else if (currentstep.index == 8) {
+                currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 closeOtherDropdowns(designOptionsDropdown);
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     toggleDropdown(floorplanOptionsDropdown, floorplanOptionsTrigger, tourguide);
                 });
             }
             else if (currentstep.index == 9) {
+                currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     tourguide.stop();
                 });
@@ -342,34 +348,32 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         onComplete: function() {
             tourIsActive = false;
+        },
+        onStop: function(options) {
+            tourIsActive = false;
         }
     });
 
-    tourguide.start();
+    function startTour() {
+        tourguide.start();
+    }
+    
+    function setLocalStorage(key, val) {
+        window.localStorage.setItem(key, val)
+    }
+      
+    function hasLocalStorage(key) {
+        let val = window.localStorage.getItem(key);
+        if (val) return true;
+        return false;
+    }
+    
+    if (!hasLocalStorage('hasCompletedTour') && isPCorLaptop) {
+        setLocalStorage('hasCompletedTour', true);
+        startTour();
+    }
 
 });
-
-
-function startTour() {
-    tourguide.start();
-}
-
-function setLocalStorage(key, val) {
-    window.localStorage.setItem(key, val)
-}
-  
-function hasLocalStorage(key) {
-    let val = window.localStorage.getItem(key);
-    if (val) return true;
-    return false;
-}
-
-// if (!hasLocalStorage('hasCompletedTour')) {
-//     setLocalStorage('hasCompletedTour', true);
-//     startTour();
-// }
-
-// startTour();
 
 // Hide the buttons if the device is a PC or laptop before the DOM is fully loaded
 if (isPCorLaptop()) {

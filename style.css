@@ -258,7 +258,7 @@ button:hover  {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 2em;
+  margin-top: 3em;
 }
 
 .header-icon  {

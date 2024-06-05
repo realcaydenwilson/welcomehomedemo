@@ -376,6 +376,9 @@ document.addEventListener('DOMContentLoaded', function() {
         setLocalStorage('hasCompletedTour', true);
         startTour();
     }
+    else {
+        tourIsActive = false;
+    }
 
 });
 

@@ -6,6 +6,7 @@ const menuButton = document.getElementById("menu-button");
 const sharingButton = document.getElementById("sharing-button");
 
 var isExpanded = true;
+var tourIsActive = true;
 
 // Function to check if the device is a PC or laptop
 function isPCorLaptop() {
@@ -13,44 +14,344 @@ function isPCorLaptop() {
     return /windows nt|macintosh/.test(userAgent) && !/iphone|ipad|android/.test(userAgent);
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    let currentDesignStyle = 1;
+    const designOptionsTrigger = document.getElementById('design-options-trigger');
+    const designOptionsDropdown = document.getElementById('design-options-dropdown');
+    const floorplanOptionsTrigger = document.getElementById('floorplan-options-trigger');
+    const floorplanOptionsDropdown = document.getElementById('floorplan-options-dropdown');
+    const dropdownContainers = document.getElementsByClassName('design-options-container');
+
+    const allDropdowns = [designOptionsDropdown, floorplanOptionsDropdown];
+    const allTriggers = [designOptionsTrigger, floorplanOptionsTrigger];
+
+    allTriggers.forEach(trigger => {
+      trigger.addEventListener('click', function() {
+        console.log(this);
+        const currentDropdown = this === designOptionsTrigger ? designOptionsDropdown : floorplanOptionsDropdown;
+        closeOtherDropdowns(currentDropdown);
+        toggleDropdown(currentDropdown, this, null);
+      });
+    });
+
+    function closeOtherDropdowns(currentDropdown) {
+        allDropdowns.forEach(function (dropdown, i) {
+          if (dropdown !== currentDropdown && dropdown.style.display === 'block') {
+            dropdown.style.opacity = '0';
+            setTimeout(() => {
+              dropdown.style.display = 'none';
+            }, 500);
+            allTriggers[i].classList.toggle('rotate-icon');
+          }
+          else if (tourIsActive) {
+            designOptionsTrigger.style.transform = 'rotate(0deg)';
+            designOptionsDropdown.style.opacity = '0';
+            setTimeout(() => {
+                designOptionsDropdown.style.display = 'none';
+            }, 500);
+          }
+        });
+      }
+    
+      function toggleDropdown(dropdown, trigger, guide) {
+        if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+          dropdown.style.display = 'block';
+          setTimeout(() => {
+            dropdown.style.opacity = '1';
+            allDropdowns.forEach(function (drop, i) {
+              if (drop != dropdown && drop != allDropdowns.at(0)) {
+                  dropdownContainers[i].style.transform = `translateY(${dropdown.offsetHeight}px)`;
+              } 
+            });
+            if (tourIsActive) guide.next();
+          }, 10);
+        } else {
+          dropdown.style.opacity = '0';
+          setTimeout(() => {
+            dropdown.style.display = 'none';
+          }, 500);
+        }
+        allDropdowns.forEach(function (drop, i) {
+          dropdownContainers[i].style.transform = `translateY(0px)`;
+        });
+        trigger.classList.toggle('rotate-icon');
+      }
+
+    // User position and matrix setup
+    class UserPosition {
+        constructor(matrix) {
+            this.matrix = matrix;
+            this.row = 0;
+            this.col = 0;
+            this.newRow = this.row;
+            this.newCol = this.col;
+            this.currentTexture = null;
+            this.textureLoadSuccess = false;
+            console.log('UserPosition initialized at row 0, col 0');
+        }
+
+        normalizeRotation(rotationY) {
+            return ((rotationY % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI); // Normalize to range [0, 2π]
+        }
+
+        determineDirection(rotationY, clickCount) {
+            const normalizedY = this.normalizeRotation(rotationY);
+            const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
+            console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
+            let direction = null;
+
+            if (angleDeg >= 22.5 && angleDeg < 67.5) {
+                direction = 'northeast';
+            } else if (angleDeg >= 67.5 && angleDeg < 112.5) {
+                direction = 'east';
+            } else if (angleDeg >= 112.5 && angleDeg < 157.5) {
+                direction = 'southeast';
+            } else if (angleDeg >= 157.5 && angleDeg < 202.5) {
+                direction = 'south';
+            } else if (angleDeg >= 202.5 && angleDeg < 247.5) {
+                direction = 'southwest';
+            } else if (angleDeg >= 247.5 && angleDeg < 292.5) {
+                direction = 'west';
+            } else if (angleDeg >= 292.5 && angleDeg < 337.5) {
+                direction = 'northwest';
+            } else {
+                direction = 'north';
+            }
+
+            console.log(`Determined direction: ${direction}`);
+            this.move(direction, clickCount);
+        }
+
+        move(direction, clickCount) {
+            const dirMap = {
+                'east': [0, 1],
+                'west': [0, -1],
+                'north': [-1, 0],
+                'south': [1, 0],
+                'northeast': [-1, 1],
+                'northwest': [-1, -1],
+                'southeast': [1, 1],
+                'southwest': [1, -1]
+            };
+            const [dRow, dCol] = dirMap[direction];
+            console.log(`MOVE ${dirMap[direction]}`);
+            console.log(clickCount);
+            let moveCount = clickCount - 1;
+            console.log(moveCount);
+
+            let newRow = this.row;
+            let newCol = this.col;
+
+            for (let i = 0; i < moveCount; i++) {
+                const tempRow = newRow + dRow;
+                const tempCol = newCol + dCol;
+                if (tempRow >= 0 && tempRow < this.matrix.length && tempCol >= 0 && tempCol < this.matrix[0].length) {
+                    newRow = tempRow;
+                    newCol = tempCol;
+                } else {
+                    console.log(`Move blocked at step ${i + 1}: target position out of bounds.`);
+                    break;
+                }
+            }
+
+            console.log(`Attempting to move from [${this.row}, ${this.col}] to [${newRow}, ${newCol}]`);
+            if (this.row !== newRow || this.col !== newCol) {
+                this.updateSphereTexture(newRow, newCol, null);
+                // Wait for the texture to load
+                setTimeout(() => {
+                    if (this.textureLoadSuccess) {
+                        this.row = newRow;
+                        this.col = newCol;
+                        console.log(`Move successful to [${newRow}, ${newCol}]`);
+                        console.log(this.row);
+                        console.log(this.col);
+                    } else {
+                        console.log(`Move failed: texture update unsuccessful.`);
+                    }
+                }, 500); // Adjust timeout as needed to ensure texture load status is updated
+            } else {
+                console.log(`Move failed: texture update unnecessary.`);
+            }
+        }
+
+        updateSphereTexture(newRow, newCol, guide) {
+            let imageUrl = this.matrix[newRow][newCol];
+            if (Array.isArray(imageUrl)) {
+                // Select the appropriate style
+                imageUrl = imageUrl[currentDesignStyle - 1];
+            }
+            console.log(`Attempting to load texture from ${imageUrl}`);
+            this.textureLoadSuccess = false;
+
+            textureLoader.load(imageUrl, texture => {
+                // Dispose of the old texture
+                if (sphere.material.map) {
+                    sphere.material.map.dispose();
+                }
+                // Dispose of the current texture if it's different from the new one
+                if (this.currentTexture && this.currentTexture !== sphere.material.map) {
+                    this.currentTexture.dispose();
+                }
+
+                sphere.material.map = texture;
+                sphere.material.needsUpdate = true;
+                this.currentTexture = texture; // Store reference to the current texture
+
+                console.log(`Texture successfully updated to ${imageUrl}`);
+                this.textureLoadSuccess = true;
+            }, undefined, err => {
+                console.error(`Error loading texture from ${imageUrl}:`, err);
+            });
+
+            if (tourIsActive && guide != null) guide.next();
+        }
+    }
+
+    // Example matrix with URLs
+    const panoramaMatrix = [
+        [['panoramas/1_3.webp','panoramas/2_3.webp'], ['panoramas/1_2.webp','panoramas/2_2.webp'], ['panoramas/1_1.webp','panoramas/2_1.webp']],
+        [['panoramas/1_6.webp','panoramas/2_6.webp'], ['panoramas/1_5.webp','panoramas/2_5.webp'], 0],
+    ];
+
+    /*
+    [0, 0]: ['panoramas/1_6.jpg', 'panoramas/2_6.jpg']
+    [0, 1]: 'panoramas/1_5.jpg'
+    [0, 2]: 0
+    [1, 0]: 'panoramas/1_3.jpg'
+    [1, 1]: 'panoramas/1_2.jpg'
+    [1, 2]: 'panoramas/1_1.jpg'
+    */
+
+    const userPosition = new UserPosition(panoramaMatrix);
+    userPosition.updateSphereTexture(0, 0, null); // Initial texture update
+
+    // Handle multiple clicks to move based on sphere rotation
+    let clickCount = 0;
+    let clickTimeout;
+
+    window.addEventListener('mousedown', event => {
+        clickCount++;
+        clearTimeout(clickTimeout);
+        clickTimeout = setTimeout(() => {
+            if (clickCount > 1) {
+                userPosition.determineDirection(sphere.rotation.y, clickCount);
+            }
+            clickCount = 0;
+        }, 300); // Adjust timeout as needed
+    });
+
+    // Buttons to change design styles
+    document.getElementById('style1-button').addEventListener('click', () => {
+        currentDesignStyle = 1;
+        userPosition.updateSphereTexture(userPosition.row, userPosition.col, null);
+    });
+
+    document.getElementById('style2-button').addEventListener('click', () => {
+        currentDesignStyle = 2;
+        userPosition.updateSphereTexture(userPosition.row, userPosition.col, null);
+    });
+
+    const steps = [
+        {
+            "selector": '#three-canvas',
+            "step": 1,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#three-canvas',
+            "step": 2,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#menu-button',
+            "step": 3,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#design-options-container',
+            "step": 4,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#design-options-trigger',
+            "step": 5,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#style2-button',
+            "step": 6,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#floorplan-options-container',
+            "step": 7,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#floorplan-options-trigger',
+            "step": 8,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+        {
+            "selector": '#plan2-button',
+            "step": 9,
+            "title": "Lets take a moment and look around Docsie library",
+            "content": "Click a button to advance to the next step of this tour.<br/> To stop this tour at any time click a button in the top-right corner.",
+        },
+    ];
+    
+    var tourguide = new Tourguide({
+        steps: steps,
+        onStep: function(currentstep, type) {
+            console.log(currentstep);
+            if (currentstep.index == 3) {
+                currentstep.highlight.nodes[0].addEventListener('click', function() {
+                    toggleShareModal(tourguide);
+                });
+            }
+            else if (currentstep.index == 5) {
+                currentstep.highlight.nodes[0].addEventListener('click', function() {
+                    toggleDropdown(designOptionsDropdown, designOptionsTrigger, tourguide);
+                });
+            }
+            else if (currentstep.index == 6) {
+                currentstep.highlight.nodes[0].addEventListener('click', function() {
+                    currentDesignStyle = 2;
+                    userPosition.updateSphereTexture(userPosition.row, userPosition.col, tourguide);
+                });
+            }
+            else if (currentstep.index == 8) {
+                closeOtherDropdowns(designOptionsDropdown);
+                currentstep.highlight.nodes[0].addEventListener('click', function() {
+                    toggleDropdown(floorplanOptionsDropdown, floorplanOptionsTrigger, tourguide);
+                });
+            }
+            else if (currentstep.index == 9) {
+                currentstep.highlight.nodes[0].addEventListener('click', function() {
+                    tourguide.stop();
+                });
+            }
+        },
+        onComplete: function() {
+            tourIsActive = false;
+        }
+    });
+
+    tourguide.start();
+
+});
+
 
 function startTour() {
-    const tour = new Shepherd.Tour({
-		defaultStepOptions: {
-			cancelIcon: {
-				enabled: true
-			},
-			classes: 'class-1 class-2',
-			scrollTo: { behavior: 'smooth', block: 'center' }
-		}
-	});
-
-	tour.addStep({
-		title: 'Creating a Shepherd Tour',
-		text: 'Creating a Shepherd tour is easy. too! Just create a "Tour" instance, and add as many steps as you want.',
-		attachTo: {
-			element: '#menu-button',
-			on: 'left'
-		},
-		buttons: [
-			{
-				action() {
-					return this.back();
-				},
-				classes: 'shepherd-button-secondary',
-				text: 'Back'
-			},
-			{
-				action() {
-					return this.next();
-				},
-				text: 'Next'
-			}
-		],
-		id: 'creating'
-	});
-
-	tour.start();
+    tourguide.start();
 }
 
 function setLocalStorage(key, val) {
@@ -68,7 +369,7 @@ function hasLocalStorage(key) {
 //     startTour();
 // }
 
-startTour();
+// startTour();
 
 // Hide the buttons if the device is a PC or laptop before the DOM is fully loaded
 if (isPCorLaptop()) {
@@ -335,61 +636,7 @@ vrButton.addEventListener('click', function() {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const designOptionsTrigger = document.getElementById('design-options-trigger');
-    const designOptionsDropdown = document.getElementById('design-options-dropdown');
-    const floorplanOptionsTrigger = document.getElementById('floorplan-options-trigger');
-    const floorplanOptionsDropdown = document.getElementById('floorplan-options-dropdown');
-    const dropdownContainers = document.getElementsByClassName('design-options-container');
-    
-    const allDropdowns = [designOptionsDropdown, floorplanOptionsDropdown];
-    const allTriggers = [designOptionsTrigger, floorplanOptionsTrigger];
-  
-    allTriggers.forEach(trigger => {
-      trigger.addEventListener('click', function() {
-        const currentDropdown = this === designOptionsTrigger ? designOptionsDropdown : floorplanOptionsDropdown;
-        closeOtherDropdowns(currentDropdown);
-        toggleDropdown(currentDropdown, this);
-      });
-    });
-  
-    function closeOtherDropdowns(currentDropdown) {
-      allDropdowns.forEach(function (dropdown, i) {
-        if (dropdown !== currentDropdown && dropdown.style.display === 'block') {
-          dropdown.style.opacity = '0';
-          setTimeout(() => {
-            dropdown.style.display = 'none';
-          }, 500);
-          allTriggers[i].classList.toggle('rotate-icon');
-        }
-      });
-    }
-  
-    function toggleDropdown(dropdown, trigger) {
-      if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-        dropdown.style.display = 'block';
-        setTimeout(() => {
-          dropdown.style.opacity = '1';
-          allDropdowns.forEach(function (drop, i) {
-            if (drop != dropdown && drop != allDropdowns.at(0)) {
-                dropdownContainers[i].style.transform = `translateY(${dropdown.offsetHeight}px)`;
-            } 
-          });
-        }, 10);
-      } else {
-        dropdown.style.opacity = '0';
-        setTimeout(() => {
-          dropdown.style.display = 'none';
-        }, 500);
-      }
-      allDropdowns.forEach(function (drop, i) {
-        dropdownContainers[i].style.transform = `translateY(0px)`;
-      });
-      trigger.classList.toggle('rotate-icon');
-    }
-});
-
-function toggleShareModal() {
+function toggleShareModal(guide) {
     const modal = document.getElementById('share-modal');
     const mainContent = document.getElementById('main-content');
     // const allCanvasses = document.getElementsByTagName('canvas');
@@ -404,6 +651,7 @@ function toggleShareModal() {
         const modalWidth = modal.offsetWidth; // Get the width of the modal
         mainContent.style.width = `${window.innerWidth - modalWidth}px`; // Set the width of mainContent
         document.body.classList.add('modal-active'); // Indicate that the modal is active
+        if (tourIsActive) guide.next();
     } else {
         mainContent.style.width = '100vw'; // Reset the width of mainContent
         document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active
@@ -465,13 +713,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (menuButton) {
         menuButton.addEventListener('click', function() {
-            toggleShareModal();
+            toggleShareModal(null);
         });
     }
 
     if (closeModalButton) {
         closeModalButton.addEventListener('click', function() {
-            toggleShareModal();
+            toggleShareModal(null);
         });
     }
 
@@ -500,6 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /*Testing was performed. It appears that the modal resizes efficiently when shrinking, but when expanding the window, it ends up exposing part of the background as the modal moves faster than the THREE.js application can render. This may be a timing or a render issue. Code needs optimization for this reason. Also, buttons appear along with inf-box, which we only want the buttons when in mobile.*/
+/* The above error is fixed now. */
 
 window.addEventListener('resize', function () {
     const modal = document.getElementById('share-modal');
@@ -515,9 +764,6 @@ window.addEventListener('resize', function () {
         // If modal is not active, use full window width for main content
         mainContent.style.width = `${window.innerWidth}px`;
     }
-    console.log('canvas width is: ' + canvas.style.width + ' and should be: ' + this.window.innerWidth);
-    toggleShareModal();
-    toggleShareModal();
 
     // Update renderer size after container resize
     updateRenderer();
@@ -549,181 +795,6 @@ scene.add(sphere);
 camera.position.set(0, 0, 0);
 scene.add(camera);
 
-document.addEventListener('DOMContentLoaded', function() {
-    let currentDesignStyle = 1;
-
-    // User position and matrix setup
-    class UserPosition {
-        constructor(matrix) {
-            this.matrix = matrix;
-            this.row = 0;
-            this.col = 0;
-            this.newRow = this.row;
-            this.newCol = this.col;
-            this.currentTexture = null;
-            this.textureLoadSuccess = false;
-            console.log('UserPosition initialized at row 0, col 0');
-        }
-
-        normalizeRotation(rotationY) {
-            return ((rotationY % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI); // Normalize to range [0, 2π]
-        }
-
-        determineDirection(rotationY, clickCount) {
-            const normalizedY = this.normalizeRotation(rotationY);
-            const angleDeg = (normalizedY * 180 / Math.PI); // Convert radians to degrees
-            console.log(`Normalized Rotation Y: ${normalizedY} radians, ${angleDeg} degrees`);
-            let direction = null;
-
-            if (angleDeg >= 22.5 && angleDeg < 67.5) {
-                direction = 'northeast';
-            } else if (angleDeg >= 67.5 && angleDeg < 112.5) {
-                direction = 'east';
-            } else if (angleDeg >= 112.5 && angleDeg < 157.5) {
-                direction = 'southeast';
-            } else if (angleDeg >= 157.5 && angleDeg < 202.5) {
-                direction = 'south';
-            } else if (angleDeg >= 202.5 && angleDeg < 247.5) {
-                direction = 'southwest';
-            } else if (angleDeg >= 247.5 && angleDeg < 292.5) {
-                direction = 'west';
-            } else if (angleDeg >= 292.5 && angleDeg < 337.5) {
-                direction = 'northwest';
-            } else {
-                direction = 'north';
-            }
-
-            console.log(`Determined direction: ${direction}`);
-            this.move(direction, clickCount);
-        }
-
-        move(direction, clickCount) {
-            const dirMap = {
-                'east': [0, 1],
-                'west': [0, -1],
-                'north': [-1, 0],
-                'south': [1, 0],
-                'northeast': [-1, 1],
-                'northwest': [-1, -1],
-                'southeast': [1, 1],
-                'southwest': [1, -1]
-            };
-            const [dRow, dCol] = dirMap[direction];
-            console.log(`MOVE ${dirMap[direction]}`);
-            console.log(clickCount);
-            let moveCount = clickCount - 1;
-            console.log(moveCount);
-
-            let newRow = this.row;
-            let newCol = this.col;
-
-            for (let i = 0; i < moveCount; i++) {
-                const tempRow = newRow + dRow;
-                const tempCol = newCol + dCol;
-                if (tempRow >= 0 && tempRow < this.matrix.length && tempCol >= 0 && tempCol < this.matrix[0].length) {
-                    newRow = tempRow;
-                    newCol = tempCol;
-                } else {
-                    console.log(`Move blocked at step ${i + 1}: target position out of bounds.`);
-                    break;
-                }
-            }
-
-            console.log(`Attempting to move from [${this.row}, ${this.col}] to [${newRow}, ${newCol}]`);
-            if (this.row !== newRow || this.col !== newCol) {
-                this.updateSphereTexture(newRow, newCol);
-                // Wait for the texture to load
-                setTimeout(() => {
-                    if (this.textureLoadSuccess) {
-                        this.row = newRow;
-                        this.col = newCol;
-                        console.log(`Move successful to [${newRow}, ${newCol}]`);
-                        console.log(this.row);
-                        console.log(this.col);
-                    } else {
-                        console.log(`Move failed: texture update unsuccessful.`);
-                    }
-                }, 500); // Adjust timeout as needed to ensure texture load status is updated
-            } else {
-                console.log(`Move failed: texture update unnecessary.`);
-            }
-        }
-
-        updateSphereTexture(newRow, newCol) {
-            let imageUrl = this.matrix[newRow][newCol];
-            if (Array.isArray(imageUrl)) {
-                // Select the appropriate style
-                imageUrl = imageUrl[currentDesignStyle - 1];
-            }
-            console.log(`Attempting to load texture from ${imageUrl}`);
-            this.textureLoadSuccess = false;
-
-            textureLoader.load(imageUrl, texture => {
-                // Dispose of the old texture
-                if (sphere.material.map) {
-                    sphere.material.map.dispose();
-                }
-                // Dispose of the current texture if it's different from the new one
-                if (this.currentTexture && this.currentTexture !== sphere.material.map) {
-                    this.currentTexture.dispose();
-                }
-
-                sphere.material.map = texture;
-                sphere.material.needsUpdate = true;
-                this.currentTexture = texture; // Store reference to the current texture
-
-                console.log(`Texture successfully updated to ${imageUrl}`);
-                this.textureLoadSuccess = true;
-            }, undefined, err => {
-                console.error(`Error loading texture from ${imageUrl}:`, err);
-            });
-        }
-    }
-
-    // Example matrix with URLs
-    const panoramaMatrix = [
-        [['panoramas/1_3.webp','panoramas/2_3.webp'], ['panoramas/1_2.webp','panoramas/2_2.webp'], ['panoramas/1_1.webp','panoramas/2_1.webp']],
-        [['panoramas/1_6.webp','panoramas/2_6.webp'], ['panoramas/1_5.webp','panoramas/2_5.webp'], 0],
-    ];
-
-    /*
-    [0, 0]: ['panoramas/1_6.jpg', 'panoramas/2_6.jpg']
-    [0, 1]: 'panoramas/1_5.jpg'
-    [0, 2]: 0
-    [1, 0]: 'panoramas/1_3.jpg'
-    [1, 1]: 'panoramas/1_2.jpg'
-    [1, 2]: 'panoramas/1_1.jpg'
-    */
-
-    const userPosition = new UserPosition(panoramaMatrix);
-    userPosition.updateSphereTexture(0, 0); // Initial texture update
-
-    // Handle multiple clicks to move based on sphere rotation
-    let clickCount = 0;
-    let clickTimeout;
-
-    window.addEventListener('mousedown', event => {
-        clickCount++;
-        clearTimeout(clickTimeout);
-        clickTimeout = setTimeout(() => {
-            if (clickCount > 1) {
-                userPosition.determineDirection(sphere.rotation.y, clickCount);
-            }
-            clickCount = 0;
-        }, 300); // Adjust timeout as needed
-    });
-
-    // Buttons to change design styles
-    document.getElementById('style1-button').addEventListener('click', () => {
-        currentDesignStyle = 1;
-        userPosition.updateSphereTexture(userPosition.row, userPosition.col);
-    });
-
-    document.getElementById('style2-button').addEventListener('click', () => {
-        currentDesignStyle = 2;
-        userPosition.updateSphereTexture(userPosition.row, userPosition.col);
-    });
-});
 
 // Allow user interaction to control sphere rotation
 var isDragging = false;

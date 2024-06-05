@@ -9,10 +9,8 @@
     <link rel="icon" type="image/x-icon" href="./images/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@12.0.4/dist/css/shepherd.css"/>
 
-    <script type="module" src="https://cdn.jsdelivr.net/npm/shepherd.js@12.0.4/dist/esm/shepherd.mjs"></script>
-    <!-- <script type="module" src="shepherd.js"></script>     -->
+    <script src="https://cdn.jsdelivr.net/npm/tourguidejs@1.0.1/tourguide.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/webxr-polyfill@latest"></script>
   </head>
@@ -108,7 +106,7 @@
           </div>
       </div>
 
-      <div id="floorplans-options-container" class="floorplans-options-container">
+      <div id="floorplan-options-container" class="design-options-container floorplan-options-container">
         <div class="option-header-contain">
           <i class="fas fa-home option-icon"></i>
           <h3>FLOOR PLANS</h3>
@@ -117,7 +115,6 @@
             <i class="fas fa-plus"></i>
         </button>
           <div id="floorplan-options-dropdown" class="dropdown-content">
-              <!-- <button href="https://saywelcomehome.com" target="_blank"> -->
               <button id="plan1-button" class="option-button">
                 <div class="floorplan-item">
                   <span class="floorplan-name">Studio</span>
@@ -125,7 +122,6 @@
                   <img src="./images/style1.jpg" alt="Style 1">
                 </div>
               </button>
-              <!-- <button href="https://saywelcomehome.com" target="_blank"> -->
               <button id="plan2-button" class="option-button">
                   <div class="floorplan-item">
                     <span class="floorplan-name">Single Bedroom</span>

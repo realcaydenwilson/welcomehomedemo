@@ -442,7 +442,7 @@ button:hover  {
   }
 }
 
-#design-options-container, #floorplans-options-container {
+#design-options-container, #floorplan-options-container {
   display: flex; /* Use flexbox to align children inline */
   align-items: center; /* Align items vertically in the center */
   justify-content: space-between;

@@ -13,6 +13,46 @@ function isPCorLaptop() {
     return /windows nt|macintosh/.test(userAgent) && !/iphone|ipad|android/.test(userAgent);
 }
 
+
+function startTour() {
+    const tour = new Shepherd.Tour({
+		defaultStepOptions: {
+			cancelIcon: {
+				enabled: true
+			},
+			classes: 'class-1 class-2',
+			scrollTo: { behavior: 'smooth', block: 'center' }
+		}
+	});
+
+	tour.addStep({
+		title: 'Creating a Shepherd Tour',
+		text: 'Creating a Shepherd tour is easy. too! Just create a "Tour" instance, and add as many steps as you want.',
+		attachTo: {
+			element: '#menu-button',
+			on: 'left'
+		},
+		buttons: [
+			{
+				action() {
+					return this.back();
+				},
+				classes: 'shepherd-button-secondary',
+				text: 'Back'
+			},
+			{
+				action() {
+					return this.next();
+				},
+				text: 'Next'
+			}
+		],
+		id: 'creating'
+	});
+
+	tour.start();
+}
+
 function setLocalStorage(key, val) {
     window.localStorage.setItem(key, val)
 }
@@ -23,10 +63,12 @@ function hasLocalStorage(key) {
     return false;
 }
 
-if (!hasLocalStorage('hasCompletedTour')) {
-    setLocalStorage('hasCompletedTour', true);
-    // startTour();
-}
+// if (!hasLocalStorage('hasCompletedTour')) {
+//     setLocalStorage('hasCompletedTour', true);
+//     startTour();
+// }
+
+startTour();
 
 // Hide the buttons if the device is a PC or laptop before the DOM is fully loaded
 if (isPCorLaptop()) {
@@ -360,13 +402,8 @@ function toggleShareModal() {
     // Toggle the width of mainContent based on modal visibility
     if (modal.classList.contains('show')) {
         const modalWidth = modal.offsetWidth; // Get the width of the modal
-        // const mainContentWidth = window.innerWidth - modalWidth;
         mainContent.style.width = `${window.innerWidth - modalWidth}px`; // Set the width of mainContent
-        // const canvas = document.querySelector('canvas');
-        // console.log(canvas);
         document.body.classList.add('modal-active'); // Indicate that the modal is active
-        // canvas.width = `${window.innerWidth - modalWidth}px !important`;
-        // canvas.style.width = `${window.innerWidth - modalWidth}px !important`;
     } else {
         mainContent.style.width = '100vw'; // Reset the width of mainContent
         document.body.classList.remove('modal-active'); // Indicate that the modal is no longer active

@@ -103,7 +103,7 @@ h3 {
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(0,0,0);
   font-size: 1.25em;
-  font-weight: normal;
+  font-weight: 600;
   line-height: 1.25;
   text-align: left;
   margin: 0;
@@ -177,12 +177,17 @@ button:hover  {
   border-radius: 0.4em;
   align-items: center;
   transition: opacity 0.1s ease, height 0.1s ease, visibility 0.1s;
+  z-index: 1500;
 }
 
 #collapse-button  {
   color: rgba(0,0,0,0.5);
   font-size: 18px;
   transform: rotate(0deg);
+}
+
+#menu-button  {
+  z-index: 1500;
 }
 
 .modal {
@@ -437,7 +442,7 @@ button:hover  {
   }
 }
 
-#design-options-container, #floorplan-options-container {
+#design-options-container, #floorplans-options-container {
   display: flex; /* Use flexbox to align children inline */
   align-items: center; /* Align items vertically in the center */
   justify-content: space-between;

@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "placement": "left",
         },
         {
-            "selector": '#design-options-container',
+            "selector": '#design-title',
             "step": 4,
             "title": "Design Center",
             "content": "The Design Center allows you to view different designs.",
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "placement": "bottom",
         },
         {
-            "selector": '#floorplan-options-container',
+            "selector": '#floorplan-title',
             "step": 7,
             "title": "Floor Plans",
             "content": "Floor Plans allow you to view different floor plans.",

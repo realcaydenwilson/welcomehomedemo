@@ -296,6 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "step": 7,
             "title": "Floor Plans",
             "content": "Floor Plans allow you to view different floor plans.",
+            "placement": "bottom",
         },
         {
             "selector": '#floorplan-options-trigger',

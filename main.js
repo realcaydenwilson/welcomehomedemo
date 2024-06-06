@@ -43,14 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
             allTriggers[i].classList.toggle('rotate-icon');
           }
           else if (tourIsActive) {
-            if (document.getElementById('design-options-trigger').classList.toggle('rotate-icon'))
-            {
-                document.getElementById('design-options-trigger').classList.toggle('rotate-icon');
-            }
             designOptionsDropdown.style.opacity = '0';
             setTimeout(() => {
                 designOptionsDropdown.style.display = 'none';
             }, 500);
+            if (document.getElementById('design-options-trigger').classList.toggle('rotate-icon'))
+            {
+                document.getElementById('design-options-trigger').classList.toggle('rotate-icon');
+            }
           }
         });
       }
@@ -326,14 +326,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     toggleShareModal(tourguide);
-                    currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 });
             }
             else if (currentstep.index == 5) {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     toggleDropdown(designOptionsDropdown, designOptionsTrigger, tourguide);
-                    currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 });
             }
             else if (currentstep.index == 6) {
@@ -341,24 +339,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     currentDesignStyle = 2;
                     userPosition.updateSphereTexture(userPosition.row, userPosition.col, tourguide);
-                    currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 });
             }
-            else if (currentstep.index == 7) {
-                closeOtherDropdowns(designOptionsDropdown);
-            }
+            // else if (currentstep.index == 7) {
+            //     closeOtherDropdowns(designOptionsDropdown);
+            // }
             else if (currentstep.index == 8) {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
+                    closeOtherDropdowns(designOptionsDropdown);
                     toggleDropdown(floorplanOptionsDropdown, floorplanOptionsTrigger, tourguide);
-                    currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 });
             }
             else if (currentstep.index == 9) {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     tourguide.stop();
-                    currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 });
             }
         },

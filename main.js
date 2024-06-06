@@ -277,13 +277,13 @@ document.addEventListener('DOMContentLoaded', function() {
             "step": 4,
             "title": "Design Center",
             "content": "The Design Center allows you to view different designs.",
-            "placement": "left",
         },
         {
             "selector": '#design-options-trigger',
             "step": 5,
             "title": "Design Center",
             "content": "Click the icon below to open the Design Center.",
+            "placement": "bottom",
         },
         {
             "selector": '#style2-button',
@@ -348,6 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     tourguide.stop();
+                    currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 });
             }
         },

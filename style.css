@@ -389,7 +389,7 @@ button:hover  {
   align-items: center; /* Ensures the label (icon + text) aligns correctly */
 }
 
-@media (max-width: 450px) { /* Adjust this breakpoint based on the devices you're targeting */
+@media screen and (max-width: 450px) { /* Adjust this breakpoint based on the devices you're targeting */
   .modal {
     width: 100%;
     display: flex; /* Flex ensures content is laid out properly */
@@ -441,8 +441,8 @@ button:hover  {
     display: block !important; /* Show button on mobile */
   }
 
-  #floorplan-options-container, #floorplan-options-dropdown  {
-    padding-bottom: 5em;
+  #floorplan-options-container  {
+    margin-bottom: 9.5em !important;
   }
 
 }

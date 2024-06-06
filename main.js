@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "placement": "left",
         },
         {
-            "selector": '#design-title',
+            "selector": '#design-options-container',
             "step": 4,
             "title": "Design Center",
             "content": "The Design Center allows you to view different designs.",
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "placement": "bottom",
         },
         {
-            "selector": '#floorplan-title',
+            "selector": '#floorplan-options-container',
             "step": 7,
             "title": "Floor Plans",
             "content": "Floor Plans allow you to view different floor plans.",
@@ -341,9 +341,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     userPosition.updateSphereTexture(userPosition.row, userPosition.col, tourguide);
                 });
             }
-            // else if (currentstep.index == 7) {
-            //     closeOtherDropdowns(designOptionsDropdown);
-            // }
             else if (currentstep.index == 8) {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {

@@ -442,7 +442,7 @@ button:hover  {
   }
 
   #floorplan-options-container, #floorplan-options-dropdown  {
-    margin-bottom: 5em;
+    padding-bottom: 5em;
   }
 
 }

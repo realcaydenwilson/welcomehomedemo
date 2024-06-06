@@ -440,6 +440,11 @@ button:hover  {
   .close-modal-button {
     display: block !important; /* Show button on mobile */
   }
+
+  #floorplan-options-container, #floorplan-options-dropdown  {
+    margin-bottom: 5em;
+  }
+
 }
 
 #design-options-container, #floorplan-options-container {

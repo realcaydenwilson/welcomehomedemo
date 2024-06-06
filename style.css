@@ -453,6 +453,10 @@ button:hover  {
   border-radius: 0.75em;
 }
 
+#floorplan-options-container  {
+  margin-bottom: 3.5em;
+}
+
 #design-options-trigger, #floorplan-options-trigger {
   background-color: white;
   border: none;

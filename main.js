@@ -294,14 +294,14 @@ document.addEventListener('DOMContentLoaded', function() {
             "step": 6,
             "title": "Floor Plans",
             "content": "Floor Plans allow you to view different floor plans. Click the icon to open the Floor Plans panel.",
-            "placement": "top",
+            "placement": "bottom",
         },
         {
             "selector": '#plan2-button',
             "step": 7,
             "title": "Floor Plans",
             "content": "Click the option to change the current floor plan and complete the tour!",
-            "placement": "top",
+            "placement": "bottom",
         },
     ];
     

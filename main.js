@@ -255,28 +255,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const steps = [
         {
-            "selector": '#main-content',
+            "selector": '#info-box',
             "step": 1,
             "title": "Welcome!",
-            "content": "Welcome to the Welcome Home platform! This tour will guide<br/>you through some of the basic functions of the platform. Click the arrow to get started!",
+            "content": "Welcome to the Welcome Home platform! This tour will guide you through some of the basic functions of the platform. Click the arrow to get started!",
         },
         {
-            "selector": '#main-content',
+            "selector": '#info-box',
             "step": 2,
             "title": "Movement",
-            "content": "To move around, double click anywhere. To look around,<br/>click and drag the screen.",
+            "content": "To move around, double click anywhere. To look around, click and drag the screen.",
         },
         {
             "selector": '#menu-button',
             "step": 3,
             "title": "Menu",
-            "content": "The menu is used to control various parts of the platform<br/>as well. Click the menu icon to open the menu.",
+            "content": "The menu is used to control various parts of the platform as well. Click the menu icon to open the menu.",
         },
         {
             "selector": '#design-options-container',
             "step": 4,
             "title": "Design Center",
             "content": "The Design Center allows you to view different designs.",
+            "placement": "left",
         },
         {
             "selector": '#design-options-trigger',
@@ -306,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "selector": '#plan2-button',
             "step": 9,
             "title": "Floor Plans",
-            "content": "Click the option below to change the current floor plan and<br/>complete the tour!",
+            "content": "Click the option below to change the current floor plan and complete the tour!",
         },
     ];
     

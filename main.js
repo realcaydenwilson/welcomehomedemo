@@ -337,9 +337,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 });
             }
+            else if (currentstep.index == 7) {
+                closeOtherDropdowns(designOptionsDropdown);
+            }
             else if (currentstep.index == 8) {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
-                closeOtherDropdowns(designOptionsDropdown);
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     toggleDropdown(floorplanOptionsDropdown, floorplanOptionsTrigger, tourguide);
                     currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');

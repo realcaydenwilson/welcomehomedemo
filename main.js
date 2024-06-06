@@ -275,46 +275,32 @@ document.addEventListener('DOMContentLoaded', function() {
             "content": "The menu is used to control various parts of the platform as well. Click the menu icon to open the menu.",
             "placement": "left",
         },
-        // {
-        //     "selector": '#design-options-container',
-        //     "step": 4,
-        //     "title": "Design Center",
-        //     "content": "The Design Center allows you to view different designs.",
-        //     "placement": "bottom",
-        // },
         {
             "selector": '#design-options-trigger',
             "step": 4,
             "title": "Design Center",
-            "content": "The Design Center allows you to view different designs. Click the icon below to open the Design Center.",
+            "content": "The Design Center allows you to view different designs. Click the icon to open the Design Center panel.",
             "placement": "bottom",
         },
         {
             "selector": '#style2-button',
             "step": 5,
             "title": "Design Center",
-            "content": "Click the option below to change the current design.",
+            "content": "Click the option to change the current design.",
             "placement": "bottom",
         },
-        // {
-        //     "selector": '#floorplan-options-container',
-        //     "step": 7,
-        //     "title": "Floor Plans",
-        //     "content": "Floor Plans allow you to view different floor plans.",
-        //     "placement": "top",
-        // },
         {
             "selector": '#floorplan-options-trigger',
-            "step": 7,
+            "step": 6,
             "title": "Floor Plans",
-            "content": "Floor Plans allow you to view different floor plans. Click the icon below to open Floor Plans.",
+            "content": "Floor Plans allow you to view different floor plans. Click the icon to open the Floor Plans panel.",
             "placement": "top",
         },
         {
             "selector": '#plan2-button',
-            "step": 8,
+            "step": 7,
             "title": "Floor Plans",
-            "content": "Click the option below to change the current floor plan and complete the tour!",
+            "content": "Click the option to change the current floor plan and complete the tour!",
             "placement": "top",
         },
     ];
@@ -342,13 +328,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     closeOtherDropdowns(designOptionsDropdown);
                 });
             }
-            else if (currentstep.index == 7) {
+            else if (currentstep.index == 6) {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     toggleDropdown(floorplanOptionsDropdown, floorplanOptionsTrigger, tourguide);
                 });
             }
-            else if (currentstep.index == 8) {
+            else if (currentstep.index == 7) {
                 currentstep.container.nodes[0].childNodes[1].children[0].childNodes[2].children[1].classList.toggle('display-as-none');
                 currentstep.highlight.nodes[0].addEventListener('click', function() {
                     tourguide.stop();

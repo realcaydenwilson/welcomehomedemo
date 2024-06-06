@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "step": 4,
             "title": "Design Center",
             "content": "The Design Center allows you to view different designs.",
-            "placement": "top",
+            "placement": "bottom",
         },
         {
             "selector": '#design-options-trigger',
@@ -288,35 +288,34 @@ document.addEventListener('DOMContentLoaded', function() {
             "title": "Design Center",
             "content": "Click the icon below to open the Design Center.",
             "placement": "bottom",
-            "placement": "top",
         },
         {
             "selector": '#style2-button',
             "step": 6,
             "title": "Design Center",
             "content": "Click the option below to change the current design.",
-            "placement": "top",
+            "placement": "bottom",
         },
         {
             "selector": '#floorplan-options-container',
             "step": 7,
             "title": "Floor Plans",
             "content": "Floor Plans allow you to view different floor plans.",
-            "placement": "bottom",
+            "placement": "top",
         },
         {
             "selector": '#floorplan-options-trigger',
             "step": 8,
             "title": "Floor Plans",
             "content": "Click the icon below to open Floor Plans.",
-            "placement": "bottom",
+            "placement": "top",
         },
         {
             "selector": '#plan2-button',
             "step": 9,
             "title": "Floor Plans",
             "content": "Click the option below to change the current floor plan and complete the tour!",
-            "placement": "bottom",
+            "placement": "top",
         },
     ];
     

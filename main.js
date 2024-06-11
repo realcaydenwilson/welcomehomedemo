@@ -6,12 +6,41 @@ const menuButton = document.getElementById("menu-button");
 const sharingButton = document.getElementById("sharing-button");
 
 var isExpanded = true;
+var isFullscreen = false;
 var tourIsActive = true;
 
 // Function to check if the device is a PC or laptop
 function isPCorLaptop() {
     const userAgent = navigator.userAgent.toLowerCase();
     return /windows nt|macintosh/.test(userAgent) && !/iphone|ipad|android/.test(userAgent);
+}
+
+function updateRenderer() {
+    const modal = document.getElementById('share-modal');
+    const mainContent = document.getElementById('main-content');
+    const canvas = document.querySelector('canvas');
+    const containerWidth = modal.classList.contains('show') ? mainContent.offsetWidth : window.innerWidth;
+
+    if (renderer && camera && !isFullscreen) {
+        renderer.setSize(containerWidth, window.innerHeight);
+        camera.aspect = containerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        // Update canvas width and height attributes
+        canvas.width = containerWidth;
+        canvas.height = window.innerHeight;
+    } else if (renderer && camera && isFullscreen) {
+        renderer.setSize(window.outerWidth, window.outerHeight);
+        camera.aspect = window.outerWidth / window.outerHeight;
+        camera.updateProjectionMatrix();
+
+        // Update canvas width and height attributes
+        canvas.width = window.outerWidth;
+        canvas.height = window.outerHeight;
+    }
+    else {
+        console.error('Renderer or camera not defined');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -641,8 +670,6 @@ vrButton.addEventListener('click', function() {
 function toggleShareModal(guide) {
     const modal = document.getElementById('share-modal');
     const mainContent = document.getElementById('main-content');
-    // const allCanvasses = document.getElementsByTagName('canvas');
-    // const canvas = allCanvasses[1];
     const canvas = document.getElementsByTagName('canvas');
 
     // Toggle the 'show' class to either show or hide the modal
@@ -687,8 +714,9 @@ function toggleFullScreen() {
         } else if (document.documentElement.mozRequestFullScreen) { // Firefox
             document.documentElement.mozRequestFullScreen();
         } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-            document.documentElement.msRequestFullscreen();
+            document.documentElement.msRequestFullscreen()
         }
+        isFullscreen = true;
     } else {
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -699,7 +727,9 @@ function toggleFullScreen() {
         } else if (document.msExitFullscreen) { // IE/Edge
             document.msExitFullscreen();
         }
+        isFullscreen = false;
     }
+    updateRenderer();
 }
 
 fullscreenButton.addEventListener('click', toggleFullScreen);
@@ -723,25 +753,6 @@ document.addEventListener('DOMContentLoaded', function() {
         closeModalButton.addEventListener('click', function() {
             toggleShareModal(null);
         });
-    }
-
-    function updateRenderer() {
-        const modal = document.getElementById('share-modal');
-        const mainContent = document.getElementById('main-content');
-        const canvas = document.querySelector('canvas');
-        const containerWidth = modal.classList.contains('show') ? mainContent.offsetWidth : window.innerWidth;
-
-        if (renderer && camera) {
-            renderer.setSize(containerWidth, window.innerHeight);
-            camera.aspect = containerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-
-            // Update canvas width and height attributes
-            canvas.width = containerWidth;
-            canvas.height = window.innerHeight;
-        } else {
-            console.error('Renderer or camera not defined');
-        }
     }
 
     window.addEventListener('load', function() {
